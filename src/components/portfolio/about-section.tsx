@@ -1,4 +1,7 @@
+import { calculateYearsOfExperience } from "@/lib/utils";
+
 export function AboutSection() {
+  const yearsOfExperience = calculateYearsOfExperience(new Date("2019-02-01"));
   return (
     <section id="about" className="min-h-screen flex items-center px-8 py-20">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
@@ -40,7 +43,9 @@ export function AboutSection() {
               <h3 className="text-emerald-400 font-semibold mb-2">
                 Experience
               </h3>
-              <p className="text-sm text-gray-300">6+ Years</p>
+              <p className="text-sm text-gray-300">
+                {yearsOfExperience}+ Years
+              </p>
               <p className="text-sm text-gray-300">Full-Stack Development</p>
             </div>
           </div>

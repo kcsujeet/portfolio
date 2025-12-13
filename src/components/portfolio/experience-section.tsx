@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
+import { JOB_TITLE } from "@/lib/constants";
 
 const experiences = [
   {
     period: "2023 — PRESENT",
-    role: "Full-Stack Engineer",
+    role: JOB_TITLE,
     company: "Event Temple",
     description:
       "Led migration from Angular.js to Next.js, boosted performance by 80%, secured 2000+ hotel customers.",
@@ -43,8 +44,8 @@ export function ExperienceSection() {
         </div>
 
         <div className="space-y-16">
-          {experiences.map((exp, index) => (
-            <div key={index} className="group relative">
+          {experiences.map((exp) => (
+            <div key={exp.company} className="group relative">
               <div className="grid lg:grid-cols-4 gap-8 items-start">
                 <div className="lg:text-right">
                   <span className="font-mono text-sm text-emerald-400">

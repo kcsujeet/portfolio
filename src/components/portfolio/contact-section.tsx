@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Coffee, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { SocialMediaLinks } from "./social-media-links";
 
 export function ContactSection() {

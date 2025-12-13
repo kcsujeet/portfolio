@@ -43,10 +43,14 @@ export function CommandPalette({
   hideCommandPalette,
 }: CommandPaletteProps) {
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Backdrop click handler
+    // biome-ignore lint/a11y/noStaticElementInteractions: Backdrop click handler
     <div
       className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-start justify-center pt-32"
       onClick={hideCommandPalette}
     >
+      {/* biome-ignore lint/a11y/useKeyWithClickEvents: Stop propagation */}
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: Stop propagation */}
       <div
         className="bg-gray-800 border border-gray-600 rounded-lg w-full max-w-lg mx-4"
         onClick={(e) => e.stopPropagation()}
@@ -63,6 +67,7 @@ export function CommandPalette({
         <div className="p-2">
           {navigationItems.map((item) => (
             <button
+              type="button"
               key={item.id}
               onClick={() => scrollToSection(item.id)}
               className="w-full text-left p-3 rounded hover:bg-gray-700 transition-all group hover:translate-x-1"

@@ -1,6 +1,9 @@
 import { Dot } from "lucide-react";
+import { JOB_TITLE } from "@/lib/constants";
+import { calculateYearsOfExperience } from "@/lib/utils";
 
 export function HeroSection() {
+  const yearsOfExperience = calculateYearsOfExperience(new Date("2019-02-01"));
   return (
     <section
       id="home"
@@ -21,11 +24,12 @@ export function HeroSection() {
 
         <div className="max-w-2xl">
           <p className="text-xl md:text-2xl text-gray-200 mb-6 leading-relaxed">
-            Full-Stack Engineer crafting{" "}
+            {JOB_TITLE} crafting{" "}
             <span className="text-emerald-400 font-semibold">
               scalable web experiences
             </span>{" "}
-            with 6+ years of expertise in React.js and Ruby on Rails.
+            with {yearsOfExperience}+ years of expertise in React.js and Ruby on
+            Rails.
           </p>
 
           <div className="flex items-center gap-6 text-sm text-gray-300 font-mono mb-8">

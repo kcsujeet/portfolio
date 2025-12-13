@@ -1,4 +1,5 @@
 import { Terminal } from "lucide-react";
+import { JOB_TITLE } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -14,7 +15,7 @@ export function Footer() {
               </span>
             </div>
             <p className="text-sm text-gray-400 text-center md:text-left">
-              Full-Stack Engineer
+              {JOB_TITLE}
             </p>
           </div>
 

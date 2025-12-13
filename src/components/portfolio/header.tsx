@@ -89,6 +89,7 @@ export function Header() {
               const isActive = currentSection === section;
               return (
                 <button
+                  type="button"
                   key={section}
                   onClick={() => {
                     scrollToSection(section);
@@ -116,8 +117,10 @@ export function Header() {
 
             {/* Command Palette Trigger - Mobile Only */}
             <button
+              type="button"
               onClick={() => setShowCommandPalette(true)}
               className="lg:hidden bg-gray-800/60 backdrop-blur-sm border border-gray-700 rounded-lg px-3 py-2 text-gray-300 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 hover:border-emerald-400"
+              aria-label="Open command palette"
             >
               <div className="flex items-center gap-2">
                 <Terminal className="w-4 h-4" />

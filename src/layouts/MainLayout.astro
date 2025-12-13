@@ -1,44 +1,74 @@
 ---
 import "../styles/global.css";
+import { JOB_TITLE } from "@/lib/constants";
 
-const ogTitle = "Sujeet Kc - Software Engineer";
-const ogDescription =
-  "Software Engineer specializing in frontend development with React and backend development with Ruby on Rails. Passionate about building efficient and scalable web applications.";
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
+const ogTitle = `Sujeet Kc - ${JOB_TITLE}`;
+const ogDescription = `${JOB_TITLE} specializing in frontend development with React and backend development with Ruby on Rails. Passionate about building efficient and scalable web applications.`;
 const logoUrl = "/logo.png";
 const siteUrl = "https://kcsujeet.com.np/";
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
 const ogType = "website";
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
 const ogSiteName = "Sujeet Kc";
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
 const keywords = "portfolio,software,engineer,developer,react,rubyonrails";
+
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+
+// biome-ignore lint/correctness/noUnusedVariables: Used in template
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Sujeet Kc",
+  url: siteUrl,
+  sameAs: [
+    "https://github.com/kcsujeet",
+    "https://linkedin.com/in/kc-sujeet",
+    "https://dev.to/kcsujeet",
+  ],
+  jobTitle: JOB_TITLE,
+  worksFor: {
+    "@type": "Organization",
+    name: "Event Temple",
+  },
+  description: ogDescription,
+  image: new URL(logoUrl, siteUrl).href,
+};
 ---
 
-<html>
+<html lang="en">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta charset="UTF-8" />
-    <meta property="og:image" content={logoUrl} />
-    <meta property="og:title" content={ogTitle} />
-    <meta property="og:site_name" content={ogSiteName} />
-    <meta property="og:url" content={siteUrl} />
-    <meta property="og:description" content={ogDescription} />
-    <meta property="og:type" content={ogType} />
-    <meta property="og:locale" content="en_CA" />
-
-    <!-- Twitter open-graph tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image:alt" content={ogSiteName} />
-    <meta name="twitter:title" content={ogTitle} />
-    <meta name="twitter:description" content={ogDescription} />
-    <meta name="twitter:image:src" content={logoUrl} />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sujeet Kc</title>
     <meta name="description" content={ogDescription} />
     <meta name="keywords" content={keywords} />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-    />
-    <title>Sujeet Kc</title>
+    <meta name="author" content="Sujeet Kc" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph tags -->
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={new URL(logoUrl, siteUrl)} />
+    <meta property="og:site_name" content={ogSiteName} />
+    <meta property="og:locale" content="en_CA" />
+
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@kcsujeet" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:image" content={new URL(logoUrl, siteUrl)} />
+
     <link rel="icon" type="image/png" href={logoUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
 
   <body>

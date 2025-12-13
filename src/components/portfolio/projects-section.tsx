@@ -1,16 +1,49 @@
+import { ArrowUpRight, Code2, ExternalLink, Github } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Code2, ExternalLink, Github } from "lucide-react";
+
 const projects = [
   {
     name: "ilamy Calendar",
     description:
       "React-first, customizable, and feature-rich calendar library.",
-    tech: ["React", "Shadcn", "Tailwind CSS", "TypeScript", "Framer Motion", "Bun"],
+    tech: [
+      "React",
+      "Shadcn",
+      "Tailwind CSS",
+      "TypeScript",
+      "Framer Motion",
+      "Bun",
+    ],
     year: "Jul, 2025",
     status: "Live",
     code: null,
     live: "https://ilamy.dev",
+  },
+  {
+    name: "Fujimee",
+    description:
+      "Fujifilm inspired recipes for photos built with Astro, Firebase, Cloudflare Functions, and Tailwind CSS.",
+    tech: [
+      "Astro",
+      "Firebase",
+      "Cloudflare Functions",
+      "Tailwind CSS",
+      "TypeScript",
+    ],
+    year: "Dec, 2025",
+    status: "Live",
+    live: "https://fujimee.com",
+    code: null,
+  },
+
+  {
+    name: "bdd-lazy-var-next",
+    description: "Lazy variable evaluation helpers for Bun, Vitest, and Jest.",
+    tech: ["TypeScript", "Bun", "Vitest", "Jest", "NPM"],
+    year: "Sep, 2025",
+    status: "Open Source",
+    code: "https://github.com/kcsujeet/bdd-lazy-var-next",
   },
   {
     name: "Passport Photo Wiz",
@@ -46,9 +79,9 @@ export function ProjectsSection() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
+          {projects.map((project) => (
             <div
-              key={index}
+              key={project.name}
               className="group bg-gray-800/50 border border-gray-700 p-8 hover:border-emerald-400 transition-all duration-300"
             >
               <div className="flex items-center justify-between mb-4">
@@ -94,7 +127,11 @@ export function ProjectsSection() {
                       asChild
                       className="border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-black font-semibold p-0 bg-transparent"
                     >
-                      <a href={project.code} target="_blank">
+                      <a
+                        href={project.code}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Github className="w-4 h-4 mr-2" />
                         Code
                       </a>
@@ -122,7 +159,7 @@ export function ProjectsSection() {
         </div>
 
         <div className="text-center mt-16">
-          <a href="https://github.com/kcsujeet" target="_blank">
+          <a href="https://github.com/kcsujeet" target="_blank" rel="noopener">
             <div className="hover:scale-105 active:scale-95 transform transition-transform inline-block">
               <Button className="bg-emerald-500 hover:bg-emerald-600 text-black font-semibold px-8 py-3 rounded-none">
                 View All Projects

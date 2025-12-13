@@ -1,4 +1,5 @@
 import { Github, Globe, Linkedin, Mail } from "lucide-react";
+
 const socialLinks = [
   {
     name: "GitHub",
@@ -32,8 +33,10 @@ export function SocialMediaLinks() {
       <a
         href={social.url}
         target={social.name !== "Email" ? "_blank" : undefined}
+        rel={social.name !== "Email" ? "noopener noreferrer" : undefined}
         className={`block p-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg transition-all duration-300 hover:scale-110 hover:bg-gray-700/80 hover:border-emerald-400 ${social.color}`}
         title={social.name}
+        aria-label={social.name}
       >
         <social.icon className="w-5 h-5" />
       </a>
