@@ -21,6 +21,16 @@ const projects = [
     live: "https://ilamy.dev",
   },
   {
+    name: "Collage Pen",
+    description:
+      "A free online collage maker with native like experience",
+    tech: ["Astro", "React", "TypeScript", "Canvas API", "Shadcn", "Tailwind CSS"],
+    year: "Jan, 2026",
+    status: "Live",
+    code: null,
+    live: "https://collagepen.com",
+  },
+  {
     name: "Fujimee",
     description:
       "Fujifilm inspired recipes for photos built with Astro, Firebase, Cloudflare Functions, and Tailwind CSS.",
