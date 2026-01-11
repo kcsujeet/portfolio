@@ -31,6 +31,22 @@ const projects = [
     live: "https://collagepen.com",
   },
   {
+    name: "Debackground",
+    description:
+      "Free AI-powered background removal tool that runs locally in browser, ensuring privacy and high-quality results.",
+    tech: [
+      "React",
+      "Tailwind CSS",
+      "Transformers.js",
+      "WebAssembly",
+      "TypeScript",
+    ],
+    year: "Jan, 2026",
+    status: "Live",
+    live: "https://debackground.com",
+    code: null
+  }
+  {
     name: "Fujimee",
     description:
       "Fujifilm inspired recipes for photos built with Astro, Firebase, Cloudflare Functions, and Tailwind CSS.",
