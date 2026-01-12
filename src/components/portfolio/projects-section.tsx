@@ -45,7 +45,7 @@ const projects = [
     status: "Live",
     live: "https://debackground.com",
     code: null
-  }
+  },
   {
     name: "Fujimee",
     description:
