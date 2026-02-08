@@ -1,6 +1,6 @@
-# Sujeet KC - Portfolio Website
+# Sujeet KC - Portfolio Template
 
-A modern, responsive portfolio website built with **Astro**, **React**, and **TypeScript**, featuring elegant animations and a sleek design.
+A modular, open-source portfolio template built with **Astro**, **React**, and **TypeScript**. Designed as a clean, performant foundation for developers to build and showcase their own technical identity.
 
 🌐 **Live Demo**: [kcsujeet.com.np](https://kcsujeet.com.np)
 
