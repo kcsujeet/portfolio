@@ -22,9 +22,8 @@ export function AboutSection() {
               <span className="text-primary font-medium">
                 Senior Full-Stack Engineer
               </span>{" "}
-              with a decade-spanning commitment to technical excellence. My
-              approach to software is rooted in architectural integrity and
-              user-centric results.
+              focused on technical excellence. My approach to software is rooted
+              in architectural integrity and user-centric results.
             </p>
 
             <p>
@@ -51,9 +50,7 @@ export function AboutSection() {
               <h3 className="text-primary font-mono text-xs uppercase tracking-widest mb-4">
                 Professional Focus
               </h3>
-              <p className="text-sm font-medium">
-                Full-Stack Architecture
-              </p>
+              <p className="text-sm font-medium">Full-Stack Architecture</p>
               <p className="text-xs text-muted-foreground mt-1">
                 React, Ruby on Rails
               </p>

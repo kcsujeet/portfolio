@@ -161,7 +161,7 @@ export function ProjectsSection() {
           ))}
           {/* View All Card */}
           <div className="bg-surface-2 p-10 flex flex-col items-center justify-center text-center space-y-6">
-            <h4 className="font-serif text-xl italic text-muted-foreground">
+            <h4 className="font-serif text-xl text-muted-foreground">
               Exploring more?
             </h4>
             <Button

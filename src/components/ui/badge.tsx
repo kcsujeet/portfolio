@@ -9,9 +9,9 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--badge)] text-[var(--badge-fg)] border-transparent",
-        outline: "border-current/30 text-[var(--badge)] bg-transparent",
-        soft: "bg-current/15 text-[var(--badge)] border-transparent",
+        default: "bg-(--badge) text-(--badge-fg) border-transparent",
+        outline: "border-current/30 text-(--badge) bg-transparent",
+        soft: "bg-current/15 text-(--badge) border-transparent",
       },
       color: {
         primary:

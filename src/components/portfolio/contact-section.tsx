@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { Activity, Mail } from "lucide-react";
 import { SocialMediaLinks } from "./social-media-links";
 
 export function ContactSection() {
@@ -25,7 +25,7 @@ export function ContactSection() {
 
           <div className="grid sm:grid-cols-2 gap-6 w-full max-w-2xl text-left">
             <a href="mailto:sujeetkc45@gmail.com" className="group h-full">
-              <div className="h-full p-8 border border-border bg-background hover:border-primary transition-all duration-300 rounded-sm flex flex-col gap-6">
+              <div className="h-full p-8 border border-border bg-background hover:border-primary/50 hover:bg-surface-1/50 transition-all duration-300 rounded-sm flex flex-col gap-6">
                 <div className="size-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
                   <Mail className="size-5" />
                 </div>
@@ -40,20 +40,16 @@ export function ContactSection() {
               </div>
             </a>
 
-            <div className="p-8 border border-border bg-background rounded-sm flex flex-col gap-6">
-              <div className="size-12 bg-surface-2 rounded-full flex items-center justify-center">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                </span>
+            <div className="group p-8 border border-border bg-background hover:border-primary/50 hover:bg-surface-1/50 transition-all duration-300 rounded-sm flex flex-col gap-6">
+              <div className="size-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+                <Activity className="size-5" />
               </div>
               <div className="space-y-4">
                 <h3 className="font-mono text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
                   Inquiry Status
                 </h3>
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Selective Engagement</p>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Listening for opportunities. Expect a response within 24-48
                     business hours.
                   </p>
@@ -63,7 +59,7 @@ export function ContactSection() {
           </div>
 
           <div className="flex flex-col items-center gap-8 pt-12">
-            <div className="w-px h-16 bg-gradient-to-b from-border to-transparent" />
+            <div className="w-px h-16 bg-linear-to-b from-border to-transparent" />
             <div className="flex justify-center gap-8 lg:hidden">
               <SocialMediaLinks />
             </div>

@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--btn)] text-[var(--btn-fg)] hover:opacity-90",
+        default: "bg-(--btn) text-(--btn-fg) hover:opacity-90",
         outline:
-          "border border-current/30 text-[var(--btn)] bg-background shadow-xs hover:bg-current/5",
+          "border border-current/30 text-(--btn) bg-background shadow-xs hover:bg-current/5",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        soft: "bg-current/15 text-[var(--btn)] hover:bg-current/20",
-        ghost: "text-[var(--btn)] hover:bg-current/10",
-        link: "text-[var(--btn)] underline-offset-4 hover:underline",
+        soft: "bg-current/15 text-(--btn) hover:bg-current/20",
+        ghost: "text-(--btn) hover:bg-current/10",
+        link: "text-(--btn) underline-offset-4 hover:underline",
       },
       color: {
         primary: "[--btn:var(--primary)] [--btn-fg:var(--primary-foreground)]",
