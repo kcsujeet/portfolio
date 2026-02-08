@@ -7,9 +7,9 @@ const experiences = [
     role: JOB_TITLE,
     company: "Event Temple",
     description:
-      "Architected the migration from legacy Angular.js to a modern Next.js stack, achieving an 80% performance gain. Leading technical strategy for a platform serving over 2,000 global hotel customers.",
+      "Architected the migration from legacy Angular.js to Next.js and designed high-performance APIs, significantly improving both front-end responsiveness and back-end efficiency for over 2,000 global hotel customers.",
     tech: ["Next.js", "React", "Ruby on Rails", "Storybook"],
-    highlight: "80% Performance Boost",
+    highlight: "Performance Optimization",
   },
   {
     period: "2021 — 2022",
