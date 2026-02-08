@@ -52,10 +52,10 @@ export function AboutSection() {
                 Professional Focus
               </h3>
               <p className="text-sm font-medium">
-                User Experience & Full-Stack Architecture
+                Full-Stack Architecture
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                React, Rails, Node.js
+                React, Ruby on Rails
               </p>
             </div>
           </div>
