@@ -1,5 +1,6 @@
-import { Menu, Terminal, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Logo } from "@/components/ui/logo";
 import { SocialMediaLinks } from "./social-media-links";
 
 const sections = ["home", "about", "experience", "projects", "contact"];
@@ -70,10 +71,8 @@ export function Header() {
       <header className="fixed top-0 left-0 right-0 z-40 bg-background/60 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* Logo/Brand - Left Side */}
-          <div className="flex items-center gap-3">
-            <div className="size-8 bg-primary/10 border border-primary/20 flex items-center justify-center rounded-sm">
-              <Terminal className="size-4 text-primary" />
-            </div>
+          <div className="flex items-center gap-2">
+            <Logo size={40} />
             <span className="font-mono text-sm font-bold tracking-tighter text-foreground">
               SUJEET.KC
             </span>
@@ -88,7 +87,7 @@ export function Header() {
                   type="button"
                   key={section}
                   onClick={() => scrollToSection(section)}
-                  className={`font-mono text-xs uppercase tracking-ultrawide transition-all duration-300 hover:text-primary ${
+                  className={`font-mono text-xs uppercase tracking-widest transition-all duration-300 hover:text-primary ${
                     isActive
                       ? "text-primary font-bold"
                       : "text-muted-foreground hover:text-foreground"

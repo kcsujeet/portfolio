@@ -4,7 +4,7 @@ import { JOB_TITLE } from "@/lib/constants";
 
 const ogTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
 const ogDescription = `Senior Full-Stack Engineer specializing in React, Ruby on Rails, and Astro. Focused on building high-performance, scalable web applications and solving complex architectural challenges.`;
-const logoUrl = "/logo.png";
+const logoUrl = "/logo.svg";
 const siteUrl = "https://kcsujeet.com.np/";
 const ogType = "website";
 const ogSiteName = "Sujeet Kc | Portfolio";
@@ -86,7 +86,7 @@ const websiteSchema = {
     <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={new URL(logoUrl, siteUrl)} />
 
-    <link rel="icon" type="image/png" href={logoUrl} />
+    <link rel="icon" type="image/svg+xml" href={logoUrl} sizes="any" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- JSON-LD Structured Data -->

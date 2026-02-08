@@ -1,5 +1,5 @@
-import { Terminal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Logo } from "@/components/ui/logo";
 import { JOB_TITLE } from "@/lib/constants";
 
 export function Footer() {
@@ -9,10 +9,8 @@ export function Footer() {
         <div className="grid md:grid-cols-2 gap-20 items-end">
           {/* Left - Identity */}
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="size-8 bg-primary/10 border border-primary/20 flex items-center justify-center rounded-sm">
-                <Terminal className="size-4 text-primary" />
-              </div>
+            <div className="flex items-center gap-2">
+              <Logo size={56} />
               <span className="font-mono text-sm font-bold tracking-tighter">
                 SUJEET.KC
               </span>
