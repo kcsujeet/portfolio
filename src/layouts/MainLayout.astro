@@ -2,23 +2,18 @@
 import "../styles/global.css";
 import { JOB_TITLE } from "@/lib/constants";
 
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
-const ogTitle = `Sujeet Kc - ${JOB_TITLE}`;
-const ogDescription = `${JOB_TITLE} specializing in frontend development with React and backend development with Ruby on Rails. Passionate about building efficient and scalable web applications.`;
+const ogTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
+const ogDescription = `Senior Full-Stack Engineer specializing in React, Ruby on Rails, and Astro. Focused on building high-performance, scalable web applications and solving complex architectural challenges.`;
 const logoUrl = "/logo.png";
 const siteUrl = "https://kcsujeet.com.np/";
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
 const ogType = "website";
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
-const ogSiteName = "Sujeet Kc";
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
-const keywords = "portfolio,software,engineer,developer,react,rubyonrails";
+const ogSiteName = "Sujeet Kc | Portfolio";
+const keywords =
+  "Sujeet Kc, Senior Full-Stack Engineer, Software Architect, Problem Solver, React Developer, Ruby on Rails Expert, PostgreSQL, Postgres, SQL, Redis, Docker, Astro Framework, TypeScript, Web Performance, Scalable Architecture, Canada Developer, Halifax Software Engineer";
 
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
-// biome-ignore lint/correctness/noUnusedVariables: Used in template
-const schema = {
+const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Sujeet Kc",
@@ -33,8 +28,35 @@ const schema = {
     "@type": "Organization",
     name: "Event Temple",
   },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Dalhousie University",
+  },
   description: ogDescription,
   image: new URL(logoUrl, siteUrl).href,
+  knowsAbout: [
+    "Full-Stack Development",
+    "React",
+    "Ruby on Rails",
+    "PostgreSQL",
+    "Postgres",
+    "SQL",
+    "Redis",
+    "Docker",
+    "Astro",
+    "TypeScript",
+    "System Architecture",
+    "Web Performance",
+  ],
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Sujeet Kc Portfolio",
+  url: siteUrl,
+  description: ogDescription,
+  author: "Sujeet Kc",
 };
 ---
 
@@ -68,7 +90,7 @@ const schema = {
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script type="application/ld+json" set:html={JSON.stringify([personSchema, websiteSchema])} />
   </head>
 
   <body class="bg-background text-foreground font-sans selection:bg-primary/30 selection:text-primary-foreground">
