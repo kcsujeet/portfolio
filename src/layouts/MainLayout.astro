@@ -71,10 +71,8 @@ const schema = {
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
 
-  <body>
-    <main
-      class="bg-gray-900 text-white min-h-screen relative overflow-x-hidden font-mono"
-    >
+  <body class="bg-background text-foreground font-sans selection:bg-primary/30 selection:text-primary-foreground">
+    <main class="min-h-screen relative overflow-x-hidden">
       <slot />
     </main>
   </body>

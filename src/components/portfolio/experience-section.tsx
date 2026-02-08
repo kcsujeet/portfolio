@@ -7,82 +7,85 @@ const experiences = [
     role: JOB_TITLE,
     company: "Event Temple",
     description:
-      "Led migration from Angular.js to Next.js, boosted performance by 80%, secured 2000+ hotel customers.",
+      "Architected the migration from legacy Angular.js to a modern Next.js stack, achieving an 80% performance gain. Leading technical strategy for a platform serving over 2,000 global hotel customers.",
     tech: ["Next.js", "React", "Ruby on Rails", "Storybook"],
-    highlight: "80% performance boost",
+    highlight: "80% Performance Boost",
   },
   {
     period: "2021 — 2022",
     role: "Front-End Developer",
     company: "Legalfit",
     description:
-      "Migrated Vue2 to Vue3, transitioned to TypeScript, reduced bugs by 50%.",
-    tech: ["Vue3", "TypeScript", "Django"],
-    highlight: "50% bug reduction",
+      "Led the transition from Vue 2 to Vue 3 with a full Type-Safe implementation. Standardized UI components and reduced production bug reports by 50%.",
+    tech: ["Vue 3", "TypeScript", "Django"],
+    highlight: "50% Reliability Increase",
   },
   {
     period: "2019 — 2021",
     role: "Software Engineer",
     company: "Tekvortex",
     description:
-      "Built dependency mapping with D3.js, contributed to $500k annual profit.",
-    tech: ["D3.js", "Angular", "Ruby on Rails", "PostgreSQL"],
-    highlight: "$500k profit impact",
+      "Developed high-complexity dependency mapping visualizations using D3.js. Contributed to core features that drove $500k in annual profit growth.",
+    tech: ["D3.js", "Ruby on Rails", "PostgreSQL"],
+    highlight: "$500k ARR Contribution",
   },
 ];
 
 export function ExperienceSection() {
   return (
-    <section
-      id="experience"
-      className="min-h-screen flex items-center px-8 py-20"
-    >
+    <section id="experience" className="min-h-screen py-32 px-8 bg-background">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-2 mb-16">
-          <span className="font-mono text-sm text-emerald-400">03.</span>
-          <h2 className="text-3xl md:text-4xl font-bold">Experience</h2>
+        <div className="flex items-center gap-4 mb-24">
+          <span className="font-mono text-sm text-primary/60">03.</span>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold tracking-tight">
+            Professional Journey
+          </h2>
         </div>
 
-        <div className="space-y-16">
+        <div className="space-y-24">
           {experiences.map((exp) => (
-            <div key={exp.company} className="group relative">
-              <div className="grid lg:grid-cols-4 gap-8 items-start">
-                <div className="lg:text-right">
-                  <span className="font-mono text-sm text-emerald-400">
-                    {exp.period}
-                  </span>
+            <div
+              key={exp.company}
+              className="group flex flex-col md:flex-row gap-8 md:gap-20"
+            >
+              <div className="md:w-1/4 pt-1">
+                <span className="font-mono text-xs uppercase tracking-megawide text-muted-foreground group-hover:text-primary transition-colors">
+                  {exp.period}
+                </span>
+              </div>
+
+              <div className="md:w-3/4 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                  <div className="space-y-1">
+                    <h3 className="text-2xl font-serif font-bold text-foreground">
+                      {exp.role}
+                    </h3>
+                    <p className="text-primary font-sans text-lg font-medium italic">
+                      {exp.company}
+                    </p>
+                  </div>
+                  <Badge
+                    variant="soft"
+                    color="primary"
+                    className="font-mono text-xs uppercase tracking-wider py-1 px-3"
+                  >
+                    {exp.highlight}
+                  </Badge>
                 </div>
 
-                <div className="lg:col-span-3">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold text-white group-hover:text-emerald-400 transition-colors">
-                        {exp.role}
-                      </h3>
-                      <p className="text-gray-300">{exp.company}</p>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className="border-emerald-400 text-emerald-400 w-fit mt-2 lg:mt-0"
+                <p className="text-muted-foreground text-lg leading-relaxed font-sans max-w-3xl">
+                  {exp.description}
+                </p>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  {exp.tech.map((tech) => (
+                    <span
+                      key={tech}
+                      className="font-mono text-xs uppercase tracking-widest text-foreground/60 border border-border px-3 py-1 bg-surface-1"
                     >
-                      {exp.highlight}
-                    </Badge>
-                  </div>
-
-                  <p className="text-gray-200 mb-4 leading-relaxed">
-                    {exp.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="font-mono text-xs bg-gray-800 px-3 py-1 text-emerald-400 hover:scale-110 transform transition-transform"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>

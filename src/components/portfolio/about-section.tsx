@@ -3,75 +3,94 @@ import { calculateYearsOfExperience } from "@/lib/utils";
 export function AboutSection() {
   const yearsOfExperience = calculateYearsOfExperience(new Date("2019-02-01"));
   return (
-    <section id="about" className="min-h-screen flex items-center px-8 py-20">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <div className="flex items-center gap-2 mb-6">
-            <span className="font-mono text-sm text-emerald-400">02.</span>
-            <h2 className="text-3xl md:text-4xl font-bold">About Me</h2>
+    <section
+      id="about"
+      className="min-h-screen flex items-center px-8 py-20 bg-surface-1/50"
+    >
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-20 items-start">
+        <div className="space-y-12">
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-sm text-primary/60">02.</span>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold tracking-tight">
+              About
+            </h2>
           </div>
 
-          <div className="space-y-6 text-gray-200 leading-relaxed">
+          <div className="space-y-8 text-foreground/85 leading-relaxed font-sans text-lg">
             <p>
-              I'm a passionate full-stack engineer who loves turning complex
-              problems into elegant solutions. My journey began in Nepal and led
-              me to Halifax, where I earned my Master's in Applied Computer
-              Science.
+              I am a{" "}
+              <span className="text-primary font-medium">
+                Senior Full-Stack Engineer
+              </span>{" "}
+              with a decade-spanning commitment to technical excellence. My
+              approach to software is rooted in architectural integrity and
+              user-centric results.
             </p>
 
             <p>
-              I specialize in building exceptional digital experiences with a
-              focus on performance and user experience. Whether it's migrating
-              legacy systems or building from scratch, I bring both technical
-              expertise and creative problem-solving to every project.
-            </p>
-
-            <p>
-              When I'm not coding, you'll find me on a trek to the himalayas,
-              taking photos with my camera, or enjoying a good cup of ginger tea
-              with friends and family.
+              With over {yearsOfExperience} years of experience, I have led
+              technical migrations, optimized performance-critical systems, and
+              bridged the gap between complex business logic and intuitive
+              frontend interfaces.
             </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-12 pt-8 border-t border-border">
             <div>
-              <h3 className="text-emerald-400 font-semibold mb-2">Education</h3>
-              <p className="text-sm text-gray-300">Master's in Applied CS</p>
-              <p className="text-sm text-gray-300">Dalhousie University</p>
+              <h3 className="text-primary font-mono text-xs uppercase tracking-widest mb-4">
+                Academic Root
+              </h3>
+              <p className="text-sm font-medium">
+                Master's in Applied Computer Science
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Dalhousie University, Halifax
+              </p>
             </div>
             <div>
-              <h3 className="text-emerald-400 font-semibold mb-2">
-                Experience
+              <h3 className="text-primary font-mono text-xs uppercase tracking-widest mb-4">
+                Professional Focus
               </h3>
-              <p className="text-sm text-gray-300">
-                {yearsOfExperience}+ Years
+              <p className="text-sm font-medium">
+                User Experience & Full-Stack Architecture
               </p>
-              <p className="text-sm text-gray-300">Full-Stack Development</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                React, Rails, Node.js
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="relative">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            {[
-              "TypeScript",
-              "React.js",
-              "Next.js",
-              "Astro.js",
-              "Vue.js",
-              "Tailwind CSS",
-              "Ruby on Rails",
-              "Node.js",
-              "PostgreSQL",
-            ].map((skill) => (
-              <div
-                key={skill}
-                className="bg-gray-800 border border-gray-700 p-3 text-center hover:border-emerald-400 transition-colors duration-300 hover:scale-105 transform"
-              >
-                <span className="text-sm font-mono">{skill}</span>
-              </div>
-            ))}
+        <div className="relative lg:pt-20">
+          <div className="bg-surface-2 border border-border p-8 rounded-sm shadow-2xl">
+            <h3 className="text-primary font-mono text-xs uppercase tracking-widest mb-8 text-center lg:text-left">
+              Technical Arsenal
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {[
+                "TypeScript",
+                "React.js",
+                "Next.js",
+                "Ruby on Rails",
+                "PostgreSQL",
+                "Node.js",
+                "Astro.js",
+                "Vue.js",
+                "Tailwind CSS",
+              ].map((skill) => (
+                <div
+                  key={skill}
+                  className="bg-background/40 border border-border/50 py-3 px-2 text-center transition-all duration-300 hover:border-primary hover:bg-primary/5 group"
+                >
+                  <span className="text-xs font-mono group-hover:text-primary transition-colors">
+                    {skill}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
+          {/* Decorative element */}
+          <div className="absolute -bottom-4 -right-4 size-32 bg-primary/5 -z-10" />
         </div>
       </div>
     </section>

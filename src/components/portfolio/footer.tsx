@@ -3,38 +3,46 @@ import { JOB_TITLE } from "@/lib/constants";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-700 bg-gray-800/30 backdrop-blur-md">
-      <div className="max-w-6xl mx-auto px-8 py-12">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
+    <footer className="bg-surface-1 border-t border-border">
+      <div className="max-w-6xl mx-auto px-8 py-16">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* Left - Branding */}
-          <div>
-            <div className="flex items-center gap-2 mb-2 justify-center md:justify-start">
-              <Terminal className="w-5 h-5 text-emerald-400" />
-              <span className="font-mono text-lg font-bold text-emerald-400">
-                SKC
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="size-6 bg-primary/10 border border-primary/20 flex items-center justify-center rounded-sm">
+                <Terminal className="size-3 text-primary" />
+              </div>
+              <span className="font-mono text-sm font-bold tracking-tighter">
+                SKC.DEV
               </span>
             </div>
-            <p className="text-sm text-gray-400 text-center md:text-left">
-              {JOB_TITLE}
+            <p className="text-muted-foreground text-sm font-sans max-w-xs leading-relaxed">
+              {JOB_TITLE} specializing in high-performance web architectures and
+              resilient systems.
             </p>
           </div>
 
-          {/* Center - Copyright */}
-          <div className="text-center md:text-right">
-            <p className="font-mono text-sm text-gray-400">
-              © {new Date().getFullYear()} All rights reserved
-            </p>
-            <p className="font-mono text-xs text-gray-500 mt-1">
-              Designed & Built by Sujeet Kc
-            </p>
+          {/* Right - Meta Info */}
+          <div className="flex flex-col md:items-end justify-between h-full">
+            <div className="space-y-1 md:text-right">
+              <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+                © {new Date().getFullYear()} Sujeet Kc
+              </p>
+              <p className="font-serif italic text-sm text-foreground/60">
+                Architected in Halifax, NS
+              </p>
+            </div>
+
+            <div className="mt-8 md:mt-0">
+              <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/50">
+                v2.0.0 {/* Built with Astro */}
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Bottom - Additional Info */}
-        <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-          <p className="font-mono text-xs text-gray-500">
-            Built with Astro, TypeScript, and Tailwind CSS.
-          </p>
+        <div className="mt-16 pt-8 border-t border-border/30 flex justify-center">
+          <div className="size-1 rounded-full bg-border" />
         </div>
       </div>
     </footer>

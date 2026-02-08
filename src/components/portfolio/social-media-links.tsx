@@ -5,25 +5,21 @@ const socialLinks = [
     name: "GitHub",
     url: "https://github.com/kcsujeet",
     icon: Github,
-    color: "text-gray-300 hover:text-emerald-400",
   },
   {
     name: "LinkedIn",
     url: "https://linkedin.com/in/kc-sujeet",
     icon: Linkedin,
-    color: "text-gray-300 hover:text-emerald-400",
   },
   {
     name: "Email",
     url: "mailto:sujeetkc45@gmail.com",
     icon: Mail,
-    color: "text-gray-300 hover:text-emerald-400",
   },
   {
     name: "Dev.to",
     url: "https://dev.to/kcsujeet",
     icon: Globe,
-    color: "text-gray-300 hover:text-emerald-400",
   },
 ];
 
@@ -34,11 +30,11 @@ export function SocialMediaLinks() {
         href={social.url}
         target={social.name !== "Email" ? "_blank" : undefined}
         rel={social.name !== "Email" ? "noopener noreferrer" : undefined}
-        className={`block p-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg transition-all duration-300 hover:scale-110 hover:bg-gray-700/80 hover:border-emerald-400 ${social.color}`}
+        className="group block p-2 border border-border/50 bg-background/50 backdrop-blur-sm rounded-sm transition-all duration-300 hover:border-primary hover:bg-primary/5 hover:-translate-y-1"
         title={social.name}
         aria-label={social.name}
       >
-        <social.icon className="w-5 h-5" />
+        <social.icon className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
       </a>
     </div>
   ));
