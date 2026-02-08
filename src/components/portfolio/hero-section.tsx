@@ -28,16 +28,12 @@ export function HeroSection() {
         </div>
 
         <div className="max-w-2xl">
-          <p className="text-xl md:text-2xl text-foreground/80 mb-10 leading-relaxed font-sans font-light">
-            <span className="text-foreground font-semibold uppercase tracking-tighter mr-2">
+          <p className="text-xl text-foreground/80 mb-10 leading-relaxed font-sans font-light">
+            <span className="font-semibold uppercase tracking-tighter mr-2">
               {JOB_TITLE}
             </span>
-            specializing in building
-            <strong className="font-bold mx-1">robust</strong>
-            and
-            <strong className="font-bold mx-1">efficient</strong>
-            applications with {yearsOfExperience}+ years of technical leadership
-            in React and Rails.
+            specializing in building robust and efficient applications with{" "}
+            {yearsOfExperience}+ years of experience.
           </p>
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-4 text-xs text-muted-foreground font-mono uppercase tracking-widest">

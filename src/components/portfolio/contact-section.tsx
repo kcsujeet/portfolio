@@ -13,11 +13,11 @@ export function ContactSection() {
             <div className="flex items-center justify-center gap-4">
               <span className="font-mono text-sm text-primary/60">05.</span>
               <h2 className="text-4xl md:text-5xl font-serif font-bold tracking-tight">
-                Direct Access
+                Contact
               </h2>
             </div>
             <p className="text-muted-foreground font-sans text-xl max-w-2xl mx-auto leading-relaxed">
-              Always interested in unique technical challenges and high-impact
+              Always interested in complex problems and high-impact
               collaborations. Feel free to reach out if you're building
               something that requires a thoughtful full-stack perspective.
             </p>
@@ -33,7 +33,7 @@ export function ContactSection() {
                   <h3 className="font-mono text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
                     Email Communication
                   </h3>
-                  <p className="text-lg font-medium tracking-tight border-b border-primary/10 group-hover:border-primary transition-all inline-block">
+                  <p className="text-lg font-medium tracking-tight border-b border-primary/10 transition-all inline-block text-muted-foreground group-hover:decoration-primary underline">
                     sujeetkc45@gmail.com
                   </p>
                 </div>
