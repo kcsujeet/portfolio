@@ -14,6 +14,15 @@ const projects = [
     live: "https://ilamy.dev",
   },
   {
+    name: "testoise",
+    description:
+      "Lightweight and fully type-safe lazy test variables for Bun, Vitest, Jest, and Node.js. Inspired by RSpec.",
+    tech: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
+    year: "2026",
+    status: "Open Source",
+    code: "https://github.com/kcsujeet/testoise",
+  },
+  {
     name: "Collage Pen",
     description:
       "High-performance online collage maker with a native-like experience, utilizing modern Canvas API techniques.",
@@ -42,15 +51,6 @@ const projects = [
     status: "Live",
     live: "https://fujimee.com",
     code: null,
-  },
-  {
-    name: "testoise",
-    description:
-      "Lightweight and fully type-safe lazy test variables for Bun, Vitest, Jest, and Node.js. Inspired by RSpec.",
-    tech: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
-    year: "2026",
-    status: "Open Source",
-    code: "https://github.com/kcsujeet/testoise",
   },
 ];
 
