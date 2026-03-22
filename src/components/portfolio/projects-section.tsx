@@ -44,13 +44,13 @@ const projects = [
     code: null,
   },
   {
-    name: "bdd-lazy-var-next",
+    name: "testoise",
     description:
-      "Advanced lazy variable evaluation patterns for modern testing runners like Bun and Vitest.",
-    tech: ["TypeScript", "Bun", "Vitest", "NPM"],
-    year: "2025",
+      "Lightweight and fully type-safe lazy test variables for Bun, Vitest, Jest, and Node.js. Inspired by RSpec.",
+    tech: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
+    year: "2026",
     status: "Open Source",
-    code: "https://github.com/kcsujeet/bdd-lazy-var-next",
+    code: "https://github.com/kcsujeet/testoise",
   },
 ];
 
