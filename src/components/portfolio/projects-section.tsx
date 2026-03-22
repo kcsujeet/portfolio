@@ -9,8 +9,8 @@ const projects = [
       "React-first, customizable, and feature-rich calendar library built for performance and developer experience.",
     tech: ["React", "TypeScript", "Tailwind CSS", "Framer Motion", "Bun"],
     year: "2025",
-    status: "Live",
-    code: null,
+    status: ["Live", "Open Source"],
+    github: "https://github.com/kcsujeet/calendar",
     live: "https://ilamy.dev",
   },
   {
@@ -19,8 +19,8 @@ const projects = [
       "Lightweight and fully type-safe lazy test variables for Bun, Vitest, Jest, and Node.js. Inspired by RSpec.",
     tech: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
     year: "2026",
-    status: "Open Source",
-    code: "https://github.com/kcsujeet/testoise",
+    status: ["Open Source"],
+    github: "https://github.com/kcsujeet/testoise",
   },
   {
     name: "Collage Pen",
@@ -28,8 +28,8 @@ const projects = [
       "High-performance online collage maker with a native-like experience, utilizing modern Canvas API techniques.",
     tech: ["Astro", "React", "TypeScript", "Canvas API"],
     year: "2026",
-    status: "Live",
-    code: null,
+    status: ["Live"],
+    github: null,
     live: "https://collagepen.com",
   },
   {
@@ -38,9 +38,9 @@ const projects = [
       "Privacy-centric AI background removal tool using Transformers.js and WASM for local execution.",
     tech: ["Transformers.js", "WebAssembly", "TypeScript", "React"],
     year: "2026",
-    status: "Live",
+    status: ["Live"],
+    github: null,
     live: "https://debackground.com",
-    code: null,
   },
   {
     name: "Fujimee",
@@ -48,9 +48,9 @@ const projects = [
       "Fujifilm-inspired recipe platform architected with Astro, Cloudflare Functions, and Firebase.",
     tech: ["Astro", "Firebase", "Cloudflare", "Tailwind CSS"],
     year: "2025",
-    status: "Live",
+    status: ["Live"],
+    github: null,
     live: "https://fujimee.com",
-    code: null,
   },
 ];
 
@@ -89,31 +89,36 @@ export function ProjectsSection() {
           </a>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-1px bg-border border border-border overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 md:gap-10">
           {projects.map((project) => (
             <div
               key={project.name}
-              className="group bg-background p-10 flex flex-col justify-between transition-colors hover:bg-surface-1"
+              className="group relative flex flex-col justify-between p-8 md:p-10 rounded-sm bg-background border border-border transition-all duration-300 hover:bg-surface-1/50 hover:border-primary/50 hover:-translate-y-1"
             >
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <span className="font-mono text-xs uppercase tracking-ultrawide text-muted-foreground">
                     {project.year}
                   </span>
-                  <Badge
-                    variant="soft"
-                    color={project.status === "Live" ? "success" : "info"}
-                    className="font-mono text-xs uppercase tracking-wider"
-                  >
-                    {project.status}
-                  </Badge>
+                  <div className="flex gap-2">
+                    {project.status.map((status) => (
+                      <Badge
+                        key={status}
+                        variant="soft"
+                        color={status === "Live" ? "success" : "info"}
+                        className="font-mono text-xs uppercase tracking-wider"
+                      >
+                        {status}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
 
                 <h3 className="text-2xl font-serif font-bold mb-4 group-hover:text-primary transition-colors">
                   {project.name}
                 </h3>
 
-                <p className="text-muted-foreground mb-8 leading-relaxed font-sans text-base line-clamp-2">
+                <p className="text-muted-foreground mb-8 leading-relaxed font-sans text-base line-clamp-3">
                   {project.description}
                 </p>
 
@@ -121,7 +126,7 @@ export function ProjectsSection() {
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="font-mono text-xs uppercase tracking-wider px-2 py-1 bg-surface-2 text-foreground/70 border border-border/50"
+                      className="font-mono text-[10px] uppercase tracking-wider px-2 py-1 bg-surface-1 text-foreground/60 border border-border"
                     >
                       {tech}
                     </span>
@@ -143,32 +148,36 @@ export function ProjectsSection() {
                     </a>
                   </Button>
                 )}
-                {project.code && (
+                {project.github && (
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     color="primary"
                     size="sm"
                     asChild
                     className="h-8 text-xs uppercase tracking-widest font-mono font-bold"
                   >
-                    <a href={project.code} target="_blank" rel="noopener">
-                      Source <Github className="size-3 ml-2" />
+                    <a href={project.github} target="_blank" rel="noopener">
+                      GitHub <Github className="size-3 ml-2" />
                     </a>
                   </Button>
                 )}
               </div>
             </div>
           ))}
+
           {/* View All Card */}
-          <div className="bg-surface-2 p-10 flex flex-col items-center justify-center text-center space-y-6">
-            <h4 className="font-serif text-xl text-muted-foreground">
+          <div className="group relative flex flex-col items-center justify-center text-center p-8 md:p-10 rounded-sm bg-surface-2/30 border border-border transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 space-y-6">
+            <h4 className="font-serif text-2xl text-muted-foreground group-hover:text-foreground transition-colors">
               Exploring more?
             </h4>
+            <p className="text-muted-foreground font-sans max-w-[200px] text-sm mb-4">
+              Dive into the full repository archive on GitHub.
+            </p>
             <Button
               variant="soft"
               color="primary"
               asChild
-              className="font-mono text-xs uppercase tracking-megawide font-bold"
+              className="font-mono text-xs uppercase tracking-megawide font-bold px-8 shadow-sm hover:shadow-primary/20"
             >
               <a
                 href="https://github.com/kcsujeet"
