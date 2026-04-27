@@ -1,117 +1,93 @@
-# Sujeet KC - Portfolio Template
+# Sujeet KC — Portfolio
 
-A modular, open-source portfolio template built with **Astro**, **React**, and **TypeScript**. Designed as a clean, performant foundation for developers to build and showcase their own technical identity.
+Personal portfolio site for Sujeet KC, Senior Full-Stack Engineer based in Halifax.
 
-🌐 **Live Demo**: [kcsujeet.com.np](https://kcsujeet.com.np)
+**Live**: [kcsujeet.com.np](https://kcsujeet.com.np)
 
-## ✨ Features
+## Stack
 
-- **Modern Tech Stack**: Built with Astro 5.8, React 19, and TypeScript
-- **Responsive Design**: Fully responsive across all devices
-- **Interactive Components**: Command palette, section navigation, and hover effects
-- **Performance Optimized**: Fast loading with Astro's static site generation
-- **SEO Friendly**: Built-in sitemap generation and meta tags
+- **[Astro](https://astro.build/)** — static site generator. Pure Astro components, no JS framework runtime ships to the client.
+- **[Tailwind CSS v4](https://tailwindcss.com/)** — utility-first styling. Design tokens defined in `@theme` blocks in `src/styles/global.css`.
+- **[Bun](https://bun.sh/)** — package manager and runtime.
+- **[Biome](https://biomejs.dev/)** — formatter and linter.
 
-## 🛠️ Tech Stack
+The site is fully static. Zero React (or other JS framework) ships to the browser. The only client-side JavaScript is a small inline `<script>` block in `side-rail.astro` for scroll-position tracking and the native browser handling of `<details>` accordions.
 
-- **Framework**: [Astro](https://astro.build/) - Static site generator
-- **Frontend**: [React](https://reactjs.org/) - UI library
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- **Package Manager**: [Bun](https://bun.sh/) - Fast JavaScript runtime & package manager
-- **Icons**: [Lucide React](https://lucide.dev/) - Beautiful SVG icons
-- **UI Components**: [Radix UI](https://www.radix-ui.com/) - Headless UI components
+## Getting started
 
-## 🚀 Getting Started
+Prerequisites: [Bun](https://bun.sh/) installed.
 
-### Prerequisites
+```bash
+git clone https://github.com/kcsujeet/portfolio.git
+cd portfolio
+bun install
+bun run dev
+```
 
-- [Bun](https://bun.sh/) installed on your machine
+Open [http://localhost:5000](http://localhost:5000).
 
-### Installation
+## Scripts
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/kcsujeet/portfolio.git
-   cd portfolio
-   ```
+- `bun run dev` — start dev server (port 5000)
+- `bun run build` — build the static site to `dist/`
+- `bun run preview` — preview the production build
+- `bun run typecheck` — run TypeScript checks
+- `bun run lint` — run Biome linter
+- `bun run format` — format with Biome
+- `bun run ci` — lint, typecheck, then build
 
-2. Install dependencies:
-   ```bash
-   bun install
-   ```
-
-3. Start the development server:
-   ```bash
-   bun run dev
-   ```
-
-4. Open [http://localhost:5000](http://localhost:5000) in your browser
-
-## 📜 Available Scripts
-
-- **`bun run dev`** - Start development server
-- **`bun run build`** - Build for production
-- **`bun run preview`** - Preview production build locally
-
-## 🏗️ Project Structure
+## Project structure
 
 ```
 src/
 ├── components/
-│   ├── portfolio/          # Portfolio-specific components
-│   │   ├── header.tsx      # Navigation header with command palette
-│   │   ├── hero-section.tsx
-│   │   ├── about-section.tsx
-│   │   ├── experience-section.tsx
-│   │   ├── projects-section.tsx
-│   │   ├── contact-section.tsx
-│   │   └── ...
-│   └── ui/                 # Reusable UI components
+│   └── portfolio/
+│       ├── HeroSection.astro
+│       ├── AboutSection.astro
+│       ├── ExperienceSection.astro
+│       ├── ProjectsSection.astro
+│       ├── ContactSection.astro
+│       ├── Footer.astro
+│       ├── side-rail.astro       Side rail + mobile pill, with inline JS for active highlight
+│       ├── Mono.astro            Mono label primitive
+│       ├── Pulse.astro           Pulsing dot indicator
+│       ├── Reveal.astro          CSS-keyframe fade-in wrapper
+│       └── SectionHead.astro     Section heading (numeral, label, optional blurb)
 ├── layouts/
-│   └── MainLayout.astro    # Main page layout
+│   └── MainLayout.astro          HTML shell, SEO, ambient atmosphere layer
+├── lib/
+│   └── constants.ts              JOB_TITLE, NAME, SITE_URL, START_DATE
 ├── pages/
-│   └── index.astro         # Home page
+│   ├── index.astro
+│   └── robots.txt.ts
 └── styles/
-    └── global.css          # Global styles and animations
+    └── global.css                Design tokens, @utility rules, keyframes
 ```
 
-## 🎨 Key Features
+## Design system
 
-### Command Palette
-- **Desktop**: Traditional navigation bar with smooth scrolling
-- **Mobile**: Compact command palette trigger (⌘K or Ctrl+K)
-- **Keyboard Shortcuts**: Quick navigation with keyboard
+Defined in `src/styles/global.css` via Tailwind v4's `@theme inline` directive. Follows the [shadcn](https://ui.shadcn.com/) semantic-token convention:
 
-### Sections
-- **Hero**: Introduction with gradient backgrounds
-- **About**: Skills showcase with staggered animations
-- **Experience**: Professional timeline with hover effects
-- **Projects**: Portfolio showcase with interactive cards
-- **Contact**: Social links and contact information
+- **Colors**: `background`, `foreground`, `primary`, `secondary`, `success`, `info`, `warning`, `destructive`, `muted`, `accent`, `card`, `border`, `input`, `ring`, plus `surface-1` and `surface-2`
+- **Radii**: `--radius` with `sm`, `md`, `lg`, `xl` variants
+- **Fonts**: Geist (sans), Geist Mono
+- **Custom utilities**: `radial-center`, `radial-from-top`, `radial-from-top-left`, `radial-from-right`, `radial-from-bottom` for ambient gradient backgrounds
+- **Animation**: `animate-reveal` keyframe driven by `animation-delay` for staggered fade-ins on initial paint
 
-## 🔧 Customization
+Components use semantic Tailwind utilities throughout (`text-primary`, `bg-card`, `border-border`, `text-foreground/65`). No arbitrary `[var(--color)]` values.
 
-1. **Personal Information**: Update content in each section component
-2. **Styling**: Modify Tailwind classes or add custom CSS in `global.css`
-4. **Colors**: Update the color scheme in Tailwind configuration
+## Sections
 
-## 📝 Recent Updates
+- **Hero**: Display name, intro, CTA links (View projects, Download resume, Let's talk)
+- **About**: Bio paragraphs, education / focus / location grid, core stack chips
+- **Experience**: Native `<details>` cards with role, impact pill, summary, expandable bullets, and stack tags
+- **Projects**: Featured + grid layout, with status pills (Live, Open Source) and tech chips
+- **Contact**: Email card with hover glow, social links, inquiry status
 
-- ✅ Removed Framer Motion dependency for better performance
-- ✅ Implemented CSS animations with Tailwind
-- ✅ Added responsive navigation (traditional header + command palette)
-- ✅ Enhanced hover effects and transitions
-- ✅ Improved mobile responsiveness
-- ✅ Added scroll progress indicator
+Side rail navigation:
+- **Desktop** (≥1024px): fixed left rail with numbered section labels and an active highlight that follows scroll position
+- **Mobile / tablet** (<1024px): fixed bottom-centered icon pill
 
-## 📄 License
+## License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## ⭐ Support
-
-If you found this project helpful, please consider giving it a star on GitHub!
-
----
-
-**Built with ❤️ by [Sujeet KC](https://kcsujeet.com.np)**
+MIT
