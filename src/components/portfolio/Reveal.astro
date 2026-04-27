@@ -1,0 +1,16 @@
+---
+type Props = {
+  delay?: number;
+  class?: string;
+  as?: string;
+};
+const { delay = 0, class: className = "", as = "div" } = Astro.props;
+const Tag = as;
+---
+
+<Tag
+  style={`animation-delay: ${delay}ms`}
+  class:list={["animate-reveal", className]}
+>
+  <slot />
+</Tag>

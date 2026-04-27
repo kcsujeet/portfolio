@@ -1,0 +1,26 @@
+---
+import Mono from "./Mono.astro";
+---
+
+<footer class="mt-24 pt-8 pb-12 border-t border-border">
+  <div class="flex items-center justify-between flex-wrap gap-4">
+    <div class="flex items-baseline gap-3 text-white">
+      <span class="text-base">
+        SUJEET<span class="text-primary">·</span>KC
+      </span>
+      <Mono class="text-foreground/30">Senior Full-Stack Engineer</Mono>
+    </div>
+    <Mono class="text-foreground/30">
+      © 2026 · BUILT WITH{" "}
+      <a
+        href="https://astro.build"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hover:text-primary transition-colors"
+      >
+        ASTRO
+      </a>
+      {" "}· v3.0
+    </Mono>
+  </div>
+</footer>

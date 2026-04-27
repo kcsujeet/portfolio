@@ -1,0 +1,33 @@
+---
+import Mono from "./Mono.astro";
+import Reveal from "./Reveal.astro";
+
+type Props = {
+  n: string;
+  label: string;
+  anchor: string;
+};
+const { n, label, anchor } = Astro.props;
+const hasBlurb = Astro.slots.has("default");
+---
+
+<div id={anchor} class="pt-24 pb-10 scroll-mt-24">
+  <Reveal>
+    <div class="flex items-baseline gap-6">
+      <span class="text-foreground/15 text-5xl md:text-6xl font-medium tabular-nums tracking-tight leading-none">
+        {n}
+      </span>
+      <span class="block flex-1 h-px bg-border -translate-y-2" />
+      <Mono class="text-primary">{label}</Mono>
+    </div>
+  </Reveal>
+  {
+    hasBlurb && (
+      <Reveal delay={80}>
+        <div class="mt-6 text-foreground/65 text-base md:text-lg max-w-prose space-y-4">
+          <slot />
+        </div>
+      </Reveal>
+    )
+  }
+</div>

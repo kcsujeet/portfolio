@@ -1,0 +1,109 @@
+---
+// Lucide icon paths. viewBox 24, currentColor stroke.
+const SECTIONS = [
+  {
+    id: "home",
+    label: "HOME",
+    icon: `<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>`,
+  },
+  {
+    id: "about",
+    label: "ABOUT",
+    icon: `<circle cx="12" cy="7" r="4"/><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>`,
+  },
+  {
+    id: "experience",
+    label: "EXPERIENCE",
+    icon: `<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>`,
+  },
+  {
+    id: "projects",
+    label: "PROJECTS",
+    icon: `<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>`,
+  },
+  {
+    id: "contact",
+    label: "CONTACT",
+    icon: `<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>`,
+  },
+];
+---
+
+<!-- Desktop: fixed left vertical rail -->
+<nav
+  aria-label="Section navigation"
+  class="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 z-30 flex-col gap-1"
+>
+  {
+    SECTIONS.map((s, i) => (
+      <a
+        href={`#${s.id}`}
+        data-rail-link={s.id}
+        class="group flex items-center gap-3 py-2.5 pr-2"
+      >
+        <span class="block h-px w-4 bg-foreground/30 group-hover:w-7 group-hover:bg-foreground/55 group-data-active:w-10 group-data-active:bg-primary group-data-active:group-hover:bg-primary transition-all duration-500" />
+        <span class="font-mono text-xs uppercase tracking-widest text-foreground/30 group-hover:text-foreground/80 group-data-active:text-primary group-data-active:group-hover:text-primary transition-colors">
+          0{i + 1}. {s.label}
+        </span>
+      </a>
+    ))
+  }
+</nav>
+
+<!-- Mobile/tablet: fixed bottom centered pill -->
+<nav
+  aria-label="Section navigation"
+  class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 px-2 py-2 bg-background/80 backdrop-blur-md border border-border rounded-full"
+>
+  {
+    SECTIONS.map((s) => (
+      <a
+        href={`#${s.id}`}
+        data-rail-link={s.id}
+        aria-label={s.label}
+        class="group inline-flex items-center justify-center w-10 h-10 rounded-full"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+          class="w-5 h-5 text-foreground/30 group-hover:text-foreground/80 group-data-active:text-primary transition-colors"
+          set:html={s.icon}
+        />
+      </a>
+    ))
+  }
+</nav>
+
+<script>
+  const links =
+    document.querySelectorAll<HTMLAnchorElement>("[data-rail-link]");
+  const sectionIds = new Set(
+    Array.from(links).map((l) => l.dataset.railLink ?? ""),
+  );
+  const sections = Array.from(sectionIds)
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  const setActive = (id: string) => {
+    links.forEach((l) => {
+      if (l.dataset.railLink === id) l.setAttribute("data-active", "");
+      else l.removeAttribute("data-active");
+    });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      }
+    },
+    { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+  );
+
+  sections.forEach((s) => observer.observe(s));
+</script>

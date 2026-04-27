@@ -1,0 +1,11 @@
+---
+type Props = {
+  class?: string;
+};
+const { class: className = "" } = Astro.props;
+---
+
+<span class:list={["relative inline-flex w-1.5 h-1.5", className]}>
+  <span class="absolute inset-0 rounded-full bg-primary animate-ping opacity-60" />
+  <span class="absolute inset-0 rounded-full bg-primary" />
+</span>

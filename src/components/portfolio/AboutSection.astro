@@ -1,0 +1,75 @@
+---
+import Mono from "./Mono.astro";
+import Reveal from "./Reveal.astro";
+import SectionHead from "./SectionHead.astro";
+
+const STACK = [
+  "TypeScript",
+  "React.js",
+  "Next.js",
+  "Ruby on Rails",
+  "PostgreSQL",
+  "Node.js",
+  "Astro.js",
+  "Vue.js",
+  "Tailwind CSS",
+];
+---
+
+<section data-screen-label="02 About">
+  <SectionHead n="02." label="ABOUT" anchor="about">
+    <p>
+      I'm a <span class="text-white">Senior Full-Stack Engineer</span> based in Halifax, Canada, originally from Nepal.
+    </p>
+    <p>
+      Over the past <span class="text-white">7+ years</span>, I've worked across startups and product teams building SaaS products, internal platforms, and developer tools. My strongest stack is React, TypeScript, and Ruby on Rails, with extensive work across the full stack.
+    </p>
+    <p>
+      At Event Temple, I helped lead a large migration from AngularJS to React, made key architectural decisions, and helped modernize a product used by thousands of hotel customers.
+    </p>
+    <p>
+      Outside of work, I enjoy building side projects, contributing to open source, and writing technical articles about engineering and product development.
+    </p>
+  </SectionHead>
+
+  <div class="mt-12 grid md:grid-cols-3 gap-x-10 gap-y-8 max-w-4xl">
+    <div>
+      <Mono class="text-primary">EDUCATION</Mono>
+      <p class="mt-3 text-white text-base">
+        Master's in Applied Computer Science
+      </p>
+      <p class="mt-1 text-muted-foreground text-sm">
+        Dalhousie University, Halifax
+      </p>
+    </div>
+    <div>
+      <Mono class="text-primary">FOCUS</Mono>
+      <p class="mt-3 text-white text-base">Full-stack architecture</p>
+      <p class="mt-1 text-muted-foreground text-sm">
+        React · Ruby on Rails · large migrations
+      </p>
+    </div>
+    <div>
+      <Mono class="text-primary">LOCATION</Mono>
+      <p class="mt-3 text-white text-base">Halifax, NS</p>
+      <p class="mt-1 text-muted-foreground text-sm">
+        Remote / hybrid · Atlantic time
+      </p>
+    </div>
+  </div>
+
+  <Reveal>
+    <div class="mt-12">
+      <Mono class="text-foreground/45 mb-4 block">CORE STACK</Mono>
+      <div class="flex flex-wrap gap-x-2 gap-y-2 max-w-3xl">
+        {
+          STACK.map((s) => (
+            <Mono class="text-foreground/65 px-2.5 py-1 border border-border rounded-sm hover:border-primary/40 hover:text-primary transition-colors">
+              {s}
+            </Mono>
+          ))
+        }
+      </div>
+    </div>
+  </Reveal>
+</section>

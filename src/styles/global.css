@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -7,8 +7,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
@@ -28,23 +31,70 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
   --color-surface-1: var(--surface-1);
   --color-surface-2: var(--surface-2);
 
   --shadow-primary: 0 0 8px var(--primary);
 
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-serif: "EB Garamond", serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
 
-  --tracking-widest: 0.1em;
-  --tracking-wider: 0.05em;
-  --tracking-ultrawide: 0.2em;
-  --tracking-megawide: 0.3em;
-  --tracking-gigawide: 0.4em;
-  --tracking-terawide: 0.5em;
+  --animate-reveal: reveal 1s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@utility radial-center {
+  --tw-gradient-position: circle;
+  background-image: radial-gradient(var(--tw-gradient-stops, circle));
+}
+@utility radial-from-top {
+  --tw-gradient-position: circle at 50% 0%;
+  background-image: radial-gradient(var(--tw-gradient-stops, circle at 50% 0%));
+}
+@utility radial-from-top-left {
+  --tw-gradient-position: ellipse at 30% 0%;
+  background-image: radial-gradient(var(--tw-gradient-stops, ellipse at 30% 0%));
+}
+@utility radial-from-right {
+  --tw-gradient-position: circle at 80% 50%;
+  background-image: radial-gradient(var(--tw-gradient-stops, circle at 80% 50%));
+}
+@utility radial-from-bottom {
+  --tw-gradient-position: ellipse at 50% 100%;
+  background-image: radial-gradient(var(--tw-gradient-stops, ellipse at 50% 100%));
+}
+
+/* Animated <details> body. The UA stylesheet uses
+   content-visibility:hidden on ::details-content (and display:none on
+   children in older browsers), which suspends layout and breaks
+   transitions. Force the body into layout, then animate via the
+   grid-template-rows trick. */
+details::details-content {
+  content-visibility: visible;
+}
+
+.details-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+details[open] > .details-body {
+  grid-template-rows: 1fr;
+}
+
+.details-body > * {
+  overflow: hidden;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -52,51 +102,82 @@
 :root {
   --radius: 0.125rem;
 
-  /* Core Backgrounds - "Refined Obsidian" */
-  --background: oklch(0.12 0.01 250);
-  --foreground: oklch(0.98 0.01 250);
+  --background: #0c0a08;
+  --foreground: #f4f0e8;
 
-  /* Semantic Tokens */
-  --primary: oklch(0.7 0.15 150);
-  --primary-foreground: oklch(0.12 0.01 250);
+  /* Card is translucent so the ambient glow shows through */
+  --card: oklch(1 0 0 / 0.015);
+  --card-foreground: var(--foreground);
+
+  --primary: oklch(0.72 0.16 301);
+  --primary-foreground: var(--background);
 
   --secondary: oklch(0.45 0.12 260);
-  --secondary-foreground: oklch(0.98 0.01 250);
+  --secondary-foreground: var(--background);
 
-  --success: oklch(0.75 0.18 150);
-  --success-foreground: oklch(0.12 0.01 250);
+  --success: var(--primary);
+  --success-foreground: var(--primary-foreground);
 
   --info: oklch(0.65 0.15 240);
-  --info-foreground: oklch(0.98 0.01 250);
+  --info-foreground: var(--background);
 
   --warning: oklch(0.85 0.15 80);
-  --warning-foreground: oklch(0.12 0.01 250);
+  --warning-foreground: var(--background);
 
   --destructive: oklch(0.55 0.2 25);
-  --destructive-foreground: oklch(0.98 0.01 250);
+  --destructive-foreground: var(--background);
 
-  --muted: oklch(0.25 0.02 250);
-  --muted-foreground: oklch(0.7 0.02 250);
+  --muted: oklch(0.25 0.005 70);
+  --muted-foreground: oklch(1 0 0 / 0.55);
 
-  --accent: oklch(0.3 0.04 250);
-  --accent-foreground: oklch(0.98 0.01 250);
+  --accent: oklch(0.22 0.005 70);
+  --accent-foreground: var(--foreground);
 
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 8%);
+  --border: oklch(1 0 0 / 0.08);
+  --input: oklch(1 0 0 / 0.06);
   --ring: var(--primary);
 
-  --surface-1: oklch(0.14 0.01 250);
-  --surface-2: oklch(0.16 0.01 250);
+  --surface-1: oklch(0.18 0.005 70);
+  --surface-2: oklch(0.22 0.005 70);
+}
 
-  --card: var(--surface-1);
-  --card-foreground: var(--foreground);
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 1px solid var(--primary);
+  outline-offset: 3px;
+}
+
+p,
+h1,
+h2,
+h3 {
+  text-wrap: pretty;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
+    @apply border-border;
   }
 }

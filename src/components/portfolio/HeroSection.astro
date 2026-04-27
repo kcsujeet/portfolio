@@ -1,0 +1,63 @@
+---
+import Mono from "./Mono.astro";
+import Reveal from "./Reveal.astro";
+---
+
+<section
+  id="home"
+  class="min-h-screen pt-32 pb-24 flex flex-col justify-center"
+  data-screen-label="01 Home"
+>
+  <div class="flex items-baseline gap-6 mb-12">
+    <span class="text-foreground/15 text-5xl md:text-6xl font-medium tabular-nums tracking-tight leading-none">
+      01.
+    </span>
+    <span class="block flex-1 h-px bg-border -translate-y-2" />
+    <Mono class="text-primary">SENIOR ENGINEER</Mono>
+  </div>
+
+  <Reveal delay={120}>
+    <h1 class="text-white text-7xl sm:text-8xl lg:text-9xl font-medium tracking-tighter leading-none">
+      Sujeet<span class="text-foreground/45">Kc</span><span class="text-primary">.</span>
+    </h1>
+  </Reveal>
+
+  <Reveal delay={220}>
+    <div class="mt-12 max-w-prose space-y-4 text-xl md:text-2xl">
+      <p class="text-white">
+        I build new products and improve old ones.
+      </p>
+      <p class="text-foreground/80 text-lg">
+        That often means working across product decisions, engineering, and
+        execution to turn ideas into something people actually use.
+      </p>
+    </div>
+  </Reveal>
+
+  <Reveal delay={300}>
+    <div class="mt-10 flex flex-wrap items-center gap-2 text-xs">
+      <a
+        href="#projects"
+        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-primary text-foreground/70 hover:text-primary rounded-sm transition-colors"
+      >
+        View projects
+        <span class="group-hover:translate-y-0.5 transition-transform">↓</span>
+      </a>
+      <a
+        href="/Sujeet_Kc_Resume.pdf"
+        download
+        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-primary text-foreground/70 hover:text-primary rounded-sm transition-colors"
+      >
+        Download resume
+        <span class="group-hover:translate-y-0.5 transition-transform">↓</span>
+      </a>
+      <a
+        href="#contact"
+        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-primary/50 hover:border-primary text-primary rounded-sm transition-colors"
+      >
+        Let's talk
+        <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+      </a>
+    </div>
+  </Reveal>
+</section>

@@ -58,17 +58,22 @@ const websiteSchema = {
   description: ogDescription,
   author: "Sujeet Kc",
 };
+
+const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sujeet Kc</title>
+    <title>Sujeet Kc · Senior Full-Stack Engineer · Halifax</title>
     <meta name="description" content={ogDescription} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content="Sujeet Kc" />
     <link rel="canonical" href={canonicalURL} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Open Graph tags -->
     <meta property="og:title" content={ogTitle} />
@@ -93,8 +98,26 @@ const websiteSchema = {
     <script type="application/ld+json" set:html={JSON.stringify([personSchema, websiteSchema])} />
   </head>
 
-  <body class="bg-background text-foreground font-sans selection:bg-primary/30 selection:text-primary-foreground">
-    <main class="min-h-screen relative overflow-x-hidden">
+  <body class="bg-background text-foreground font-sans">
+    <!-- Atmosphere: ambient primary glows + grain. Blob positions are
+         decorative absolute positioning tuned to the viewport. -->
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div
+        class="absolute -top-[20vh] left-1/2 -translate-x-1/2 w-[120vw] h-[90vh] rounded-full blur-3xl radial-center from-primary/22 to-transparent to-60%"
+      />
+      <div
+        class="absolute top-[60vh] -left-[10vw] w-[70vw] h-[70vh] rounded-full blur-3xl radial-center from-primary/10 to-transparent to-65%"
+      />
+      <div
+        class="absolute inset-0 radial-from-bottom from-black/60 to-transparent to-75%"
+      />
+      <div
+        class="absolute inset-0 opacity-[0.03] mix-blend-overlay"
+        style={`background-image: ${grainSvg};`}
+      />
+    </div>
+
+    <main class="relative z-10 min-h-screen overflow-x-hidden">
       <slot />
     </main>
   </body>

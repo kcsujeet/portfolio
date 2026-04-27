@@ -1,0 +1,65 @@
+---
+import Mono from "./Mono.astro";
+import Pulse from "./Pulse.astro";
+import SectionHead from "./SectionHead.astro";
+
+const SOCIAL: ReadonlyArray<readonly [string, string, string]> = [
+  ["GITHUB", "github.com/kcsujeet", "https://github.com/kcsujeet"],
+  ["LINKEDIN", "linkedin.com/in/kcsujeet", "https://linkedin.com/in/kcsujeet"],
+];
+---
+
+<section data-screen-label="05 Contact">
+  <SectionHead n="05." label="CONTACT" anchor="contact">
+    <p>
+      I'm always interested in ambitious projects and thoughtful collaborations. If you're building something worth talking about, reach out.
+    </p>
+  </SectionHead>
+
+  <div class="grid md:grid-cols-3 gap-3 mt-4">
+    <a
+      href="mailto:sujeetkc45@gmail.com"
+      class="group md:col-span-2 relative block p-8 md:p-10 border border-border rounded-sm bg-card hover:border-primary/30 transition-all overflow-hidden"
+    >
+      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none radial-from-top-left from-primary/15 to-transparent to-60%" />
+      <div class="relative">
+        <Mono class="text-primary">EMAIL COMMUNICATION</Mono>
+        <p class="mt-4 text-white text-3xl md:text-5xl tracking-tight leading-tight break-all">
+          sujeetkc45@gmail.com
+        </p>
+        <div class="mt-6 inline-flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
+          <Mono>WRITE A MESSAGE</Mono>
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </div>
+    </a>
+
+    <div class="relative p-8 border border-border rounded-sm bg-card">
+      <Mono class="text-primary">INQUIRY STATUS</Mono>
+      <div class="mt-4 flex items-center gap-2.5">
+        <Pulse />
+        <span class="text-white text-base">Open to interesting work</span>
+      </div>
+      <p class="mt-4 text-muted-foreground text-sm">
+        Expect a response within 24–48 business hours.
+      </p>
+      <div class="mt-6 space-y-2">
+        {
+          SOCIAL.map(([k, v, h]) => (
+            <a
+              href={h}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group flex items-baseline justify-between gap-3 py-1.5 border-b border-border hover:border-primary/40 transition-colors"
+            >
+              <Mono class="text-muted-foreground">{k}</Mono>
+              <span class="text-foreground/80 text-xs group-hover:text-primary transition-colors">
+                {v}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

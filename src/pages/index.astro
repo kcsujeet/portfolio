@@ -1,26 +1,25 @@
 ---
-import { AboutSection } from "@/components/portfolio/about-section";
-import { ContactSection } from "@/components/portfolio/contact-section";
-import { ExperienceSection } from "@/components/portfolio/experience-section";
-import { Footer } from "@/components/portfolio/footer";
-import { Header } from "@/components/portfolio/header";
-import { HeroSection } from "@/components/portfolio/hero-section";
-import { ProjectsSection } from "@/components/portfolio/projects-section";
+import AboutSection from "@/components/portfolio/AboutSection.astro";
+import ContactSection from "@/components/portfolio/ContactSection.astro";
+import ExperienceSection from "@/components/portfolio/ExperienceSection.astro";
+import Footer from "@/components/portfolio/Footer.astro";
+import HeroSection from "@/components/portfolio/HeroSection.astro";
+import ProjectsSection from "@/components/portfolio/ProjectsSection.astro";
+import SideRail from "@/components/portfolio/side-rail.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 ---
 
 <MainLayout>
-  <Header client:load />
+  <SideRail />
 
-  <HeroSection />
-
-  <AboutSection />
-
-  <ExperienceSection />
-
-  <ProjectsSection />
-
-  <ContactSection />
-
-  <Footer />
+  <div class="relative">
+    <div class="max-w-6xl mx-auto px-8 lg:pl-44 lg:pr-8">
+      <HeroSection />
+      <AboutSection />
+      <ExperienceSection />
+      <ProjectsSection />
+      <ContactSection />
+      <Footer />
+    </div>
+  </div>
 </MainLayout>
