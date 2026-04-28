@@ -5,7 +5,7 @@ import Reveal from "./Reveal.astro";
 
 <section
   id="home"
-  class="min-h-screen pt-32 pb-24 flex flex-col justify-center"
+  class="pt-24 md:pt-40 pb-20 md:pb-28"
   data-screen-label="01 Home"
 >
   <div class="flex items-baseline gap-6 mb-12">
@@ -13,7 +13,7 @@ import Reveal from "./Reveal.astro";
       01.
     </span>
     <span class="block flex-1 h-px bg-border -translate-y-2" />
-    <Mono class="text-primary">SENIOR ENGINEER</Mono>
+    <Mono class="text-primary">INTRO</Mono>
   </div>
 
   <Reveal delay={120}>
@@ -23,13 +23,12 @@ import Reveal from "./Reveal.astro";
   </Reveal>
 
   <Reveal delay={220}>
-    <div class="mt-12 max-w-prose space-y-4 text-xl md:text-2xl">
+    <div class="mt-12 max-w-prose space-y-4 text-lg md:text-xl">
       <p class="text-white">
-        I build new products and improve old ones.
+        A man has many names. Architect of systems. Shipper of products. Closer of tabs.
       </p>
-      <p class="text-foreground/80 text-lg">
-        That often means working across product decisions, engineering, and
-        execution to turn ideas into something people actually use.
+      <p class="text-foreground/80 text-base">
+        Seven years of building software end to end, and finding new ways to enjoy it.
       </p>
     </div>
   </Reveal>

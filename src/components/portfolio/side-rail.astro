@@ -53,7 +53,7 @@ const SECTIONS = [
 <!-- Mobile/tablet: fixed bottom centered pill -->
 <nav
   aria-label="Section navigation"
-  class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 px-2 py-2 bg-background/80 backdrop-blur-md border border-border rounded-full"
+  class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 p-1 bg-background/80 backdrop-blur-md border border-border rounded-full"
 >
   {
     SECTIONS.map((s) => (
@@ -61,7 +61,7 @@ const SECTIONS = [
         href={`#${s.id}`}
         data-rail-link={s.id}
         aria-label={s.label}
-        class="group inline-flex items-center justify-center w-10 h-10 rounded-full"
+        class="group inline-flex items-center justify-center w-8 h-8 rounded-full"
       >
         <svg
           viewBox="0 0 24 24"
@@ -71,7 +71,7 @@ const SECTIONS = [
           stroke-linecap="round"
           stroke-linejoin="round"
           aria-hidden="true"
-          class="w-5 h-5 text-foreground/30 group-hover:text-foreground/80 group-data-active:text-primary transition-colors"
+          class="w-4 h-4 text-foreground/30 group-hover:text-foreground/80 group-data-active:text-primary transition-colors"
           set:html={s.icon}
         />
       </a>
