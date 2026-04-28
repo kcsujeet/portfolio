@@ -1,4 +1,5 @@
 ---
+import Card from "@/components/ui/Card.astro";
 import Mono from "./Mono.astro";
 import Pulse from "./Pulse.astro";
 import SectionHead from "./SectionHead.astro";
@@ -17,24 +18,25 @@ const SOCIAL: ReadonlyArray<readonly [string, string, string]> = [
   </SectionHead>
 
   <div class="grid md:grid-cols-3 gap-3 mt-4">
-    <a
+    <Card
+      as="a"
       href="mailto:sujeetkc45@gmail.com"
-      class="group md:col-span-2 relative block p-8 md:p-10 border border-border rounded-sm bg-card hover:border-primary/30 transition-all overflow-hidden"
+      hover
+      glow="top-left"
+      padding="lg"
+      class="md:col-span-2"
     >
-      <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none radial-from-top-left from-primary/15 to-transparent to-60%" />
-      <div class="relative">
-        <Mono class="text-primary">EMAIL COMMUNICATION</Mono>
-        <p class="mt-4 text-white text-3xl md:text-5xl tracking-tight leading-tight break-all">
-          sujeetkc45@gmail.com
-        </p>
-        <div class="mt-6 inline-flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
-          <Mono>WRITE A MESSAGE</Mono>
-          <span class="group-hover:translate-x-1 transition-transform">→</span>
-        </div>
+      <Mono class="text-primary">EMAIL COMMUNICATION</Mono>
+      <p class="mt-4 text-white text-3xl md:text-5xl tracking-tight leading-tight break-all">
+        sujeetkc45@gmail.com
+      </p>
+      <div class="mt-6 inline-flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
+        <Mono>WRITE A MESSAGE</Mono>
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
       </div>
-    </a>
+    </Card>
 
-    <div class="relative p-8 border border-border rounded-sm bg-card">
+    <Card padding="lg">
       <Mono class="text-primary">INQUIRY STATUS</Mono>
       <div class="mt-4 flex items-center gap-2.5">
         <Pulse />
@@ -60,6 +62,6 @@ const SOCIAL: ReadonlyArray<readonly [string, string, string]> = [
           ))
         }
       </div>
-    </div>
+    </Card>
   </div>
 </section>

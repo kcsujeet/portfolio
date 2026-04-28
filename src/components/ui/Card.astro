@@ -1,0 +1,65 @@
+---
+type Props = {
+  as?: "div" | "a";
+  href?: string;
+  target?: string;
+  rel?: string;
+  padding?: "sm" | "md" | "lg";
+  hover?: boolean;
+  glow?: "top" | "top-left" | "right" | false;
+  class?: string;
+  contentClass?: string;
+};
+
+const {
+  as: Tag = "div",
+  href,
+  target,
+  rel,
+  padding = "md",
+  hover = false,
+  glow = false,
+  class: className = "",
+  contentClass = "",
+} = Astro.props;
+
+const padClass = {
+  sm: "p-5",
+  md: "p-7",
+  lg: "p-8 md:p-10",
+}[padding];
+
+const glowClass = glow
+  ? glow === "top"
+    ? "radial-from-top"
+    : glow === "top-left"
+      ? "radial-from-top-left"
+      : "radial-from-right"
+  : "";
+---
+
+<Tag
+  href={href}
+  target={target}
+  rel={rel}
+  class:list={[
+    "group relative block border border-border rounded-sm bg-card transition-all",
+    hover && "hover:border-primary/30",
+    glow && "overflow-hidden",
+    className,
+  ]}
+>
+  {
+    glow && (
+      <div
+        class:list={[
+          "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none from-primary/15 to-transparent to-60%",
+          glowClass,
+        ]}
+      />
+    )
+  }
+  <div class:list={["relative", padClass, contentClass]}>
+    <slot />
+  </div>
+</Tag>

@@ -1,4 +1,6 @@
 ---
+import Badge from "@/components/ui/Badge.astro";
+import Card from "@/components/ui/Card.astro";
 import Mono from "./Mono.astro";
 import Reveal from "./Reveal.astro";
 import SectionHead from "./SectionHead.astro";
@@ -33,7 +35,7 @@ const STACK = [
   </SectionHead>
 
   <div class="mt-12 grid md:grid-cols-3 gap-4 max-w-4xl">
-    <div class="p-5 border border-border rounded-sm bg-card hover:border-primary/40 transition-colors">
+    <Card padding="sm" hover>
       <Mono class="text-primary">EDUCATION</Mono>
       <p class="mt-3 text-white text-base">
         Master's in Applied Computer Science
@@ -41,34 +43,28 @@ const STACK = [
       <p class="mt-1 text-muted-foreground text-sm">
         Dalhousie University, Halifax
       </p>
-    </div>
-    <div class="p-5 border border-border rounded-sm bg-card hover:border-primary/40 transition-colors">
+    </Card>
+    <Card padding="sm" hover>
       <Mono class="text-primary">FOCUS</Mono>
       <p class="mt-3 text-white text-base">Full-stack architecture</p>
       <p class="mt-1 text-muted-foreground text-sm">
         React · Ruby on Rails · large migrations
       </p>
-    </div>
-    <div class="p-5 border border-border rounded-sm bg-card hover:border-primary/40 transition-colors">
+    </Card>
+    <Card padding="sm" hover>
       <Mono class="text-primary">LOCATION</Mono>
       <p class="mt-3 text-white text-base">Halifax, NS</p>
       <p class="mt-1 text-muted-foreground text-sm">
         Remote / hybrid · Atlantic time
       </p>
-    </div>
+    </Card>
   </div>
 
   <Reveal>
     <div class="mt-12">
       <Mono class="text-foreground/45 mb-4 block">CORE STACK</Mono>
       <div class="flex flex-wrap gap-x-2 gap-y-2 max-w-3xl">
-        {
-          STACK.map((s) => (
-            <Mono class="text-foreground/65 px-2.5 py-1 border border-border rounded-sm hover:border-primary/40 hover:text-primary transition-colors">
-              {s}
-            </Mono>
-          ))
-        }
+        {STACK.map((s) => <Badge variant="outline">{s}</Badge>)}
       </div>
     </div>
   </Reveal>

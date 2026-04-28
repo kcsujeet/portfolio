@@ -1,0 +1,54 @@
+---
+type Props = {
+  href: string;
+  variant?: "default" | "primary";
+  arrow?: "down" | "right" | "up-right" | false;
+  download?: boolean;
+  target?: string;
+  rel?: string;
+  class?: string;
+};
+
+const {
+  href,
+  variant = "default",
+  arrow = "right",
+  download = false,
+  target,
+  rel,
+  class: className = "",
+} = Astro.props;
+
+const variantClass = {
+  default:
+    "border-border hover:border-primary text-foreground/70 hover:text-primary",
+  primary: "border-primary/50 hover:border-primary text-primary",
+}[variant];
+
+const arrowChar =
+  arrow === "down" ? "↓" : arrow === "up-right" ? "↗" : arrow === "right" ? "→" : "";
+
+const arrowAnim =
+  arrow === "down"
+    ? "group-hover:translate-y-0.5"
+    : "group-hover:translate-x-0.5";
+---
+
+<a
+  href={href}
+  download={download || undefined}
+  target={target}
+  rel={rel}
+  class:list={[
+    "group inline-flex items-center gap-1.5 px-3 py-1.5 border rounded-sm transition-colors text-xs",
+    variantClass,
+    className,
+  ]}
+>
+  <slot />
+  {
+    arrow && (
+      <span class:list={[arrowAnim, "transition-transform"]}>{arrowChar}</span>
+    )
+  }
+</a>

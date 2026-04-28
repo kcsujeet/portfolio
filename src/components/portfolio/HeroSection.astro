@@ -1,4 +1,5 @@
 ---
+import Button from "@/components/ui/Button.astro";
 import Mono from "./Mono.astro";
 import Reveal from "./Reveal.astro";
 ---
@@ -34,29 +35,12 @@ import Reveal from "./Reveal.astro";
   </Reveal>
 
   <Reveal delay={300}>
-    <div class="mt-10 flex flex-wrap items-center gap-2 text-xs">
-      <a
-        href="#projects"
-        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-primary text-foreground/70 hover:text-primary rounded-sm transition-colors"
-      >
-        View projects
-        <span class="group-hover:translate-y-0.5 transition-transform">↓</span>
-      </a>
-      <a
-        href="/Sujeet_Kc_Resume.pdf"
-        download
-        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-border hover:border-primary text-foreground/70 hover:text-primary rounded-sm transition-colors"
-      >
+    <div class="mt-10 flex flex-wrap items-center gap-2">
+      <Button href="#projects" arrow="down">View projects</Button>
+      <Button href="/Sujeet_Kc_Resume.pdf" download arrow="down">
         Download resume
-        <span class="group-hover:translate-y-0.5 transition-transform">↓</span>
-      </a>
-      <a
-        href="#contact"
-        class="group inline-flex items-center gap-1.5 px-3 py-1.5 border border-primary/50 hover:border-primary text-primary rounded-sm transition-colors"
-      >
-        Let's talk
-        <span class="group-hover:translate-x-0.5 transition-transform">→</span>
-      </a>
+      </Button>
+      <Button href="#contact" variant="primary" arrow="right">Let's talk</Button>
     </div>
   </Reveal>
 </section>

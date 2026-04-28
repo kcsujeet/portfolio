@@ -1,0 +1,25 @@
+---
+type Props = {
+  variant?: "default" | "primary" | "outline";
+  class?: string;
+};
+
+const { variant = "default", class: className = "" } = Astro.props;
+
+const variantClass = {
+  default: "text-muted-foreground border-border",
+  primary: "text-primary border-primary/35 bg-primary/15",
+  outline:
+    "text-foreground/65 border-border hover:border-primary/40 hover:text-primary",
+}[variant];
+---
+
+<span
+  class:list={[
+    "inline-flex items-center px-2 py-1 border rounded-sm font-mono text-xs uppercase tracking-widest transition-colors",
+    variantClass,
+    className,
+  ]}
+>
+  <slot />
+</span>
