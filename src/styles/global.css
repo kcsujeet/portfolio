@@ -109,7 +109,7 @@ details[open] > .details-body {
   --card: oklch(1 0 0 / 0.015);
   --card-foreground: var(--foreground);
 
-  --primary: oklch(0.72 0.16 301);
+  --primary: oklch(0.9 0.3 136);
   --primary-foreground: var(--background);
 
   --secondary: oklch(0.45 0.12 260);
