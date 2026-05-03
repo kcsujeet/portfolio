@@ -17,7 +17,7 @@ const SECTIONS = [
     icon: `<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>`,
   },
   {
-    id: "personal-projects",
+    id: "projects",
     label: "PERSONAL PROJECTS",
     icon: `<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>`,
   },
@@ -106,4 +106,12 @@ const SECTIONS = [
   );
 
   sections.forEach((s) => observer.observe(s));
+
+  // Fallback: forcefully set intro active if at the very top of the page
+  const handleScroll = () => {
+    if (window.scrollY < 100) setActive("intro");
+  };
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  // Initial check
+  handleScroll();
 </script>
