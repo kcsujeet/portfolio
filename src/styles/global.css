@@ -63,15 +63,21 @@
 }
 @utility radial-from-top-left {
   --tw-gradient-position: ellipse at 30% 0%;
-  background-image: radial-gradient(var(--tw-gradient-stops, ellipse at 30% 0%));
+  background-image: radial-gradient(
+    var(--tw-gradient-stops, ellipse at 30% 0%)
+  );
 }
 @utility radial-from-right {
   --tw-gradient-position: circle at 80% 50%;
-  background-image: radial-gradient(var(--tw-gradient-stops, circle at 80% 50%));
+  background-image: radial-gradient(
+    var(--tw-gradient-stops, circle at 80% 50%)
+  );
 }
 @utility radial-from-bottom {
   --tw-gradient-position: ellipse at 50% 100%;
-  background-image: radial-gradient(var(--tw-gradient-stops, ellipse at 50% 100%));
+  background-image: radial-gradient(
+    var(--tw-gradient-stops, ellipse at 50% 100%)
+  );
 }
 
 /* Animated <details> body. The UA stylesheet uses
@@ -180,4 +186,137 @@ h3 {
   * {
     @apply border-border;
   }
+}
+
+.prose {
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 65ch;
+}
+
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 2em;
+  color: oklch(1 0 0 / 0.95);
+  scroll-margin-top: 6rem;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 1.75em;
+  color: oklch(1 0 0 / 0.9);
+  scroll-margin-top: 6rem;
+}
+
+.prose .heading-anchor {
+  margin-left: 0.4em;
+  font-family: var(--font-mono);
+  text-decoration: none;
+  color: var(--muted-foreground);
+  opacity: 0;
+  transition:
+    opacity 150ms,
+    color 150ms;
+}
+
+.prose h2:hover .heading-anchor,
+.prose h3:hover .heading-anchor,
+.prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.prose .heading-anchor:hover {
+  color: var(--primary);
+}
+
+.prose p {
+  color: oklch(1 0 0 / 0.78);
+}
+
+.prose a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+  color: oklch(1 0 0 / 0.78);
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--primary);
+  padding-left: 1em;
+  color: oklch(1 0 0 / 0.65);
+  font-style: italic;
+}
+
+.prose code:not(pre code) {
+  background: oklch(1 0 0 / 0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 0.2em;
+  font-size: 0.9em;
+  font-family: var(--font-mono);
+}
+
+.prose pre {
+  background: oklch(0 0 0 / 0.4);
+  padding: 1em 1.25em;
+  border-radius: 0.25rem;
+  overflow-x: auto;
+  border: 1px solid oklch(1 0 0 / 0.08);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid oklch(1 0 0 / 0.08);
+  margin: 2.5em 0;
+}
+
+.prose img {
+  border-radius: 0.25rem;
+  border: 1px solid oklch(1 0 0 / 0.08);
+}
+
+.prose strong {
+  color: oklch(1 0 0 / 0.95);
+  font-weight: 500;
+}
+
+.prose em {
+  font-style: italic;
 }

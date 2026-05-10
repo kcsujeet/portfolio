@@ -1,0 +1,51 @@
+---
+import { type DateFormat, formatDate } from "@/features/blog/utils/format-date";
+
+type Props = {
+  href: string;
+  title: string;
+  date: Date;
+  tags: string[];
+  minutes: number;
+  dateFormat?: DateFormat;
+};
+
+const { href, title, date, tags, minutes, dateFormat = "year" } = Astro.props;
+
+const dateLabel = formatDate(date, dateFormat);
+
+const DATE_WIDTH: Record<DateFormat, string> = {
+  year: "w-12",
+  "month-day": "w-16",
+  full: "w-28",
+};
+const dateWidthClass = DATE_WIDTH[dateFormat];
+---
+
+<a href={href} class="group block py-5 border-b border-border last:border-b-0">
+  <div class="flex items-baseline gap-4">
+    <span
+      class:list={[
+        "shrink-0 font-mono text-xs uppercase tracking-widest text-muted-foreground whitespace-nowrap",
+        dateWidthClass,
+      ]}
+    >
+      {dateLabel}
+    </span>
+    <span class="block w-3 h-px bg-foreground/15 shrink-0" />
+    <div class="flex-1 min-w-0">
+      <h3 class="text-white text-lg md:text-xl group-hover:text-primary transition-colors">
+        {title}
+        <span class="inline-block ml-1 text-foreground/30 group-hover:text-primary group-hover:translate-x-1 transition-all">
+          ↗
+        </span>
+      </h3>
+      <div class="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+        <span class="font-mono text-foreground/55">
+          {tags.join(" · ")}
+        </span>
+        <span class="font-mono text-muted-foreground">- {minutes} min read</span>
+      </div>
+    </div>
+  </div>
+</a>

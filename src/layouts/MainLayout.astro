@@ -1,9 +1,22 @@
 ---
 import "../styles/global.css";
-import { JOB_TITLE } from "@/lib/constants";
+import { JOB_TITLE } from "@/config/constants";
 
-const ogTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
-const ogDescription = `Senior Full-Stack Engineer specializing in React, Ruby on Rails, and Astro. Focused on building high-performance, scalable web applications and solving complex architectural challenges.`;
+type Props = {
+  title?: string;
+  description?: string;
+};
+
+const { title: pageTitle, description: pageDescription } = Astro.props;
+
+const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Halifax";
+const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
+const defaultDescription = `Senior Full-Stack Engineer specializing in React, Ruby on Rails, and Astro. Focused on building high-performance, scalable web applications and solving complex architectural challenges.`;
+
+const finalTitle = pageTitle ?? defaultTitle;
+const finalOgTitle = pageTitle ?? defaultOgTitle;
+const finalDescription = pageDescription ?? defaultDescription;
+
 const logoUrl = "/logo.svg";
 const siteUrl = "https://kcsujeet.com.np/";
 const ogType = "website";
@@ -32,7 +45,7 @@ const personSchema = {
     "@type": "CollegeOrUniversity",
     name: "Dalhousie University",
   },
-  description: ogDescription,
+  description: defaultDescription,
   image: new URL(logoUrl, siteUrl).href,
   knowsAbout: [
     "Full-Stack Development",
@@ -55,7 +68,7 @@ const websiteSchema = {
   "@type": "WebSite",
   name: "Sujeet Kc Portfolio",
   url: siteUrl,
-  description: ogDescription,
+  description: defaultDescription,
   author: "Sujeet Kc",
 };
 
@@ -66,8 +79,8 @@ const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns=
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sujeet Kc · Senior Full-Stack Engineer · Halifax</title>
-    <meta name="description" content={ogDescription} />
+    <title>{finalTitle}</title>
+    <meta name="description" content={finalDescription} />
     <meta name="keywords" content={keywords} />
     <meta name="author" content="Sujeet Kc" />
     <link rel="canonical" href={canonicalURL} />
@@ -76,8 +89,8 @@ const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns=
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Open Graph tags -->
-    <meta property="og:title" content={ogTitle} />
-    <meta property="og:description" content={ogDescription} />
+    <meta property="og:title" content={finalOgTitle} />
+    <meta property="og:description" content={finalDescription} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={new URL(logoUrl, siteUrl)} />
@@ -87,8 +100,8 @@ const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns=
     <!-- Twitter Card tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@kcsujeet" />
-    <meta name="twitter:title" content={ogTitle} />
-    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:title" content={finalOgTitle} />
+    <meta name="twitter:description" content={finalDescription} />
     <meta name="twitter:image" content={new URL(logoUrl, siteUrl)} />
 
     <link rel="icon" type="image/svg+xml" href={logoUrl} sizes="any" />

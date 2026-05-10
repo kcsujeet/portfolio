@@ -26,7 +26,13 @@ const variantClass = {
 }[variant];
 
 const arrowChar =
-  arrow === "down" ? "↓" : arrow === "up-right" ? "↗" : arrow === "right" ? "→" : "";
+  arrow === "down"
+    ? "↓"
+    : arrow === "up-right"
+      ? "↗"
+      : arrow === "right"
+        ? "→"
+        : "";
 
 const arrowAnim =
   arrow === "down"

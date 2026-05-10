@@ -1,17 +1,21 @@
 ---
+import Mono from "@/components/Mono.astro";
+import Pulse from "@/components/Pulse.astro";
+import SectionHead from "@/components/SectionHead.astro";
 import Card from "@/components/ui/Card.astro";
-import Mono from "./Mono.astro";
-import Pulse from "./Pulse.astro";
-import SectionHead from "./SectionHead.astro";
 
 const SOCIAL: ReadonlyArray<readonly [string, string, string]> = [
   ["GITHUB", "github.com/kcsujeet", "https://github.com/kcsujeet"],
-  ["LINKEDIN", "linkedin.com/in/kc-sujeet", "https://linkedin.com/in/kc-sujeet"],
+  [
+    "LINKEDIN",
+    "linkedin.com/in/kc-sujeet",
+    "https://linkedin.com/in/kc-sujeet",
+  ],
 ];
 ---
 
-<section data-screen-label="05 Contact">
-  <SectionHead n="05." label="CONTACT" anchor="contact">
+<section data-screen-label="06 Contact">
+  <SectionHead n="06." label="CONTACT" anchor="contact">
     <p>
       I'm always interested in ambitious projects and thoughtful collaborations. If you're building something worth talking about, reach out.
     </p>

@@ -1,0 +1,107 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import Mono from "@/components/Mono.astro";
+import Badge from "@/components/ui/Badge.astro";
+import { formatDate } from "@/features/blog/utils/format-date";
+import { readingTimeMinutes } from "@/features/blog/utils/reading-time";
+
+type Props = {
+  post: CollectionEntry<"blog">;
+};
+
+const { post } = Astro.props;
+const minutes = readingTimeMinutes(post.body ?? "");
+const formattedPubDate = formatDate(post.data.pubDate, "full");
+const formattedUpdated = post.data.updatedDate
+  ? formatDate(post.data.updatedDate, "full")
+  : undefined;
+---
+
+<article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-20">
+  <a
+    href="/blog"
+    class="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+  >
+    <span class="group-hover:-translate-x-1 transition-transform">←</span>
+    <Mono>ALL WRITING</Mono>
+  </a>
+
+  <header class="mt-10">
+    <div class="flex items-center gap-3 text-muted-foreground">
+      <Mono>{formattedPubDate}</Mono>
+      <span class="block w-3 h-px bg-foreground/15" />
+      <Mono>{minutes} MIN READ</Mono>
+    </div>
+
+    <h1 class="mt-6 text-white text-4xl md:text-5xl font-medium tracking-tight leading-tight">
+      {post.data.title}
+    </h1>
+
+    <p class="mt-4 text-foreground/70 text-lg md:text-xl max-w-prose">
+      {post.data.description}
+    </p>
+
+    {
+      post.data.tags.length > 0 && (
+        <div class="mt-6 flex flex-wrap gap-x-3 gap-y-2">
+          {post.data.tags.map((tag) => (
+            <Badge>{tag}</Badge>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      post.data.cover && (
+        <div class="mt-10 overflow-hidden rounded-sm border border-border">
+          <Image
+            src={post.data.cover as ImageMetadata}
+            alt={post.data.coverAlt ?? post.data.title}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 768px) 768px, 100vw"
+          />
+        </div>
+      )
+    }
+  </header>
+
+  <div class="mt-12 prose">
+    <slot />
+  </div>
+
+  <hr class="mt-16 border-0 border-t border-border" />
+
+  {
+    (post.data.devto || formattedUpdated) && (
+      <footer class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+        {post.data.devto && (
+          <a
+            href={post.data.devto}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Mono>ORIGINALLY ON DEV.TO</Mono>
+            <span class="group-hover:translate-x-1 transition-transform">↗</span>
+          </a>
+        )}
+        {formattedUpdated && (
+          <span class="text-muted-foreground">
+            <Mono>UPDATED {formattedUpdated.toUpperCase()}</Mono>
+          </span>
+        )}
+      </footer>
+    )
+  }
+
+  <div class="mt-12 flex justify-center">
+    <a
+      href="/blog"
+      class="group inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+    >
+      <span class="group-hover:-translate-x-1 transition-transform">←</span>
+      <Mono>BACK TO ALL WRITING</Mono>
+    </a>
+  </div>
+</article>

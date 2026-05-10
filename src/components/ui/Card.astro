@@ -23,11 +23,12 @@ const {
   contentClass = "",
 } = Astro.props;
 
-const padClass = {
+const PAD_CLASS: Record<NonNullable<Props["padding"]>, string> = {
   sm: "p-5",
   md: "p-7",
   lg: "p-8 md:p-10",
-}[padding];
+};
+const padClass = PAD_CLASS[padding];
 
 const glowClass = glow
   ? glow === "top"

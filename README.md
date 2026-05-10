@@ -1,4 +1,4 @@
-# Sujeet KC — Portfolio
+# Sujeet KC's Portfolio
 
 Personal portfolio site for Sujeet KC, Senior Full-Stack Engineer based in Halifax.
 
@@ -6,10 +6,10 @@ Personal portfolio site for Sujeet KC, Senior Full-Stack Engineer based in Halif
 
 ## Stack
 
-- **[Astro](https://astro.build/)** — static site generator. Pure Astro components, no JS framework runtime ships to the client.
-- **[Tailwind CSS v4](https://tailwindcss.com/)** — utility-first styling. Design tokens defined in `@theme` blocks in `src/styles/global.css`.
-- **[Bun](https://bun.sh/)** — package manager and runtime.
-- **[Biome](https://biomejs.dev/)** — formatter and linter.
+- **[Astro](https://astro.build/)**: static site generator. Pure Astro components, no JS framework runtime ships to the client.
+- **[Tailwind CSS v4](https://tailwindcss.com/)**: utility-first styling. Design tokens defined in `@theme` blocks in `src/styles/global.css`.
+- **[Bun](https://bun.sh/)**: package manager and runtime.
+- **[Biome](https://biomejs.dev/)**: formatter and linter.
 
 The site is fully static. Zero React (or other JS framework) ships to the browser. The only client-side JavaScript is a small inline `<script>` block in `side-rail.astro` for scroll-position tracking and the native browser handling of `<details>` accordions.
 
@@ -28,41 +28,49 @@ Open [http://localhost:5000](http://localhost:5000).
 
 ## Scripts
 
-- `bun run dev` — start dev server (port 5000)
-- `bun run build` — build the static site to `dist/`
-- `bun run preview` — preview the production build
-- `bun run typecheck` — run TypeScript checks
-- `bun run lint` — run Biome linter
-- `bun run format` — format with Biome
-- `bun run ci` — lint, typecheck, then build
+- `bun run dev`: start dev server (port 5000)
+- `bun run build`: build the static site to `dist/`
+- `bun run preview`: preview the production build
+- `bun run typecheck`: run TypeScript checks
+- `bun run lint`: run Biome linter
+- `bun run format`: format with Biome
+- `bun run ci`: lint, typecheck, then build
 
 ## Project structure
 
+The codebase follows a [bulletproof-react](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md) inspired layout, translated to Astro. Imports flow `shared` to `features` to `app`; features must not import from each other.
+
 ```
 src/
-├── components/
-│   └── portfolio/
-│       ├── HeroSection.astro
-│       ├── AboutSection.astro
-│       ├── ExperienceSection.astro
-│       ├── ProjectsSection.astro
-│       ├── ContactSection.astro
-│       ├── Footer.astro
-│       ├── side-rail.astro       Side rail + mobile pill, with inline JS for active highlight
-│       ├── Mono.astro            Mono label primitive
-│       ├── Pulse.astro           Pulsing dot indicator
-│       ├── Reveal.astro          CSS-keyframe fade-in wrapper
-│       └── SectionHead.astro     Section heading (numeral, label, optional blurb)
+├── components/                       shared primitives
+│   ├── ui/                           Badge, Button, Card
+│   ├── Mono.astro                    uppercase-mono label
+│   ├── Pulse.astro                   pulsing dot indicator
+│   ├── Reveal.astro                  CSS-keyframe fade-in wrapper
+│   └── SectionHead.astro             numbered section heading
+├── config/
+│   └── constants.ts                  JOB_TITLE, NAME, SITE_URL, START_DATE
+├── content/
+│   └── blog/                         blog posts (Markdown)
+├── content.config.ts                 Astro content collection schema
+├── features/
+│   ├── home/components/              Hero, About, Experience, Projects, Contact, Footer, SideRail
+│   └── blog/
+│       ├── components/               WritingSection, PostRow, PostLayout
+│       └── utils/                    format-date, reading-time
 ├── layouts/
-│   └── MainLayout.astro          HTML shell, SEO, ambient atmosphere layer
-├── lib/
-│   └── constants.ts              JOB_TITLE, NAME, SITE_URL, START_DATE
+│   └── MainLayout.astro              HTML shell, SEO, ambient atmosphere layer
 ├── pages/
-│   ├── index.astro
-│   └── robots.txt.ts
+│   ├── index.astro                   homepage
+│   ├── robots.txt.ts
+│   └── blog/
+│       ├── index.astro               /blog listing
+│       └── [...slug].astro           individual post page
 └── styles/
-    └── global.css                Design tokens, @utility rules, keyframes
+    └── global.css                    design tokens, @utility rules, .prose, keyframes
 ```
+
+Agent rules (Claude, Gemini, etc.) live in `.agents/rules/` and are surfaced via symlinked `CLAUDE.md` and `GEMINI.md` at the repo root.
 
 ## Design system
 
@@ -82,6 +90,7 @@ Components use semantic Tailwind utilities throughout (`text-primary`, `bg-card`
 - **About**: Bio paragraphs, education / focus / location grid, core stack chips
 - **Experience**: Native `<details>` cards with role, impact pill, summary, expandable bullets, and stack tags
 - **Projects**: Featured + grid layout, with status pills (Live, Open Source) and tech chips
+- **Writing**: Latest 3 blog posts; full collection lives at `/blog` with individual `/blog/<slug>` pages
 - **Contact**: Email card with hover glow, social links, inquiry status
 
 Side rail navigation:

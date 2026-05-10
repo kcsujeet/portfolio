@@ -1,0 +1,51 @@
+---
+import { getCollection } from "astro:content";
+import Mono from "@/components/Mono.astro";
+import Reveal from "@/components/Reveal.astro";
+import SectionHead from "@/components/SectionHead.astro";
+import { readingTimeMinutes } from "@/features/blog/utils/reading-time";
+import PostRow from "./PostRow.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const latest = posts.slice(0, 3);
+---
+
+{
+  latest.length > 0 && (
+    <section data-screen-label="05 Writing">
+      <SectionHead n="05." label="Writing" anchor="writing">
+        <p>A few notes on the things I build, debug, and learn.</p>
+      </SectionHead>
+
+      <div class="mt-4">
+        {latest.map((post, i) => (
+          <Reveal delay={i * 50}>
+            <PostRow
+              href={`/blog/${post.id}`}
+              title={post.data.title}
+              date={post.data.pubDate}
+              tags={post.data.tags}
+              minutes={readingTimeMinutes(post.body ?? "")}
+              dateFormat="full"
+            />
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal delay={latest.length * 50}>
+        <div class="mt-6 flex justify-end">
+          <a
+            href="/blog"
+            class="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Mono>VIEW ALL WRITING</Mono>
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+        </div>
+      </Reveal>
+    </section>
+  )
+}
