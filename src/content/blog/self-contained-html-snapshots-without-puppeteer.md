@@ -1,7 +1,7 @@
 ---
 title: "Generating self-Contained HTML Snapshots Without Puppeteer"
 description: "Learn how to generate portable, responsive snapshots of web pages without relying on Puppeteer, by inlining CSS and images directly into HTML"
-pubDate: 2026-02-25
+pubDate: 2026-02-25T12:00:00-04:00
 tags: ["ruby", "rails", "html", "typescript"]
 devto: "https://dev.to/kcsujeet/generating-self-contained-html-snapshots-inlining-css-and-images-without-puppeteer-2ak7"
 ---

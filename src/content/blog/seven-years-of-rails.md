@@ -1,7 +1,7 @@
 ---
 title: "Reflecting on Seven Years of Ruby on Rails"
 description: "Why I stayed with Rails for seven years, where it still wins, and an honest take on the JavaScript ecosystem."
-pubDate: 2026-05-09
+pubDate: 2026-05-10T10:00:00-03:00
 tags: ["rails", "ruby", "javascript", "career"]
 ---
 

@@ -20,7 +20,7 @@ type GroupedPost = {
 
 const grouped = new Map<number, GroupedPost[]>();
 for (const post of posts) {
-  const year = post.data.pubDate.getUTCFullYear();
+  const year = post.data.pubDate.getFullYear();
   const list = grouped.get(year) ?? [];
   list.push({
     id: post.id,

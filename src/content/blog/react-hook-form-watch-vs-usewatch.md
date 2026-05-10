@@ -1,7 +1,7 @@
 ---
 title: "React Hook Form: Understanding watch vs useWatch"
 description: "A look at differences between watch and useWatch in react-hook-form."
-pubDate: 2025-02-04
+pubDate: 2025-02-04T12:00:00-04:00
 tags: ["react", "reacthookform", "watch", "usewatch"]
 devto: "https://dev.to/kcsujeet/react-hook-form-understanding-watch-vs-usewatch-l54"
 ---

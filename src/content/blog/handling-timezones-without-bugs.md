@@ -1,7 +1,7 @@
 ---
 title: "How to Handle Date and Time Correctly to Avoid Timezone Bugs"
 description: "Learn how to handle date and time correctly in your applications to avoid timezone-related bugs. This guide covers real-world examples, best practices, and tips for testing timezone differences."
-pubDate: 2025-02-25
+pubDate: 2025-02-25T12:00:00-04:00
 tags: ["datetime", "timezone", "javascript", "rails"]
 devto: "https://dev.to/kcsujeet/how-to-handle-date-and-time-correctly-to-avoid-timezone-bugs-4o03"
 ---
