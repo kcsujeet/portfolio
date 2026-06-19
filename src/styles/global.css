@@ -161,7 +161,10 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  /* `clip` (not `hidden`) clips the decorative blur overflow WITHOUT creating a
+     scroll container, so descendant `position: sticky` (e.g. the blog TOC rail)
+     keeps working. https://developer.mozilla.org/en-US/docs/Web/CSS/overflow */
+  overflow-x: clip;
 }
 
 ::selection {
@@ -188,11 +191,29 @@ h3 {
   }
 }
 
+/* Right-rail TOC: the section the reader is currently in. The scroll-spy script
+   in PostLayout.astro sets aria-current on the matching link. */
+.toc-link[aria-current="true"] {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Mobile TOC disclosure caret: points right, rotates down when open. */
+.toc-caret {
+  transition: transform 0.15s ease;
+}
+details[open] .toc-caret {
+  transform: rotate(90deg);
+}
+
 .prose {
   color: var(--foreground);
   font-size: 1rem;
   line-height: 1.75;
-  max-width: 65ch;
+  /* Reading measure. The post sits in a wide two-column layout (content +
+     right-rail TOC), so allow a slightly longer line than the old 65ch while
+     keeping it readable. */
+  max-width: 74ch;
 }
 
 .prose > * + * {

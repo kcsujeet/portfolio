@@ -5,12 +5,20 @@ import Mono from "@/components/Mono.astro";
 import Badge from "@/components/ui/Badge.astro";
 import { formatDate } from "@/features/blog/utils/format-date";
 import { readingTimeMinutes } from "@/features/blog/utils/reading-time";
+import { MobileToc } from "./MobileToc";
+
+// Shape of each entry in the `headings` array returned by astro:content's
+// render(): https://docs.astro.build/en/guides/markdown-content/
+type Heading = { depth: number; slug: string; text: string };
 
 type Props = {
   post: CollectionEntry<"blog">;
+  headings?: Heading[];
 };
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
+// Only section headings make a useful right-rail TOC; h1 lives in the header.
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const minutes = readingTimeMinutes(post.body ?? "");
 const formattedPubDate = formatDate(post.data.pubDate, "full");
 const formattedUpdated = post.data.updatedDate
@@ -18,90 +26,248 @@ const formattedUpdated = post.data.updatedDate
   : undefined;
 ---
 
-<article class="max-w-3xl mx-auto pt-16 md:pt-24 pb-20">
-  <a
-    href="/blog"
-    class="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-  >
-    <span class="group-hover:-translate-x-1 transition-transform">←</span>
-    <Mono>ALL WRITING</Mono>
-  </a>
+<div
+  class="mx-auto max-w-6xl pt-16 md:pt-24 pb-20 lg:grid lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-12"
+>
+  {toc.length > 0 && <MobileToc client:load headings={toc} />}
 
-  <header class="mt-10">
-    <div class="flex items-center gap-3 text-muted-foreground">
-      <Mono>{formattedPubDate}</Mono>
-      <span class="block w-3 h-px bg-foreground/15" />
-      <Mono>{minutes} MIN READ</Mono>
-    </div>
-
-    <h1 class="mt-6 text-white text-4xl md:text-5xl font-medium tracking-tight leading-tight">
-      {post.data.title}
-    </h1>
-
-    <p class="mt-4 text-foreground/70 text-lg md:text-xl max-w-prose">
-      {post.data.description}
-    </p>
-
-    {
-      post.data.tags.length > 0 && (
-        <div class="mt-6 flex flex-wrap gap-x-3 gap-y-2">
-          {post.data.tags.map((tag) => (
-            <Badge>{tag}</Badge>
-          ))}
-        </div>
-      )
-    }
-
-    {
-      post.data.cover && (
-        <div class="mt-10 overflow-hidden rounded-sm border border-border">
-          <Image
-            src={post.data.cover as ImageMetadata}
-            alt={post.data.coverAlt ?? post.data.title}
-            widths={[640, 960, 1280]}
-            sizes="(min-width: 768px) 768px, 100vw"
-          />
-        </div>
-      )
-    }
-  </header>
-
-  <div class="mt-12 prose">
-    <slot />
-  </div>
-
-  <hr class="mt-16 border-0 border-t border-border" />
-
-  {
-    (post.data.devto || formattedUpdated) && (
-      <footer class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-        {post.data.devto && (
-          <a
-            href={post.data.devto}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Mono>ORIGINALLY ON DEV.TO</Mono>
-            <span class="group-hover:translate-x-1 transition-transform">↗</span>
-          </a>
-        )}
-        {formattedUpdated && (
-          <span class="text-muted-foreground">
-            <Mono>UPDATED {formattedUpdated.toUpperCase()}</Mono>
-          </span>
-        )}
-      </footer>
-    )
-  }
-
-  <div class="mt-12 flex justify-center">
+  <article class="min-w-0">
+    {/* Desktop back link; on mobile this lives in the fixed MobileToc bar. */}
     <a
       href="/blog"
-      class="group inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+      class="group hidden lg:inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
     >
       <span class="group-hover:-translate-x-1 transition-transform">←</span>
-      <Mono>BACK TO ALL WRITING</Mono>
+      <Mono>ALL WRITING</Mono>
     </a>
-  </div>
-</article>
+
+    <header class="mt-10">
+      <div class="flex items-center gap-3 text-muted-foreground">
+        <Mono>{formattedPubDate}</Mono>
+        <span class="block w-3 h-px bg-foreground/15" />
+        <Mono>{minutes} MIN READ</Mono>
+      </div>
+
+      <h1 class="mt-6 text-white text-4xl md:text-5xl font-medium tracking-tight leading-tight">
+        {post.data.title}
+      </h1>
+
+      <p class="mt-4 text-foreground/70 text-lg md:text-xl max-w-prose">
+        {post.data.description}
+      </p>
+
+      {
+        post.data.tags.length > 0 && (
+          <div class="mt-6 flex flex-wrap gap-x-3 gap-y-2">
+            {post.data.tags.map((tag) => (
+              <Badge>{tag}</Badge>
+            ))}
+          </div>
+        )
+      }
+
+      {
+        post.data.cover && (
+          <div class="mt-10 overflow-hidden rounded-sm border border-border">
+            <Image
+              src={post.data.cover as ImageMetadata}
+              alt={post.data.coverAlt ?? post.data.title}
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 768px) 768px, 100vw"
+            />
+          </div>
+        )
+      }
+    </header>
+
+    <div class="mt-12 prose">
+      <slot />
+    </div>
+
+    <hr class="mt-16 border-0 border-t border-border" />
+
+    {
+      (post.data.devto || formattedUpdated) && (
+        <footer class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          {post.data.devto && (
+            <a
+              href={post.data.devto}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
+            >
+              <Mono>ORIGINALLY ON DEV.TO</Mono>
+              <span class="group-hover:translate-x-1 transition-transform">↗</span>
+            </a>
+          )}
+          {formattedUpdated && (
+            <span class="text-muted-foreground">
+              <Mono>UPDATED {formattedUpdated.toUpperCase()}</Mono>
+            </span>
+          )}
+        </footer>
+      )
+    }
+
+    <div class="mt-12 flex justify-center">
+      <a
+        href="/blog"
+        class="group inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
+      >
+        <span class="group-hover:-translate-x-1 transition-transform">←</span>
+        <Mono>BACK TO ALL WRITING</Mono>
+      </a>
+    </div>
+  </article>
+
+  {
+    toc.length > 0 && (
+      <aside class="hidden lg:block">
+        <blog-toc class="block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
+          <nav aria-label="Table of contents">
+            <Mono class="text-muted-foreground">ON THIS PAGE</Mono>
+            <ul class="mt-4 border-l border-border">
+              {toc.map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class:list={[
+                      "toc-link block -ml-px border-l border-transparent py-1 text-sm leading-snug text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors",
+                      h.depth === 3 ? "pl-7" : "pl-4",
+                    ]}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </blog-toc>
+      </aside>
+    )
+  }
+</div>
+
+<script>
+  // Scroll-spy for the right-rail TOC. Adapted from Starlight's StarlightTOC
+  // (withastro/starlight, components-internals/TableOfContents/starlight-toc.ts):
+  // observe content elements through a thin activation band near the top of the
+  // viewport, resolve each intersecting element back to its governing heading,
+  // and mark that heading's link with aria-current. Simplified for this site's
+  // flat `.prose` DOM (headings + blocks are siblings) and no fixed header.
+  class BlogToc extends HTMLElement {
+    protected current: HTMLAnchorElement | null = null;
+
+    connectedCallback() {
+      const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+      onIdle(() => this.init());
+    }
+
+    // Mark a link as the active section. Subclasses override onCurrent to react
+    // (e.g. the mobile bar updates its summary label).
+    protected setCurrent(link: HTMLAnchorElement) {
+      if (link === this.current) return;
+      this.current?.removeAttribute("aria-current");
+      link.setAttribute("aria-current", "true");
+      this.current = link;
+      this.onCurrent(link);
+    }
+
+    protected onCurrent(_link: HTMLAnchorElement) {}
+
+    private init() {
+      const links = [...this.querySelectorAll<HTMLAnchorElement>("a")];
+      const content = document.querySelector(".prose");
+      if (!content || links.length === 0) return;
+
+      const headingSel = "h2[id], h3[id]";
+
+      // Flat prose: an element's section heading is the nearest preceding sibling
+      // that is a heading.
+      const headingFor = (el: Element | null): Element | null => {
+        let cur: Element | null = el;
+        while (cur) {
+          if (cur.matches(headingSel)) return cur;
+          cur = cur.previousElementSibling;
+        }
+        return null;
+      };
+
+      const linkFor = (heading: Element) =>
+        links.find((l) => l.hash === "#" + encodeURIComponent(heading.id));
+
+      const lastLink = links[links.length - 1];
+      // The final section is often too short to ever scroll up into the
+      // activation band, so the band observer alone can never highlight it
+      // (Starlight has the same blind spot). When the page is scrolled to the
+      // bottom, force the last link active instead.
+      const atBottom = () =>
+        Math.ceil(window.scrollY + window.innerHeight) >=
+        document.documentElement.scrollHeight - 2;
+
+      const onIntersect: IntersectionObserverCallback = (entries) => {
+        if (atBottom()) {
+          this.setCurrent(lastLink);
+          return;
+        }
+        for (const { isIntersecting, target } of entries) {
+          if (!isIntersecting) continue;
+          const heading = headingFor(target);
+          if (!heading) continue;
+          const link = linkFor(heading);
+          if (link) {
+            this.setCurrent(link);
+            break;
+          }
+        }
+      };
+
+      let observer: IntersectionObserver | undefined;
+      const observe = () => {
+        if (observer) return;
+        // Thin band: from `top`px to `top + band`px below the viewport top.
+        const top = 100;
+        const band = 64;
+        const height = document.documentElement.clientHeight;
+        const bottom = Math.max(0, height - top - band);
+        observer = new IntersectionObserver(onIntersect, {
+          rootMargin: `-${top}px 0% -${bottom}px`,
+        });
+        for (const el of content.children) observer.observe(el);
+      };
+      observe();
+
+      // Bottom guard: the band observer can't reach the last section, so watch
+      // for the page being scrolled to the bottom (also covers landing here via
+      // a #hash, which jumps straight to the bottom).
+      const onScroll = () => {
+        if (atBottom()) this.setCurrent(lastLink);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+
+      // Initial highlight. At the top the band sits over the article header (not
+      // the prose), so nothing intersects yet — default to the first section.
+      // The observer's own initial callback fires right after and corrects this
+      // if we actually loaded part-way down (e.g. via a #hash to a later
+      // section); the bottom guard covers loading at the very end.
+      if (atBottom()) this.setCurrent(lastLink);
+      else this.setCurrent(links[0]);
+
+      let timeout: ReturnType<typeof setTimeout>;
+      window.addEventListener("resize", () => {
+        // Recompute the band (it depends on viewport height) after resize.
+        observer?.disconnect();
+        observer = undefined;
+        clearTimeout(timeout);
+        timeout = setTimeout(observe, 200);
+      });
+    }
+  }
+
+  // Guard so a dev HMR re-run (or any double-eval) doesn't throw
+  // "already defined" and abort the module. (Mobile TOC is a separate React
+  // island, MobileToc.tsx, built on Base UI's Popover.)
+  if (!customElements.get("blog-toc")) {
+    customElements.define("blog-toc", BlogToc);
+  }
+</script>

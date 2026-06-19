@@ -21,14 +21,25 @@ type Project = {
 const PROJECTS: Project[] = [
   {
     id: "ilamy",
-    year: "2025",
+    year: "2026",
     title: "Ilamy Calendar",
     blurb:
-      "Open-source React calendar library built because existing tools felt bloated and inflexible. Multi-day and recurring events, multiple views, iCal export. Published on npm.",
-    stack: ["React", "TypeScript", "Tailwind", "Framer Motion", "Bun"],
+      "Open-source React calendar library, now rebuilt around a tiny ~13 KB gzipped core and an opt-in plugin ecosystem, so you only ship what you use. RFC 5545 recurring events, resource scheduling, drag-and-drop, timezones, and 100+ locales. Published on npm as @ilamy/calendar.",
+    stack: ["React", "TypeScript", "Tailwind CSS 4", "dnd-kit", "Motion"],
     href: "https://ilamy.dev",
-    repo: "https://github.com/kcsujeet/calendar",
+    repo: "https://github.com/kcsujeet/ilamy-calendar",
     state: ["Live", "Open Source"],
+    featured: true,
+  },
+  {
+    id: "sublimeread",
+    year: "2026",
+    title: "SublimeRead",
+    blurb:
+      "EPUB and PDF reader with natural-sounding narration that runs entirely on your device. Streaming neural text-to-speech in the browser, so books are read aloud with no servers and no uploads.",
+    stack: ["Astro", "React", "TypeScript", "Cloudflare", "WASM"],
+    href: "https://sublimeread.com",
+    state: ["Live"],
     featured: true,
   },
   {
@@ -52,7 +63,7 @@ const PROJECTS: Project[] = [
     state: ["Live"],
   },
   {
-    id: "deback",
+    id: "debackground",
     year: "2026",
     title: "Debackground",
     blurb:

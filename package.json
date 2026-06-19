@@ -13,9 +13,15 @@
     "ci": "bun run lint && bun run typecheck && bun run build"
   },
   "dependencies": {
+    "@astrojs/react": "^5.0.7",
     "@astrojs/sitemap": "^3.7.2",
+    "@base-ui/react": "^1.6.0",
     "@tailwindcss/vite": "^4.2.4",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
     "astro": "^6.1.9",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {
