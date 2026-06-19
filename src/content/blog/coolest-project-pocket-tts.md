@@ -1,5 +1,5 @@
 ---
-title: "The Coolest Project I've Come Across in a While"
+title: "The Coolest Piece of Software I've Come Across in a While"
 description: "I spent weeks trying to get high-quality, on-device text-to-speech working in a mobile browser. I was about to give up. Then I found pocket-tts, and it ran on my four-year-old phone like a charm."
 pubDate: 2026-06-18T19:36:22-03:00
 tags: ["typescript", "tts", "webassembly", "web-audio"]
@@ -10,7 +10,7 @@ draft: false
 
 The last few weeks, I've been on quite a ride. The kind where you pick up a feature thinking it's a couple of days of work, and somewhere around day ten you're squinting at a debug panel at midnight, genuinely wondering whether the thing you're trying to build is even possible yet.
 
-It started simply enough. I was building [SublimeRead](https://sublimeread.com), a reading app (EPUBs, PDFs, the usual), but the feature I actually cared about was narration: a real, natural voice that could read a book aloud.
+It started simply enough. I was building a reading app (EPUBs, PDFs, the usual), but the feature I actually cared about was narration: a real, natural voice that could read a book aloud.
 
 The first version was almost too easy. Browsers ship their own text-to-speech, the [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis), and it's free, runs on-device, and takes about three lines of code. I wired it up, hit play, and felt pretty pleased with myself. Done, basically.
 
