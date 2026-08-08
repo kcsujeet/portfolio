@@ -9,9 +9,9 @@ type Props = {
 
 const { title: pageTitle, description: pageDescription } = Astro.props;
 
-const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Halifax";
+const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Vancouver";
 const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
-const defaultDescription = `Senior Full-Stack Engineer specializing in React, Ruby on Rails, and Astro. Focused on building high-performance, scalable web applications and solving complex architectural challenges.`;
+const defaultDescription = `Senior full-stack engineer. Seven years across TypeScript, React, Node, and Ruby on Rails, building SaaS products, internal platforms, and developer tools.`;
 
 const finalTitle = pageTitle ?? defaultTitle;
 const finalOgTitle = pageTitle ?? defaultOgTitle;
@@ -22,7 +22,7 @@ const siteUrl = "https://kcsujeet.com.np/";
 const ogType = "website";
 const ogSiteName = "Sujeet Kc | Portfolio";
 const keywords =
-  "Sujeet Kc, Senior Full-Stack Engineer, Software Architect, Problem Solver, React Developer, Ruby on Rails Expert, PostgreSQL, Postgres, SQL, Redis, Docker, Astro Framework, TypeScript, Web Performance, Scalable Architecture, Canada Developer, Halifax Software Engineer";
+  "Sujeet Kc, Senior Full-Stack Engineer, Software Architect, Problem Solver, TypeScript Developer, React Developer, Next.js Developer, Node.js Developer, Ruby on Rails Developer, Astro Framework, Cloudflare Workers, PostgreSQL, Postgres, SQL, Redis, Docker, Web Performance, Scalable Architecture, Canada Developer, Vancouver Software Engineer, Coquitlam Software Engineer";
 
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
