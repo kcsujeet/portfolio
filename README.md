@@ -86,7 +86,7 @@ Components use semantic Tailwind utilities throughout (`text-primary`, `bg-card`
 
 ## Sections
 
-- **Hero**: Display name, intro, CTA links (View projects, Download resume, Let's talk)
+- **Hero**: Display name, intro, CTA links (View projects, Let's talk)
 - **About**: Bio paragraphs, education / focus / location grid, core stack chips
 - **Experience**: Native `<details>` cards with role, impact pill, summary, expandable bullets, and stack tags
 - **Projects**: Featured + grid layout, with status pills (Live, Open Source) and tech chips
