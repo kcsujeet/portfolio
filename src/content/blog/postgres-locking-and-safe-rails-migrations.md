@@ -148,11 +148,13 @@ In my case, an empty array is a constant, non-volatile default, so this `ADD COL
 
 ## The index was a different story
 
-The migration didn't just add a column. It also created an index, and not the usual kind.
+The migration didn't just add a column. It also created an index. You might be wondering about the `using: :gin` in that line, so a quick word on index types first.
 
 Postgres has [several index types](https://www.postgresql.org/docs/current/indexes-types.html): B-tree, Hash, GiST, SP-GiST, GIN, and BRIN. B-tree is the default and almost always what you're using; the docs describe it as handling "equality and range queries on data that can be sorted into some ordering," which covers the everyday `WHERE id = 5` and `WHERE created_at > ...` lookups.
 
 An array column doesn't fit that shape. The question you ask an array column isn't "which rows equal this array," it's "which rows contain this value." That's what GIN is for. The docs call GIN indexes "inverted indexes" that are "appropriate for data values that contain multiple component values, such as arrays": there's an index entry per element, so a query like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) can find its rows without scanning the table.
+
+That's why the migration says `using: :gin`, and it's also the last time the index type matters. Everything from here applies to building any index on a busy table.
 
 Index builds have their own locking story. A plain `CREATE INDEX` takes a `SHARE` lock, which the [locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) list as "Acquired by `CREATE INDEX` (without `CONCURRENTLY`)." `SHARE` conflicts with `ROW EXCLUSIVE`, the mode every `INSERT`, `UPDATE`, and `DELETE` takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) spell out what that feels like: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
 
