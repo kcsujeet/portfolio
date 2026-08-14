@@ -45,7 +45,7 @@ Most of the time you never notice any of this. Postgres handles it for you. The 
 At the table level, Postgres has [eight lock modes](https://www.postgresql.org/docs/current/explicit-locking.html). Five of them are enough to follow this post:
 
 - `ACCESS SHARE` is what a plain `SELECT` takes. It conflicts with `ACCESS EXCLUSIVE` only, which is why reads almost never block anything.
-- `ROW EXCLUSIVE` is what `INSERT`, `UPDATE`, and `DELETE` take.
+- `ROW EXCLUSIVE` is what `INSERT`, `UPDATE`, and `DELETE` take on the table. It doesn't conflict with itself, so writes never block each other at the table level.
 - `SHARE` is what a plain `CREATE INDEX` takes. It conflicts with `ROW EXCLUSIVE`, so writes wait while it's held.
 - `SHARE UPDATE EXCLUSIVE` is what `CREATE INDEX CONCURRENTLY` takes. It doesn't conflict with reads or writes.
 - `ACCESS EXCLUSIVE` is the strongest mode, taken by most forms of `ALTER TABLE`. It conflicts with everything above, including plain reads.
@@ -62,7 +62,7 @@ SET name = 'New name'
 WHERE id = 123;
 ```
 
-Postgres doesn't lock the entire `widgets` table. It locks the row being changed. That's why a busy table can handle lots of concurrent updates: one request updating row 123 doesn't prevent another from updating row 456.
+Postgres doesn't lock the entire `widgets` table against everyone. At the table level it takes `ROW EXCLUSIVE`, which doesn't conflict with reads or other writes, and the real exclusivity happens at the row level: it locks just the rows being changed. That's why a busy table can handle lots of concurrent updates: one request updating row 123 doesn't prevent another from updating row 456.
 
 Schema changes are different. When Rails runs `add_column :widgets, :tag_ids, :integer`, it becomes an `ALTER TABLE` in Postgres. You're no longer changing the contents of one row. You're changing the definition of the table itself.
 
@@ -104,9 +104,7 @@ if (lockMethodTable->conflictTab[lockmode] & lock->waitMask)
 
 A new `SELECT` wants an `ACCESS SHARE` lock. That conflicts with the `ACCESS EXCLUSIVE` the migration is *waiting* for, not just locks already held, so it joins the queue instead of jumping ahead.
 
-Notice that the migration never acquired the lock in this story. It's still waiting, and the queue is already forming behind it.
-
-And the queue only exists because the migration is in it. On its own, that long-running query at the front blocks nobody: reads don't conflict with reads, since only `ACCESS EXCLUSIVE` blocks a plain `SELECT`. Every new query would just run alongside it. With the migration in line, the picture changes:
+Notice that the migration never acquired the lock in this story. It's still waiting, the queue is already forming behind it, and the queue exists only because the migration is in it. On its own, that long-running query at the front blocks nobody: reads don't conflict with reads, since only `ACCESS EXCLUSIVE` blocks a plain `SELECT`. Every new query would just run alongside it. With the migration in line, the picture changes:
 
 - A user loads a page that reads from `widgets`.
 - Normally that page's query would run immediately, alongside whatever else is reading the table.
@@ -132,9 +130,13 @@ That difference is what decides the rewrite. With a constant default, Postgres e
 
 Note what isn't on the list of rewrite triggers: `NOT NULL`. I had absorbed the pre-Postgres-11 folklore that `NOT NULL` plus a default meant a rewrite. It doesn't, and hasn't for years. The trigger is volatility, not nullability. Changing an existing column's type is the other common rewrite, with a narrow exception when the old type is binary coercible to the new one.
 
-So table size matters, but only when the operation does work proportional to the table. A metadata-only change on a huge table is close to instant. A rewrite of that same table can take minutes, and the docs warn it "will temporarily require as much as double the disk space."
+## So, how bad does it get?
 
-Traffic decides whether anyone notices. A lock held for two minutes on a table nobody queries is a non-event. A lock held for a fraction of a second on a busy table can still start a queue, for the reason we saw earlier.
+How much a schema change hurts comes down to three things stacking: what the operation has to do, how big the table is, and how much traffic it gets while the lock is held. The operation is the part we just covered: Postgres either updates metadata, or it visits every row.
+
+Table size only matters for the second kind. Visiting every row costs time in proportion to how many rows there are. A metadata-only change is close to instant no matter how big the table is, but a rewrite of a table with tens of millions of rows can take minutes, and the docs warn it "will temporarily require as much as double the disk space."
+
+Traffic is the third factor, and it decides whether anyone notices. A lock held for two minutes on a table nobody queries is a non-event. A lock held for a fraction of a second on a busy table can still start a queue, for the reason we saw earlier.
 
 The combination you don't want is all of it at once:
 
@@ -146,7 +148,11 @@ In my case, an empty array is a constant, non-volatile default, so this `ADD COL
 
 ## The index was a different story
 
-The migration didn't just add a column. It also created a GIN index, the [index type Postgres provides for array columns](https://www.postgresql.org/docs/current/indexes-types.html). It's what makes queries like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) fast.
+The migration didn't just add a column. It also created an index, and not the usual kind.
+
+Postgres has [several index types](https://www.postgresql.org/docs/current/indexes-types.html): B-tree, Hash, GiST, SP-GiST, GIN, and BRIN. B-tree is the default and almost always what you're using; the docs describe it as handling "equality and range queries on data that can be sorted into some ordering," which covers the everyday `WHERE id = 5` and `WHERE created_at > ...` lookups.
+
+An array column doesn't fit that shape. The question you ask an array column isn't "which rows equal this array," it's "which rows contain this value." That's what GIN is for. The docs call GIN indexes "inverted indexes" that are "appropriate for data values that contain multiple component values, such as arrays": there's an index entry per element, so a query like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) can find its rows without scanning the table.
 
 Index builds have their own locking story. A plain `CREATE INDEX` takes a `SHARE` lock, which the [locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) list as "Acquired by `CREATE INDEX` (without `CONCURRENTLY`)." `SHARE` conflicts with `ROW EXCLUSIVE`, the mode every `INSERT`, `UPDATE`, and `DELETE` takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) spell out what that feels like: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
 
@@ -184,6 +190,8 @@ Now deploy again. Rails sees an unfinished migration and runs it from the beginn
 I never traced the exact failure to a specific pod or retry, so I can't prove that sequence. But the shape fits, and the fix is the tell: the follow-up PR added `if_not_exists: true` to *both* statements, not just the column. You only need it on the index if the index might already be sitting there.
 
 ## Why `if_not_exists` helps
+
+The follow-up version:
 
 ```ruby
 class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
