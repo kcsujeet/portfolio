@@ -174,7 +174,7 @@ Normally Rails wraps each migration in a transaction. If the migration fails hal
 
 But `CREATE INDEX CONCURRENTLY` can't run inside a transaction. The same docs again: "a regular `CREATE INDEX` command can be performed within a transaction block, but `CREATE INDEX CONCURRENTLY` cannot." That's why `disable_ddl_transaction!` is in the file, and that line changes the rules. There is no transaction anymore. The two statements are independent.
 
-And the index is the statement most likely to fail, because of the extra work above. On a busy table, waiting for every in-flight transaction can outlast a deploy timeout. We run on Kubernetes, which adds a second way for it to end badly: a migration that runs long can be cut off when the pod executing it is replaced during a rollout.
+And the index is the statement most likely to fail, because of the extra work above. On a busy table, waiting for every in-flight transaction can take longer than a deploy is allowed to run, and anything that kills the deploy mid-build takes the migration with it. For us that's Kubernetes replacing the pod during a rollout, but a CI timeout or a cancelled deploy does the same.
 
 Consider what happens when `add_column` succeeds and `add_index` fails:
 
@@ -187,7 +187,11 @@ rails:
   schema_migrations  → migration not recorded
 ```
 
-Now deploy again. Rails sees an unfinished migration and runs it from the beginning. The first statement is `add_column`, the column is already there, and Postgres answers with `PG::DuplicateColumn`. The migration stops immediately. It never even reaches the index.
+Now deploy again. Rails sees an unfinished migration and runs it from the beginning. The first statement is `add_column`, the column is already there, and Postgres answers with `PG::DuplicateColumn`.
+
+This is the error from the start of this post. It's why the retry failed immediately, before it could do anything at all: the migration dies on its first statement and never reaches the index.
+
+Deploy setups often retry on their own, and ours does: the migration runs as part of the rollout, so a restarted pod runs it again without anyone touching anything. That's why deploys stayed blocked: every attempt, automatic or manual, ran the same migration into the same existing column and hit the same wall. It stays that way until someone changes the migration or the schema by hand.
 
 I never traced the exact failure to a specific pod or retry, so I can't prove that sequence. But the shape fits, and the fix is the tell: the follow-up PR added `if_not_exists: true` to *both* statements, not just the column. You only need it on the index if the index might already be sitting there.
 
