@@ -23,6 +23,33 @@ One closing section, not two. Some older posts stack a prose `## Conclusion` on 
 
 Frontmatter needs `title`, `description`, `pubDate`, and `tags` as an array. No `# H1` in the body, since `PostLayout.astro` renders the title from frontmatter.
 
+### Openings
+
+State the symptom and the stakes. Do not state the diagnosis or the fix. Both are the payoff of later sections, and handing them over in paragraph one leaves the rest of the post with nothing to reveal. The model is the opening of `self-contained-html-snapshots-without-puppeteer.md`: what he needed, why the obvious options failed, then "It was harder than I expected, and the roadblocks were genuinely bizarre." Problem, constraint, stop.
+
+- Do not name a cause the post later derives. Calling a table "one of our busier tables" in the first line gives away a factor a whole section exists to establish. Introduce it where it becomes load bearing.
+- Do not narrate a code block you just pasted. "Two statements, plus a `disable_ddl_transaction!` at the top" tells the reader what is already on screen.
+- Do not foreshadow importance. "That directive is the one that mattered most" instructs the reader what to care about. Say what you knew at the time instead: "I knew `disable_ddl_transaction!` was required whenever you build an index concurrently, and that was about as far as my understanding went." The admission sets up the same payoff and sounds like him.
+- Skip precision flourishes. "the same eight lines of code" counts lines for effect when the code is directly below.
+- If code is edited for the post, say exactly how ("with the table and column renamed"), never "more or less as it shipped".
+
+### Transitions
+
+Every handoff must name what the next section actually delivers. A sentence pointing at "what Postgres does to a table during an `ALTER TABLE`" in front of a section on why locks exist at all sends the reader hunting for something two sections away.
+
+- Structural framing has to match how the post is organised. If you tell the reader there were two problems, split them the way the sections split them. Splitting the same incident chronologically when the sections split it by who got hurt makes both halves read wrong.
+- Do not leave a dangling promise. "for reasons I'll get to" defers a question with no payoff in sight. A setup line that hands straight into the section below it is a different thing and is fine: "Before getting to the problem and the fix, let's go back to the beginning: what a lock is, and what it does."
+- Section openers should not announce what the section is about to do. "Before getting into how Postgres locks a table, a word on why locking exists at all" is a sentence the heading already covers.
+
+### Keep the language plain
+
+He writes in short sentences made of everyday words, with something concrete doing something concrete. "I opened the codebase, started writing code, and shipped things." "You open a Rails project and there's a shape to everything." "Command-click in the editor and it shrugs." "The meeting happens at the wrong time for the Toronto user."
+
+- Prefer a thing doing something over an abstract noun phrase about it. "One problem hit everyone else using that table" beats "One problem was what the migration did to everything else".
+- Cut constructions that draw attention to the writing. "Working out the first one sent me further back than I expected" is doing a voice; "I had to go back further than I expected" is just saying it.
+- Simple beats clever every time. If a plainer word carries the same meaning, use the plainer word.
+- Accuracy still wins over simplicity. When a simple phrasing is wrong, fix the meaning first, then make the correct version plain. Do not keep a sentence because it sounds good.
+
 ### How he explains things
 
 - Build one concrete scenario with named places and real values, then reuse it for the whole post. The timezone post runs Tokyo and Toronto, `2025-01-01`, JST and UTC-5 through every example.
@@ -32,7 +59,9 @@ Frontmatter needs `title`, `description`, `pubDate`, and `tags` as an array. No 
 - Use `> **NOTE**:` blockquotes for caveats that would otherwise break the flow.
 - Point at a real product when it solves the problem well. "I really like how `Stripe` handles this."
 - Say so when there is no single right answer. "There's no single best way to display date-time in the front-end as it largely depends on product requirements and team consensus."
+- Build up from the fundamentals before the problem, so a reader who does not already know the concept can follow the fix. If a post says the table was locked, the reader needs to know what a lock is and what kinds exist before that means anything. Those primer sections are for the reader.
 - Admit what you did not know, and hedge honestly rather than projecting certainty. "I knew this meant `useWatch` gives better performance but I wasn't sure in what way or by how much." "I'd be lying if I said it was all smooth." "I never traced it down, but the shape fits."
+- Name the specific gap, never a general one. He knew what locks were for; what he did not know was which lock a schema change takes and when Postgres rewrites a whole table. Do not write narration that has him learning the basics of his own stack, and do not frame a reader primer as something he had to go and learn.
 - Quote and link primary documentation inline rather than asserting from memory.
 - Use "we" and "our team" for the work context, "I" for the investigation and the conclusions.
 
