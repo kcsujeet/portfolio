@@ -126,7 +126,11 @@ What does force a rewrite:
 
 > Adding a column with a volatile `DEFAULT` (e.g., `clock_timestamp()`), a stored generated column, an identity column, or a column with a domain data type that has constraints will cause the entire table and its indexes to be rewritten.
 
-Note what isn't on that list: `NOT NULL`. I had absorbed the pre-Postgres-11 folklore that `NOT NULL` plus a default meant a rewrite. It doesn't, and hasn't for years. The trigger is volatility, not nullability. Changing an existing column's type is the other common rewrite, with a narrow exception when the old type is binary coercible to the new one.
+"Volatile" is Postgres's term for a function that [can return different results on successive calls with the same arguments](https://www.postgresql.org/docs/current/xfunc-volatility.html). `clock_timestamp()` is volatile: call it twice and you get two different values. `random()` is another. An empty array, `0`, or `'pending'` is not: the value is the same no matter when you evaluate it.
+
+That difference is what decides the rewrite. With a constant default, Postgres evaluates it once, stores that single value in the table's metadata, and hands it back whenever an existing row is read. No row has to change. With a volatile default, every row is supposed to get its own value, so there is no single value to store. The only way to give each row its own result is to visit every row and write a value into it: a full table rewrite.
+
+Note what isn't on the list of rewrite triggers: `NOT NULL`. I had absorbed the pre-Postgres-11 folklore that `NOT NULL` plus a default meant a rewrite. It doesn't, and hasn't for years. The trigger is volatility, not nullability. Changing an existing column's type is the other common rewrite, with a narrow exception when the old type is binary coercible to the new one.
 
 So table size matters, but only when the operation does work proportional to the table. A metadata-only change on a huge table is close to instant. A rewrite of that same table can take minutes, and the docs warn it "will temporarily require as much as double the disk space."
 
