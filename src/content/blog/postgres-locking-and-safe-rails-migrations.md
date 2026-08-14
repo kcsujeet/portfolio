@@ -150,15 +150,17 @@ In my case, an empty array is a constant, non-volatile default, so this `ADD COL
 
 The migration didn't just add a column. It also created an index. You might be wondering about the `using: :gin` in that line, so a quick word on index types first.
 
-Postgres has [several index types](https://www.postgresql.org/docs/current/indexes-types.html): B-tree, Hash, GiST, SP-GiST, GIN, and BRIN. B-tree is the default and almost always what you're using; the docs describe it as handling "equality and range queries on data that can be sorted into some ordering," which covers the everyday `WHERE id = 5` and `WHERE created_at > ...` lookups.
+B-tree is the default index type and almost always what you're using. It handles [equality and range queries](https://www.postgresql.org/docs/current/indexes-types.html) on things that sort: `WHERE id = 5`, `WHERE created_at > ...`. Postgres has five other index types (Hash, GiST, SP-GiST, GIN, and BRIN) for queries that don't fit that shape.
 
-An array column doesn't fit that shape. The question you ask an array column isn't "which rows equal this array," it's "which rows contain this value." That's what GIN is for. The docs call GIN indexes "inverted indexes" that are "appropriate for data values that contain multiple component values, such as arrays": there's an index entry per element, so a query like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) can find its rows without scanning the table. That's why the migration says `using: :gin`.
+An array column is one of those. The question you ask it isn't "which rows equal this array," it's "which rows contain this value." That's what GIN is for: it keeps an index entry per element of the array, so a query like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) finds its rows without scanning the table. The docs call these "inverted indexes," "appropriate for data values that contain multiple component values, such as arrays." That's why the migration says `using: :gin`.
 
-Okay, back to the story. The index type won't matter again; what does matter is that the migration builds an index on a busy table, and index builds have their own locking story. A plain `CREATE INDEX` takes a `SHARE` lock, which the [locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) list as "Acquired by `CREATE INDEX` (without `CONCURRENTLY`)." `SHARE` conflicts with `ROW EXCLUSIVE`, the mode every `INSERT`, `UPDATE`, and `DELETE` takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) spell out what that feels like: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
+Okay, back to the story. The index type won't matter again; what does matter is that the migration builds an index on a busy table, and index builds have their own locking story.
 
-So it sits between the two extremes. `ACCESS EXCLUSIVE` blocks everything including reads. `SHARE` lets reads through and stops writes. On a GIN index over a busy table, that's a long time to accept no writes.
+While a plain `CREATE INDEX` runs, reads keep working but writes wait. That's because it takes a [`SHARE` lock](https://www.postgresql.org/docs/current/explicit-locking.html), and `SHARE` conflicts with `ROW EXCLUSIVE`, the lock every write takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) put it plainly: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
 
-`CONCURRENTLY` avoids it. It takes `SHARE UPDATE EXCLUSIVE` instead, which doesn't conflict with the `ROW EXCLUSIVE` every write takes, so writes keep flowing while the index builds.
+That's friendlier than `ACCESS EXCLUSIVE`, which blocks reads too, but it still means the table takes no writes for as long as the build runs. A busy table can't afford that.
+
+`CONCURRENTLY` avoids it. It takes `SHARE UPDATE EXCLUSIVE` instead, which doesn't conflict with reads or writes, so traffic keeps flowing while the index builds.
 
 The trade-off is that the build takes longer and does more work:
 
