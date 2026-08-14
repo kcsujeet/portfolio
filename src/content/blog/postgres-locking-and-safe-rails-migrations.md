@@ -13,9 +13,7 @@ This one looked routine too: add a column and an index to one of our tables, par
 
 Then came the part of deploying to production. I expected it to go just as smoothly there, but the deployment failed: the migration had stopped partway through. When I ran it again, it errored out immediately, before it could do anything at all. Deploys were blocked, and I had no idea why, because nothing about this change looked like it could break anything.
 
-So I started digging, and went down a rabbit hole of Postgres locks and Rails migration internals. That's what this post is about.
-
-Here is the migration, with the table and column renamed:
+So I started digging, and went down a rabbit hole of Postgres locks and Rails migration internals. That's what this post is about, and it starts with the migration itself, table and column renamed:
 
 ```ruby
 class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
@@ -30,7 +28,7 @@ end
 
 I knew why `disable_ddl_transaction!` was there: Postgres doesn't allow `CREATE INDEX CONCURRENTLY` inside a transaction. Beyond that, I hadn't thought much about what Postgres was doing underneath.
 
-It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. This one I only found because I went digging. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration, and it's the one that broke the deploy.
+It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration, and it's the one that broke the deploy.
 
 Understanding the first problem meant understanding locks. So let's start there.
 
