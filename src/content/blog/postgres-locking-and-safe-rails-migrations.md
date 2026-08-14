@@ -7,9 +7,9 @@ tags: ["postgresql", "rails", "ruby", "database"]
 
 ## The problem
 
-A while back I deployed a migration to add a column to one of our tables. It was a routine change, the kind you write without thinking twice, and it had run fine against staging.
+A while back I added a column and an index to one of our tables. Small change, part of a bigger feature, and it ran clean locally and on staging.
 
-In production it went wrong twice over. The first run didn't finish. Every attempt after that refused to start at all, and took the deploy down with it. Working out why took me longer than it should have, because there were two separate problems and they were both coming from the same migration.
+In production the deploy stopped partway through. The migration didn't finish, and when I ran it again it failed immediately, before it could do anything at all. Deploys stayed blocked until I worked out why.
 
 Here is the migration, with the table and column renamed:
 
@@ -24,13 +24,9 @@ class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
 end
 ```
 
-I'd written migrations like this one before. I knew `disable_ddl_transaction!` was required whenever you build an index concurrently, and that was about as far as my understanding went.
+I'd written migrations like this before. I knew `disable_ddl_transaction!` was needed to build the index concurrently, and that was about as far as my understanding went.
 
-One problem hit everyone else using that table while the migration ran. The other hit the migration itself when it failed halfway.
-
-I knew what locks were for. What I didn't know was the detail: which lock a schema change takes, when Postgres has to rewrite an entire table to make one, and what happens to every query that arrives while it waits.
-
-Before getting to the problem and the fix, let's go back to the beginning: what a lock is, and what it does.
+To work out what had happened, I first had to understand what a migration actually does to a table while it runs, and that comes down to locking. So let's start there: what a lock is, and what it does.
 
 ## Why databases need locks at all
 
