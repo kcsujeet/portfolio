@@ -7,11 +7,11 @@ tags: ["postgresql", "rails", "ruby", "database"]
 
 ## The problem
 
-A while back I deployed a migration to add a column to one of our busier tables. It was a routine change, the kind you write without thinking twice, and it had run fine against staging. In production it hit two separate problems, and it took me a while to realize they were both coming from the same eight lines of code.
+A while back I deployed a migration to add a column to one of our tables. It was a routine change, the kind you write without thinking twice, and it had run fine against staging.
 
-The first run took a lock on the table, which meant requests hitting that table during that window queued up behind it. Nobody reported anything at the time, and I can't say for certain customers felt it, but once I understood how that lock actually works I'd guess it wasn't entirely invisible. That same run then failed partway through, and every retry after it refused to start at all, taking the deploy down with it. I shipped a follow-up PR adding `if_not_exists: true` to get it through.
+In production it went wrong twice over. The first run didn't finish. Every attempt after that refused to start at all, and took the deploy down with it. Working out why took me longer than it should have, because there were two separate problems and they were both coming from the same migration.
 
-Here is the migration, more or less as it shipped:
+Here is the migration, with the table and column renamed:
 
 ```ruby
 class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
@@ -24,11 +24,15 @@ class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
 end
 ```
 
-Two statements, plus a `disable_ddl_transaction!` at the top. That directive is the one that mattered most, and the one I understood least at the time. It's there because of the `algorithm: :concurrently` on the index. Those two always travel together, for reasons I'll get to.
+I'd written migrations like this one before. I knew `disable_ddl_transaction!` was required whenever you build an index concurrently, and that was about as far as my understanding went.
+
+One problem hit everyone else using that table while the migration ran. The other hit the migration itself when it failed halfway.
+
+I knew what locks were for. What I didn't know was the detail: which lock a schema change takes, when Postgres has to rewrite an entire table to make one, and what happens to every query that arrives while it waits.
+
+Before getting to the problem and the fix, let's go back to the beginning: what a lock is, and what it does.
 
 ## Why databases need locks at all
-
-Before getting into how Postgres locks a table, a word on why locking exists at all. None of the rest makes sense without it.
 
 A production database has many things trying to read and write at the same time. Multiple requests, background jobs, and in our case a migration can all be touching the same table in the same moment. Without coordination that's a recipe for corruption. Two transactions could both read the same row, both decide to update it based on what they read, and one of those updates would silently overwrite the other. Or a transaction could read a row being modified by another transaction that hasn't finished yet, and end up working with data that's about to be rolled back.
 
@@ -92,7 +96,7 @@ Table size only matters once you're in rewrite territory. A metadata-only change
 
 Traffic decides whether anyone notices. A lock held for two minutes on a table nobody queries is a non-event. A lock held for a fraction of a second on a constantly-hit table can still start a queue, for the reason above.
 
-So the real danger is the combination: a rewriting operation, on a table that's both large and busy. Ours wasn't that. An empty array is a non-volatile default, so `add_column` landed on the fast metadata-only path and never triggered a rewrite. The lock was real but brief, and any pain came from queueing rather than duration. It's still the first thing I check on a migration touching a busy table, because the moment someone reaches for a computed default or a type change, that brief lock becomes an extended one.
+So the real danger is the combination: a rewriting operation, on a table that's both large and busy. Ours wasn't that. An empty array is a non-volatile default, so `add_column` landed on the fast metadata-only path and never triggered a rewrite. The lock was real but brief, and any pain came from queueing rather than duration. Nobody reported anything at the time and I can't say for certain customers felt it, but it's one of our busier tables, and knowing what I know now about that queue I'd guess it wasn't entirely invisible. It's still the first thing I check on a migration touching a busy table, because the moment someone reaches for a computed default or a type change, that brief lock becomes an extended one.
 
 ## The Rails half of the problem
 
