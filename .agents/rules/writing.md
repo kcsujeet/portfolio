@@ -27,12 +27,22 @@ Frontmatter needs `title`, `description`, `pubDate`, and `tags` as an array. No 
 
 Give the situation, what went wrong, and what it cost. Never the diagnosis or the fix, which are the payoff of later sections. The model is the top of `postgres-locking-and-safe-rails-migrations.md`:
 
-> A while back I added a column and an index to one of our tables. Small change, part of a bigger feature, and it ran clean locally and on staging.
+> I've been writing Ruby on Rails for a while now, and in all that time migrations have never given me trouble. Small hiccups, sure, but nothing serious.
 >
-> In production the deploy stopped partway through. The migration didn't finish, and when I ran it again it failed immediately, before it could do anything at all. Deploys stayed blocked until I worked out why.
+> This one looked routine too: add a column and an index to one of our tables, part of a bigger feature. I tested it locally, ran it on staging, everything passed.
+>
+> Then came the part of deploying to production. I expected it to go just as smoothly there, but the deployment failed: the migration had stopped partway through. When I ran it again, it errored out immediately, before it could do anything at all. Deploys were blocked, and I had no idea why, because nothing about this change looked like it could break anything.
+>
+> So I started digging, and went down a rabbit hole of Postgres locks and Rails migration internals. That's what this post is about.
 
+The arc is: his baseline, the routine change, the expectation breaking, the digging, what the post is. Each paragraph is one beat.
+
+- Start with his baseline before the incident: how long he has been doing this and that it had always been uneventful. The surprise in paragraph three only lands because paragraph one established the routine.
+- State the expectation and let the contrast carry the surprise: "I expected it to go just as smoothly there, but...". Say surprise once; if the expectation-then-break structure is doing it, do not also write "I was surprised".
+- Report the failure at the altitude he experienced it. He watched a deployment fail; the migration stopping partway is the explanation, not the headline. "the deployment failed: the migration had stopped partway through", not "the migration stopped partway through".
+- Close the intro by saying plainly what the post is: "So I started digging, and went down a rabbit hole of Postgres locks and Rails migration internals. That's what this post is about." Naming the topic areas is not a spoiler; naming the diagnosis is.
 - Place the work in real context. "part of a bigger feature" beats a change floating free with no reason to exist.
-- Say what it cost. "Deploys stayed blocked until I worked out why" is why a reader should care. Symptoms with no stakes are trivia.
+- Say what it cost. "Deploys were blocked" is why a reader should care. Symptoms with no stakes are trivia.
 - Describe the symptom concretely without naming the cause. "failed immediately, before it could do anything at all" shows the `PG::DuplicateColumn` behaviour without spending the reveal.
 - Plain does not mean bare. Stripping an opening down to clipped fragments takes the texture out along with the padding. Write plain sentences that carry real detail, not telegraphic ones.
 - Counting the problems is fine; compressing them into a balanced pair is not. "Two separate problems: one hit everyone else using that table, the other hit the migration itself" reads as constructed. Give each problem its own plain sentence instead: "It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what happens when a schema change touches a busy table. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration."
@@ -57,6 +67,7 @@ He writes in short sentences made of everyday words, with something concrete doi
 - Prefer a thing doing something over an abstract noun phrase about it. "The migration didn't finish" beats "the migration's execution was incomplete".
 - Cut constructions that draw attention to the writing. "Working out the first one sent me further back than I expected" is doing a voice; "I had to go back further than I expected" is just saying it.
 - Simple beats clever every time. If a plainer word carries the same meaning, use the plainer word.
+- One-sentence paragraphs are for lead-ins to a code block or quote ("You get a queue:"), not a rhythm. A run of them reads as staged; merge related sentences into normal paragraphs.
 - Accuracy still wins over simplicity. When a simple phrasing is wrong, fix the meaning first, then make the correct version plain. Do not keep a sentence because it sounds good.
 
 ### How he explains things
