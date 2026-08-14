@@ -399,5 +399,3 @@ And unlike screenshots or PDFs, these snapshots remain fully responsive. They lo
 The journey to get here was full of bizarre debugging sessions (invisible CSS rules, silent CORS failures, redirect traps) but each one taught me something real about how browsers render pages and how little of that rendering lives in the DOM you can see.
 
 If you're building something similar, my advice boils down to this: let the frontend prepare the DOM (including those hidden styles), offload asset fetching to the server (where CORS can't touch you), and inline everything so the result is truly self-contained.
-
-Thanks for reading! If you have thoughts, improvements, or questions, drop a comment below. 👋
