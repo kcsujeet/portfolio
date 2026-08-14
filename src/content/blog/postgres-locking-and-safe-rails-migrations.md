@@ -42,6 +42,16 @@ The easiest way to think about a lock is: "I'm doing something with this piece o
 
 Most of the time you never notice any of this. Postgres handles it for you. The part that matters for migrations is that Postgres has different kinds of locks, and they don't all block the same things.
 
+At the table level, Postgres has [eight lock modes](https://www.postgresql.org/docs/current/explicit-locking.html). Five of them are enough to follow this post:
+
+- `ACCESS SHARE` is what a plain `SELECT` takes. It conflicts with `ACCESS EXCLUSIVE` only, which is why reads almost never block anything.
+- `ROW EXCLUSIVE` is what `INSERT`, `UPDATE`, and `DELETE` take.
+- `SHARE` is what a plain `CREATE INDEX` takes. It conflicts with `ROW EXCLUSIVE`, so writes wait while it's held.
+- `SHARE UPDATE EXCLUSIVE` is what `CREATE INDEX CONCURRENTLY` takes. It doesn't conflict with reads or writes.
+- `ACCESS EXCLUSIVE` is the strongest mode, taken by most forms of `ALTER TABLE`. It conflicts with everything above, including plain reads.
+
+Whether two operations can run at the same time comes down to whether their lock modes conflict. The docs page above has the full conflict table if you want the complete picture.
+
 ## Row locks vs. table locks
 
 When your application runs something like:
@@ -94,7 +104,17 @@ if (lockMethodTable->conflictTab[lockmode] & lock->waitMask)
 
 A new `SELECT` wants an `ACCESS SHARE` lock. That conflicts with the `ACCESS EXCLUSIVE` the migration is *waiting* for, not just locks already held, so it joins the queue instead of jumping ahead.
 
-The surprising part is that the migration doesn't even have to hold the lock yet. It can be waiting for it while other work piles up behind it. That's why a migration on a busy table can cause an incident even when the migration itself isn't doing much work.
+Notice that the migration never acquired the lock in this story. It's still waiting, and the queue is already forming behind it.
+
+And the queue only exists because the migration is in it. On its own, that long-running query at the front blocks nobody: reads don't conflict with reads, since only `ACCESS EXCLUSIVE` blocks a plain `SELECT`. Every new query would just run alongside it. With the migration in line, the picture changes:
+
+- A user loads a page that reads from `widgets`.
+- Normally that page's query would run immediately, alongside whatever else is reading the table.
+- But it conflicts with the `ACCESS EXCLUSIVE` request already waiting, so it queues behind the migration.
+- Nothing moves until the long query finishes and the migration takes and releases its lock.
+- If that takes longer than the request timeout, the user gets an error page.
+
+Multiply that by every request touching the table while the migration waits. The long query at the front was harmless on its own. The migration's pending lock is what turned it into something the whole table has to wait for.
 
 ## Does adding a column rewrite the whole table?
 
