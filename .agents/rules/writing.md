@@ -25,8 +25,17 @@ Frontmatter needs `title`, `description`, `pubDate`, and `tags` as an array. No 
 
 ### Openings
 
-State the symptom and the stakes. Do not state the diagnosis or the fix. Both are the payoff of later sections, and handing them over in paragraph one leaves the rest of the post with nothing to reveal. The model is the opening of `self-contained-html-snapshots-without-puppeteer.md`: what he needed, why the obvious options failed, then "It was harder than I expected, and the roadblocks were genuinely bizarre." Problem, constraint, stop.
+Give the situation, what went wrong, and what it cost. Never the diagnosis or the fix, which are the payoff of later sections. The model is the top of `postgres-locking-and-safe-rails-migrations.md`:
 
+> A while back I added a column and an index to one of our tables. Small change, part of a bigger feature, and it ran clean locally and on staging.
+>
+> In production the deploy stopped partway through. The migration didn't finish, and when I ran it again it failed immediately, before it could do anything at all. Deploys stayed blocked until I worked out why.
+
+- Place the work in real context. "part of a bigger feature" beats a change floating free with no reason to exist.
+- Say what it cost. "Deploys stayed blocked until I worked out why" is why a reader should care. Symptoms with no stakes are trivia.
+- Describe the symptom concretely without naming the cause. "failed immediately, before it could do anything at all" shows the `PG::DuplicateColumn` behaviour without spending the reveal.
+- Plain does not mean bare. Stripping an opening down to clipped fragments takes the texture out along with the padding. Write plain sentences that carry real detail, not telegraphic ones.
+- Never frame the incident as a numbered set. "Two separate problems from the same migration: one hit everyone else using that table, the other hit the migration itself" is bookkeeping for the post's structure, and balanced pairs like it read as constructed. Say what happened in order and let the sections do the organising.
 - Do not name a cause the post later derives. Calling a table "one of our busier tables" in the first line gives away a factor a whole section exists to establish. Introduce it where it becomes load bearing.
 - Do not narrate a code block you just pasted. "Two statements, plus a `disable_ddl_transaction!` at the top" tells the reader what is already on screen.
 - Do not foreshadow importance. "That directive is the one that mattered most" instructs the reader what to care about. Say what you knew at the time instead: "I knew `disable_ddl_transaction!` was required whenever you build an index concurrently, and that was about as far as my understanding went." The admission sets up the same payoff and sounds like him.
@@ -37,7 +46,7 @@ State the symptom and the stakes. Do not state the diagnosis or the fix. Both ar
 
 Every handoff must name what the next section actually delivers. A sentence pointing at "what Postgres does to a table during an `ALTER TABLE`" in front of a section on why locks exist at all sends the reader hunting for something two sections away.
 
-- Structural framing has to match how the post is organised. If you tell the reader there were two problems, split them the way the sections split them. Splitting the same incident chronologically when the sections split it by who got hurt makes both halves read wrong.
+- Introduce a concept before leaning on it. Do not jump from the symptom straight to "understanding Postgres locking" when nothing has told the reader locks are involved at all. Spell out the link: "To work out what had happened, I first had to understand what a migration actually does to a table while it runs, and that comes down to locking."
 - Do not leave a dangling promise. "for reasons I'll get to" defers a question with no payoff in sight. A setup line that hands straight into the section below it is a different thing and is fine: "Before getting to the problem and the fix, let's go back to the beginning: what a lock is, and what it does."
 - Section openers should not announce what the section is about to do. "Before getting into how Postgres locks a table, a word on why locking exists at all" is a sentence the heading already covers.
 
@@ -45,7 +54,7 @@ Every handoff must name what the next section actually delivers. A sentence poin
 
 He writes in short sentences made of everyday words, with something concrete doing something concrete. "I opened the codebase, started writing code, and shipped things." "You open a Rails project and there's a shape to everything." "Command-click in the editor and it shrugs." "The meeting happens at the wrong time for the Toronto user."
 
-- Prefer a thing doing something over an abstract noun phrase about it. "One problem hit everyone else using that table" beats "One problem was what the migration did to everything else".
+- Prefer a thing doing something over an abstract noun phrase about it. "The migration didn't finish" beats "the migration's execution was incomplete".
 - Cut constructions that draw attention to the writing. "Working out the first one sent me further back than I expected" is doing a voice; "I had to go back further than I expected" is just saying it.
 - Simple beats clever every time. If a plainer word carries the same meaning, use the plainer word.
 - Accuracy still wins over simplicity. When a simple phrasing is wrong, fix the meaning first, then make the correct version plain. Do not keep a sentence because it sounds good.
