@@ -17,7 +17,9 @@ Posts come in two shapes. Match the one that fits.
 - **Guide.** Opens with `## Introduction` and a short "What We Will Cover" list, then topic sections. See `handling-timezones-without-bugs.md`.
 - **Incident.** Opens with `## The Problem` and follows the investigation: `## The Investigation`, `## The Root Cause`, `## The Solution`. See `self-contained-html-snapshots-without-puppeteer.md` and `postgres-locking-and-safe-rails-migrations.md`.
 
-Both shapes close with a concrete takeaways section: `## Conclusion`, `## Key Takeaways`, `## Final Takeaways`, or `## What I do differently now`. It lists what to actually do. It does not reflect on the post's own value, and it never invites replies or comments, because the site has no comment section.
+Both shapes close with one concrete takeaways section, named `## Conclusion`, `## Key Takeaways`, `## Final Takeaways`, or `## What I do differently now`. It lists what to actually do. It does not reflect on the post's own value, and it never invites replies or comments, because the site has no comment section.
+
+One closing section, not two. Some older posts stack a prose `## Conclusion` on top of a takeaways list, and that prose paragraph is always the weakest thing on the page ("Performance regressions can be sneaky"). Write the list and stop.
 
 Frontmatter needs `title`, `description`, `pubDate`, and `tags` as an array. No `# H1` in the body, since `PostLayout.astro` renders the title from frontmatter.
 
