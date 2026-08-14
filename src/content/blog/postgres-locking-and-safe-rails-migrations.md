@@ -7,9 +7,13 @@ tags: ["postgresql", "rails", "ruby", "database"]
 
 ## The Problem
 
-A while back I added a column and an index to one of our tables. Small change, part of a bigger feature, and it ran clean locally and on staging.
+I've been writing Ruby on Rails for a while now, and in all that time migrations have never given me trouble. Small hiccups, sure, but nothing serious.
 
-In production the deploy stopped partway through. The migration didn't finish, and when I ran it again it failed immediately, before it could do anything at all. Deploys stayed blocked until I worked out why.
+This one looked routine too: add a column and an index to one of our tables, part of a bigger feature. I tested it locally, ran it on staging, everything passed.
+
+Then came the part of deploying to production. I expected it to go just as smoothly there, but the deployment failed: the migration had stopped partway through. When I ran it again, it errored out immediately, before it could do anything at all. Deploys were blocked, and I had no idea why, because nothing about this change looked like it could break anything.
+
+So I started digging, and went down a rabbit hole of Postgres locks and Rails migration internals. That's what this post is about.
 
 Here is the migration, with the table and column renamed:
 
@@ -24,13 +28,9 @@ class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
 end
 ```
 
-I'd written migrations like this before. I knew why `disable_ddl_transaction!` was there: Postgres doesn't allow `CREATE INDEX CONCURRENTLY` inside a transaction. Beyond that, I hadn't thought much about what Postgres was doing underneath.
+I knew why `disable_ddl_transaction!` was there: Postgres doesn't allow `CREATE INDEX CONCURRENTLY` inside a transaction. Beyond that, I hadn't thought much about what Postgres was doing underneath.
 
-It turned out there were two separate problems hiding in this migration.
-
-The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. This one I only found because I went digging.
-
-The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration. This is the one that broke the deploy.
+It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. This one I only found because I went digging. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration, and it's the one that broke the deploy.
 
 Understanding the first problem meant understanding locks. So let's start there.
 
@@ -124,9 +124,9 @@ In my case, an empty array is a constant, non-volatile default, so this `ADD COL
 
 ## The index was a different story
 
-The migration didn't just add a column. It also created a GIN index, and index builds have their own locking story.
+The migration didn't just add a column. It also created a GIN index, the [index type Postgres provides for array columns](https://www.postgresql.org/docs/current/indexes-types.html). It's what makes queries like "which widgets have tag 5" (`tag_ids @> ARRAY[5]`) fast.
 
-A plain `CREATE INDEX` takes a `SHARE` lock, which the [locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) list as "Acquired by `CREATE INDEX` (without `CONCURRENTLY`)." `SHARE` conflicts with `ROW EXCLUSIVE`, the mode every `INSERT`, `UPDATE`, and `DELETE` takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) spell out what that feels like: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
+Index builds have their own locking story. A plain `CREATE INDEX` takes a `SHARE` lock, which the [locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) list as "Acquired by `CREATE INDEX` (without `CONCURRENTLY`)." `SHARE` conflicts with `ROW EXCLUSIVE`, the mode every `INSERT`, `UPDATE`, and `DELETE` takes. The [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html) spell out what that feels like: "Other transactions can still read the table, but if they try to insert, update, or delete rows in the table they will block until the index build is finished."
 
 So it sits between the two extremes. `ACCESS EXCLUSIVE` blocks everything including reads. `SHARE` lets reads through and stops writes. On a GIN index over a busy table, that's a long time to accept no writes.
 
@@ -178,9 +178,7 @@ end
 
 Rails has supported these options since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`." If the column already exists, the statement does nothing instead of raising. Same idea for the index. The migration becomes tolerant of a partial previous run.
 
-This is the version that went through. Deploys were unblocked.
-
-But there's a catch.
+This is the version that went through, and deploys were unblocked. But there's a catch.
 
 ## `if_not_exists` doesn't make a failed index safe
 
