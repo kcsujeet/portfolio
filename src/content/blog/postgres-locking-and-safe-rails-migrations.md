@@ -193,7 +193,9 @@ This is the error from the start of this post. It's why the retry failed immedia
 
 Deploy setups often retry on their own, and ours does: the migration runs as part of the rollout, so a restarted pod runs it again without anyone touching anything. That's why deploys stayed blocked: every attempt, automatic or manual, ran the same migration into the same existing column and hit the same wall. It stays that way until someone changes the migration or the schema by hand.
 
-I never traced the exact failure to a specific pod or retry, so I can't prove that sequence. But the shape fits, and the fix is the tell: the follow-up PR added `if_not_exists: true` to *both* statements, not just the column. You only need it on the index if the index might already be sitting there.
+I can't prove that's exactly what happened; I never traced it down to a specific run or retry. What I could see was the state itself: the column existed, the migration wasn't recorded, and every deploy died on the same error.
+
+The way out was to make the migration stop fighting the column it had already created. I reverted the deploy and shipped a follow-up PR with one change: `if_not_exists: true` on both statements.
 
 ## Why `if_not_exists` helps
 
@@ -212,9 +214,11 @@ class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
 end
 ```
 
-Rails has supported these options since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`." If the column already exists, the statement does nothing instead of raising. Same idea for the index. The migration becomes tolerant of a partial previous run.
+With `if_not_exists: true`, a statement whose work is already done does nothing instead of raising. Rails has supported it since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`."
 
-This is the version that went through, and deploys were unblocked. But there's a catch.
+The guard on the column is what unblocked us: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement. The guard on the index is there for the same reason, in case the failed build got far enough to leave an index behind.
+
+This is the version that went through. But there's a catch.
 
 ## `if_not_exists` doesn't make a failed index safe
 
