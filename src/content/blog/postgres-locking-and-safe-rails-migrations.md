@@ -166,15 +166,15 @@ The trade-off is that the build takes longer and does more work:
 
 > PostgreSQL must perform two scans of the table, and in addition it must wait for all existing transactions that could potentially modify or use the index to terminate. Thus this method requires more total work than a standard index build and takes significantly longer to complete.
 
-So "concurrent" doesn't mean free. It means: build this index without stopping normal application writes. That's usually what you want in production, but the build itself can take a while. And that brings us to the second problem.
+So "concurrent" doesn't mean free. It means: build this index without stopping normal application writes. That's usually the right trade in production. But it leaves the migration with one slow statement in it, and concurrent builds come with one more rule. Those two together are the second problem.
 
 ## The Rails part I didn't understand
 
-Normally Rails wraps each migration in a transaction. If the migration fails halfway, Postgres rolls back the earlier statements, and you don't end up with half a migration applied.
+The rule is in the [CREATE INDEX docs](https://www.postgresql.org/docs/current/sql-createindex.html): "a regular `CREATE INDEX` command can be performed within a transaction block, but `CREATE INDEX CONCURRENTLY` cannot."
 
-But `CREATE INDEX CONCURRENTLY` can't run inside a transaction. The same docs again: "a regular `CREATE INDEX` command can be performed within a transaction block, but `CREATE INDEX CONCURRENTLY` cannot." That's why `disable_ddl_transaction!` is in the file, and that line changes the rules. There is no transaction anymore. The two statements are independent.
+That matters because of what the transaction was doing for you. Normally Rails wraps each migration in one: if the migration fails halfway, Postgres rolls back the earlier statements, and you don't end up with half a migration applied. To build its index concurrently, this migration had to turn that off. That's what `disable_ddl_transaction!` does. There is no transaction anymore, the two statements are independent, and nothing rolls anything back.
 
-And the index is the statement most likely to fail, because of the extra work above. On a busy table, waiting for every in-flight transaction can take longer than a deploy is allowed to run, and anything that kills the deploy mid-build takes the migration with it. For us that's Kubernetes replacing the pod during a rollout, but a CI timeout or a cancelled deploy does the same.
+And the index is the statement most likely to fail, because it's the slow one. On a busy table, waiting for every in-flight transaction can take longer than a deploy is allowed to run, and anything that kills the deploy mid-build takes the migration with it. For us that's Kubernetes replacing the pod during a rollout, but a CI timeout or a cancelled deploy does the same.
 
 Consider what happens when `add_column` succeeds and `add_index` fails:
 
