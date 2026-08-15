@@ -1,6 +1,6 @@
 ---
-title: What a Broken Migration Taught Me About PostgreSQL Locking
-description: How PostgreSQL locking works, why ALTER TABLE needs a table-level lock instead of a row-level one, and what happened when disable_ddl_transaction! turned one failed migration into a schema state Rails couldn't recover from.
+title: What a Broken Migration Taught Me About PostgreSQL Locking and Rails Migration Safety
+description: How PostgreSQL locking works, why a waiting ALTER TABLE queues every query behind it, what disable_ddl_transaction! really gives up, and how if_not_exists can hide a broken index behind a green deploy.
 pubDate: 2026-08-13T21:28:29-07:00
 tags: ["postgresql", "rails", "ruby", "database"]
 ---
