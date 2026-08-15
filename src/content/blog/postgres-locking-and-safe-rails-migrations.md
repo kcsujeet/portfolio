@@ -28,7 +28,7 @@ end
 
 I knew why `disable_ddl_transaction!` was there: Postgres doesn't allow `CREATE INDEX CONCURRENTLY` inside a transaction. Beyond that, I hadn't thought much about what Postgres was doing underneath.
 
-It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration, and it's the one that broke the deploy.
+It turned out there were two separate problems hiding in this migration. The first was about Postgres locks: what my migration was doing to everyone else using that table while it ran. The second was about Rails: what happens when you disable the transaction that would normally roll back a failed migration. This second one is what broke the deploy.
 
 Understanding the first problem meant understanding locks. So let's start there.
 
@@ -62,7 +62,7 @@ SET name = 'New name'
 WHERE id = 123;
 ```
 
-Postgres doesn't lock the entire `widgets` table against everyone. At the table level it takes `ROW EXCLUSIVE`, which doesn't conflict with reads or other writes, and the real exclusivity happens at the row level: it locks just the rows being changed. That's why a busy table can handle lots of concurrent updates: one request updating row 123 doesn't prevent another from updating row 456.
+Postgres doesn't lock the entire `widgets` table against everyone. It takes the `ROW EXCLUSIVE` lock from the list above, which doesn't block reads or other writes, and then locks just the rows being changed. That's why a busy table can handle lots of concurrent updates: one request updating row 123 doesn't prevent another from updating row 456.
 
 Schema changes are different. When Rails runs `add_column :widgets, :tag_ids, :integer`, it becomes an `ALTER TABLE` in Postgres. You're no longer changing the contents of one row. You're changing the definition of the table itself.
 
@@ -70,7 +70,7 @@ That definition isn't stored per row. It's stored once, in the system catalogs (
 
 The [ALTER TABLE docs](https://www.postgresql.org/docs/current/sql-altertable.html) are blunt about it: "Note that the lock level required may differ for each subform. An `ACCESS EXCLUSIVE` lock is acquired unless explicitly noted." A handful of subforms take something weaker, but the default is the heaviest lock available, and `ADD COLUMN` takes the default.
 
-`ACCESS EXCLUSIVE` is the strongest table-level lock Postgres has. Per the [explicit locking docs](https://www.postgresql.org/docs/current/explicit-locking.html), it "conflicts with locks of all modes" and guarantees "the holder is the only transaction accessing the table in any way." Unlike every other lock mode, it also blocks plain `SELECT` queries: "Only an `ACCESS EXCLUSIVE` lock blocks a `SELECT` (without `FOR UPDATE/SHARE`) statement."
+`ACCESS EXCLUSIVE` is the strongest table-level lock Postgres has. The [explicit locking docs](https://www.postgresql.org/docs/current/explicit-locking.html) say it "conflicts with locks of all modes" and guarantees "the holder is the only transaction accessing the table in any way." Unlike every other lock mode, it also blocks plain `SELECT` queries: "Only an `ACCESS EXCLUSIVE` lock blocks a `SELECT` (without `FOR UPDATE/SHARE`) statement."
 
 This was the first part I hadn't fully appreciated. I knew an `ALTER TABLE` needed a lock. I didn't realize a small schema change could block ordinary reads from the table.
 
@@ -102,9 +102,9 @@ if (lockMethodTable->conflictTab[lockmode] & lock->waitMask)
     found_conflict = true;
 ```
 
-A new `SELECT` wants an `ACCESS SHARE` lock. That conflicts with the `ACCESS EXCLUSIVE` the migration is *waiting* for, not just locks already held, so it joins the queue instead of jumping ahead.
+Postgres checks a new request against the locks waiters are asking for, not just the locks already held. A new `SELECT` wants an `ACCESS SHARE` lock, and that conflicts with the `ACCESS EXCLUSIVE` the migration is *waiting* for, so the `SELECT` joins the queue instead of jumping ahead.
 
-Notice that the migration never acquired the lock in this story. It's still waiting, the queue is already forming behind it, and the queue exists only because the migration is in it. On its own, that long-running query at the front blocks nobody: reads don't conflict with reads, since only `ACCESS EXCLUSIVE` blocks a plain `SELECT`. Every new query would just run alongside it. With the migration in line, the picture changes:
+Notice that the migration never acquired the lock in this story. It's still waiting, and the queue is already forming behind it. The queue also exists only because the migration is in it. On its own, that long-running query at the front blocks nobody: reads don't conflict with reads, since only `ACCESS EXCLUSIVE` blocks a plain `SELECT`. Every new query would just run alongside it. With the migration in line, the picture changes:
 
 - A user loads a page that reads from `widgets`.
 - Normally that page's query would run immediately, alongside whatever else is reading the table.
@@ -120,21 +120,21 @@ This is where I had another misconception. I'd heard the usual warning: be caref
 
 > When a column is added with `ADD COLUMN` and a non-volatile `DEFAULT` is specified, the default value is evaluated at the time of the statement and the result stored in the table's metadata [...] making the `ALTER TABLE` very fast even on large tables. If no column constraints are specified, NULL is used as the `DEFAULT`. In neither case is a rewrite of the table required.
 
-What does force a rewrite:
+And here is what does force a rewrite:
 
 > Adding a column with a volatile `DEFAULT` (e.g., `clock_timestamp()`), a stored generated column, an identity column, or a column with a domain data type that has constraints will cause the entire table and its indexes to be rewritten.
 
 "Volatile" is Postgres's term for a function that [can return different results on successive calls with the same arguments](https://www.postgresql.org/docs/current/xfunc-volatility.html). `clock_timestamp()` is volatile: call it twice and you get two different values. `random()` is another. An empty array, `0`, or `'pending'` is not: the value is the same no matter when you evaluate it.
 
-That difference is what decides the rewrite. With a constant default, Postgres evaluates it once, stores that single value in the table's metadata, and hands it back whenever an existing row is read. No row has to change. With a volatile default, every row is supposed to get its own value, so there is no single value to store. The only way to give each row its own result is to visit every row and write a value into it: a full table rewrite.
+That difference decides whether Postgres has to rewrite the table. With a constant default, Postgres evaluates it once, stores that single value in the table's metadata, and hands it back whenever an existing row is read. No row has to change. With a volatile default, every row is supposed to get its own value, so there is no single value to store. The only way to give each row its own result is to visit every row and write a value into it: a full table rewrite.
 
-Note what isn't on the list of rewrite triggers: `NOT NULL`. I had absorbed the pre-Postgres-11 folklore that `NOT NULL` plus a default meant a rewrite. It doesn't, and hasn't for years. The trigger is volatility, not nullability. Changing an existing column's type is the other common rewrite, with a narrow exception when the old type is binary coercible to the new one.
+Note what isn't on the list of rewrite triggers: `NOT NULL`. I had absorbed the pre-Postgres-11 folklore that `NOT NULL` plus a default meant a rewrite. It doesn't, and hasn't for years. What forces a rewrite is a volatile default, not `NOT NULL`. Changing an existing column's type is the other common rewrite, unless the old and new types are stored the same way on disk.
 
 ## So, how bad does it get?
 
 How much a schema change hurts comes down to three things stacking: what the operation has to do, how big the table is, and how much traffic it gets while the lock is held. The operation is the part we just covered: Postgres either updates metadata, or it visits every row.
 
-Table size only matters for the second kind. Visiting every row costs time in proportion to how many rows there are. A metadata-only change is close to instant no matter how big the table is, but a rewrite of a table with tens of millions of rows can take minutes, and the docs warn it "will temporarily require as much as double the disk space."
+Table size only matters for the second kind. Visiting every row takes longer the more rows a table has. A metadata-only change is close to instant no matter how big the table is, but a rewrite of a table with tens of millions of rows can take minutes, and the docs warn it "will temporarily require as much as double the disk space."
 
 Traffic is the third factor, and it decides whether anyone notices. A lock held for two minutes on a table nobody queries is a non-event. A lock held for a fraction of a second on a busy table can still start a queue, for the reason we saw earlier.
 
@@ -160,7 +160,7 @@ While a plain `CREATE INDEX` runs, reads keep working but writes wait. That's be
 
 That's friendlier than `ACCESS EXCLUSIVE`, which blocks reads too, but it still means the table takes no writes for as long as the build runs. A busy table can't afford that.
 
-`CONCURRENTLY` avoids it. It takes `SHARE UPDATE EXCLUSIVE` instead, which doesn't conflict with reads or writes, so traffic keeps flowing while the index builds.
+`CONCURRENTLY` avoids the write-blocking. It takes `SHARE UPDATE EXCLUSIVE` instead, which doesn't conflict with reads or writes, so traffic keeps flowing while the index builds.
 
 The trade-off is that the build takes longer and does more work:
 
@@ -214,27 +214,32 @@ end
 
 With `if_not_exists: true`, a statement whose work is already done does nothing instead of raising. Rails has supported it since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`."
 
-The guard on the column is what unblocked us: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement.
+The guard on the column is the one that mattered for the error we were stuck on: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement. The guard on the index does the same job one statement later: if an earlier run left an index with that name behind, the retry skips it instead of failing on it.
 
-The guard on the index covers two cases. If the first run finished the build but died before recording the migration, the retry skips a perfectly good index and moves on; that case is harmless. If the build itself failed partway, the retry skips whatever the failure left behind, and that case isn't.
+The guarded migration went through, deploys were moving again, and at the time that felt like the end of it.
 
-This is the version that went through. But there's a catch, and it's the second case.
+## `if_not_exists` can hide a broken index
 
-## `if_not_exists` doesn't make a failed index safe
+Reading the CREATE INDEX docs more closely afterwards, I found that the index guard can do something worse than fail: it can hide a broken index.
 
-A concurrent index build that fails doesn't clean up after itself. From the [docs](https://www.postgresql.org/docs/current/sql-createindex.html):
+If an earlier run built the index completely and just died before recording the migration, the guard skips a perfectly good index; nothing lost. But a build that fails partway is different, because a concurrent build that fails doesn't clean up after itself. Postgres keeps the half-built index and marks it invalid. From the [docs](https://www.postgresql.org/docs/current/sql-createindex.html):
 
 > If a problem arises while scanning the table, such as a deadlock or a uniqueness violation in a unique index, the `CREATE INDEX` command will fail but leave behind an "invalid" index. This index will be ignored for querying purposes because it might be incomplete; however it will still consume update overhead.
 
-So a failed build leaves a real index object behind:
+Now, when you run the guarded migration on top of that, this happens:
 
 ```text
-index exists → but is invalid → queries ignore it → writes still pay for it
+first run:  column created → index build fails → invalid index left behind
+retry:      column skipped → index skipped too → migration reports success
 ```
 
-Now retry with `if_not_exists: true`. Postgres sees an index with that name, skips the creation, and the migration succeeds. Green deploy, invalid index. That's arguably worse than the original failure, because the problem is now hidden.
+The deploy is green, so as far as anyone can tell, the migration worked. But a green deploy only tells you the migration ran. It doesn't tell you whether the index came out whole or broken, and a broken index causes real problems:
 
-The documented recovery is manual: "The recommended recovery method in such cases is to drop the index and try again to perform `CREATE INDEX CONCURRENTLY`. (Another possibility is to rebuild the index with `REINDEX INDEX CONCURRENTLY`.)" You can find invalid indexes with:
+- The queries the index was built for never get fast. "Which widgets have tag 5" still scans the whole table, because Postgres won't use an invalid index.
+- Every write to the table still pays to keep the broken index updated, so you carry the cost of an index without getting anything back from it.
+- Nobody goes looking for any of this, because nothing failed. The column exists, an index with the right name exists, the deploy passed. The slow queries surface later as a mystery, and the first thing everyone checks ("do we have an index on that?") says yes.
+
+There is no automatic fix for a broken index; you have to repair it by hand. From the same docs: "The recommended recovery method in such cases is to drop the index and try again to perform `CREATE INDEX CONCURRENTLY`. (Another possibility is to rebuild the index with `REINDEX INDEX CONCURRENTLY`.)" You can find invalid indexes with this query:
 
 ```sql
 SELECT indexrelid::regclass AS index, indrelid::regclass AS table
