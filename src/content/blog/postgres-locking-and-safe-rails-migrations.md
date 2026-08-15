@@ -195,7 +195,7 @@ Deploy setups often retry on their own, and ours does: the migration runs as par
 
 I can't prove that's exactly what happened; I never traced it down to a specific run or retry. What I could see was the state itself: the column existed, the migration wasn't recorded, and every deploy died on the same error.
 
-The way out was to make the migration stop fighting the column it had already created. I reverted the deploy and shipped a follow-up PR with one change: `if_not_exists: true` on both statements.
+The way out was to make the migration okay with that state: if something it creates is already there, skip it and move on. I reverted the deploy and shipped a follow-up PR with one change: `if_not_exists: true` on both statements.
 
 ## Why `if_not_exists` helps
 
@@ -216,9 +216,11 @@ end
 
 With `if_not_exists: true`, a statement whose work is already done does nothing instead of raising. Rails has supported it since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`."
 
-The guard on the column is what unblocked us: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement. The guard on the index is there for the same reason, in case the failed build got far enough to leave an index behind.
+The guard on the column is what unblocked us: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement.
 
-This is the version that went through. But there's a catch.
+The guard on the index covers two cases. If the first run finished the build but died before recording the migration, the retry skips a perfectly good index and moves on; that case is harmless. If the build itself failed partway, the retry skips whatever the failure left behind, and that case isn't.
+
+This is the version that went through. But there's a catch, and it's the second case.
 
 ## `if_not_exists` doesn't make a failed index safe
 
