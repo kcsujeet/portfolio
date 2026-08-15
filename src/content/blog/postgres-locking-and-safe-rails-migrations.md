@@ -195,11 +195,7 @@ Deploy setups often retry on their own, and ours does: the migration runs as par
 
 I can't prove that's exactly what happened; I never traced it down to a specific run or retry. What I could see was the state itself: the column existed, the migration wasn't recorded, and every deploy died on the same error.
 
-The way out was to make the migration okay with that state: if something it creates is already there, skip it and move on. I reverted the deploy and shipped a follow-up PR with one change: `if_not_exists: true` on both statements.
-
-## Why `if_not_exists` helps
-
-The follow-up version:
+The way out was to make the migration okay with that state: if something it creates is already there, skip it and move on. I reverted the deploy and shipped a follow-up PR with one change, `if_not_exists: true` on both statements:
 
 ```ruby
 class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
@@ -213,6 +209,8 @@ class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
   end
 end
 ```
+
+## Why `if_not_exists` helps
 
 With `if_not_exists: true`, a statement whose work is already done does nothing instead of raising. Rails has supported it since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`."
 
