@@ -70,7 +70,9 @@ He writes in short sentences made of everyday words, with something concrete doi
 - Cut constructions that draw attention to the writing. "Working out the first one sent me further back than I expected" is doing a voice; "I had to go back further than I expected" is just saying it.
 - Simple beats clever every time. If a plainer word carries the same meaning, use the plainer word.
 - One-sentence paragraphs are for lead-ins to a code block or quote ("You get a queue:"), not a rhythm. A run of them reads as staged; merge related sentences into normal paragraphs.
+- A lead-in is a full sentence, never a verbless fragment. "So after a failed build, you end up with a state like this:" reads spoken; "The state you're left with:" and "The follow-up version:" read like slide titles.
 - Don't gesture when you can point. "Safe to run again, no matter how much of it had already happened" abstracts over facts the reader already has; "make the migration okay with that state: if something it creates is already there, skip it and move on" points at them. When the concrete state is already on the page, refer to it.
+- Name the object even when context implies it. "There is no automatic fix" makes the reader fill in fix for what; "There is no automatic fix for a broken index" costs four more words and reads complete. Be explicit wherever it doesn't make the sentence clumsy.
 - A framing sentence must match the scope of what it introduces. "Stop fighting the column it had already created" followed by a fix applied to both statements makes the reader re-read; frame at the width of the payoff.
 - Accuracy still wins over simplicity. When a simple phrasing is wrong, fix the meaning first, then make the correct version plain. Do not keep a sentence because it sounds good.
 
