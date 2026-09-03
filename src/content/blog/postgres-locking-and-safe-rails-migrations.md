@@ -214,7 +214,9 @@ end
 
 With `if_not_exists: true`, a statement whose work is already done does nothing instead of raising. Rails has supported it since 6.1, credited to Eileen M. Uchitelle in the [Active Record changelog](https://github.com/rails/rails/blob/v6.1.0/activerecord/CHANGELOG.md): "Adds support for `if_not_exists` to `add_column` and `if_exists` to `remove_column`."
 
-The guard on the column is the one that mattered for the error we were stuck on: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement. The guard on the index does the same job one statement later: if an earlier run left an index with that name behind, the retry skips it instead of failing on it.
+The guard on the column is the one that mattered for the error we were stuck on: `add_column` now walks past the column that's already there instead of raising `PG::DuplicateColumn`, and the migration finally gets to run its second statement. Skipping it is safe because a column can't be half there. Postgres [treats every statement as its own transaction](https://www.postgresql.org/docs/current/tutorial-transactions.html) when you don't open one yourself, so `ADD COLUMN` either finishes or leaves nothing behind. If the column exists, it's the column we wanted.
+
+The guard on the index does the same job one statement later: if an earlier run left an index with that name behind, the retry skips it instead of failing on it.
 
 The guarded migration went through, deploys were moving again, and at the time that felt like the end of it.
 
@@ -239,7 +241,32 @@ The deploy is green, so as far as anyone can tell, the migration worked. But a g
 - Every write to the table still pays to keep the broken index updated, so you carry the cost of an index without getting anything back from it.
 - Nobody goes looking for any of this, because nothing failed. The column exists, an index with the right name exists, the deploy passed. The slow queries surface later as a mystery, and the first thing everyone checks ("do we have an index on that?") says yes.
 
-There is no automatic fix for a broken index; you have to repair it by hand. From the same docs: "The recommended recovery method in such cases is to drop the index and try again to perform `CREATE INDEX CONCURRENTLY`. (Another possibility is to rebuild the index with `REINDEX INDEX CONCURRENTLY`.)" You can find invalid indexes with this query:
+Postgres won't repair a broken index on its own. From the same docs: "The recommended recovery method in such cases is to drop the index and try again to perform `CREATE INDEX CONCURRENTLY`. (Another possibility is to rebuild the index with `REINDEX INDEX CONCURRENTLY`.)" That recovery, drop the index and build it again, is something the migration can do for itself. This is the version I'd write now:
+
+```ruby
+class AddTagIdsToWidgets < ActiveRecord::Migration[7.2]
+  disable_ddl_transaction!
+
+  def change
+    add_column :widgets, :tag_ids, :integer, array: true,
+               default: [], if_not_exists: true
+    remove_index :widgets, name: :index_widgets_on_tag_ids,
+                 if_exists: true, algorithm: :concurrently
+    add_index :widgets, :tag_ids, using: :gin,
+              name: :index_widgets_on_tag_ids, algorithm: :concurrently
+  end
+end
+```
+
+Instead of asking whether an index with that name exists, the migration drops whatever is there and builds a fresh one. `remove_index` with `if_exists: true` first asks Rails whether the index exists, and Rails answers by [listing every index on the table](https://github.com/rails/rails/blob/7-2-stable/activerecord/lib/active_record/connection_adapters/postgresql/schema_statements.rb), invalid ones included; it reads the `indisvalid` flag but doesn't filter on it. So a half-built index from an earlier run gets dropped, and the `add_index` that follows starts from nothing. If the build dies again, the next run drops the new leftover and tries again. Whichever run finally records the migration, the index it leaves behind is one it built to completion.
+
+Both statements name the index explicitly. Rails would derive `index_widgets_on_tag_ids` from the column on both sides anyway, but with a drop and a create that have to agree, I'd rather spell it out.
+
+The drop needs `algorithm: :concurrently` too. The [DROP INDEX docs](https://www.postgresql.org/docs/current/sql-dropindex.html) say a normal `DROP INDEX` "acquires an `ACCESS EXCLUSIVE` lock on the table, blocking other accesses until the index drop can be completed." That is the same lock the `ALTER TABLE` took, with the same queue behind it. With `CONCURRENTLY`, the command "instead waits until conflicting transactions have completed" and doesn't block reads or writes. Like the concurrent build, it can't run inside a transaction block, which is fine here because `disable_ddl_transaction!` is already at the top of the file.
+
+There is a cost. If an earlier run built the index completely and only died before recording the migration, this version drops a good index and builds it again, which means one more concurrent build on a busy table. I'll take that over a green deploy with a broken index behind it, because the rebuild is a one-off and the broken index keeps taxing every write until someone finds it.
+
+That protects the migrations I write from now on. It does nothing for migrations that have already run. Any concurrent index build from last month or last year that failed partway and was then skipped by an `if_not_exists` guard has left an invalid index in the production database, with the migration recorded as done and nothing left to retry. The only way to find those is to ask the database. This query lists every invalid index:
 
 ```sql
 SELECT indexrelid::regclass AS index, indrelid::regclass AS table
@@ -247,7 +274,7 @@ FROM pg_index
 WHERE NOT indisvalid;
 ```
 
-That query is now one of the first things I check after a failed concurrent index build.
+Run it once against production and clean up whatever it finds. After that, migrations written the drop-and-rebuild way don't need the check: if one of them is recorded as done, the index it built is whole.
 
 ## What I do differently now
 
@@ -262,6 +289,7 @@ And the habits that fall out of the answers:
 - Treat `disable_ddl_transaction!` as the loudest line in the file. It gives up the safety net, so every statement below it has to be safe to run on its own.
 - Keep non-transactional migrations to one statement where possible. A column migration and an index migration as separate files each fail cleanly on their own.
 - Add `if_not_exists` / `if_exists` to `add_column` and `remove_column` in any migration that isn't transactional.
-- Check for invalid indexes after any deploy where a concurrent build didn't obviously succeed.
+- Don't guard a concurrent `add_index` with `if_not_exists`. Drop the index with `remove_index ... if_exists: true, algorithm: :concurrently` first and build it fresh, so a retry replaces a half-built index instead of skipping it.
+- Run the invalid-index query once against production to catch what older migrations left behind.
 - Set a `lock_timeout` for migration statements. It defaults to `0`, meaning wait forever, and a migration waiting forever is the thing that builds a queue in the middle of production traffic. Failing fast and retrying later is safer. The docs say that if `statement_timeout` is also set and is lower, it fires first and makes `lock_timeout` pointless.
 - Keep schema changes and data backfills in separate migrations, and run anything touching a busy table during a quieter window.
