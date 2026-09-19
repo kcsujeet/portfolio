@@ -5,91 +5,13 @@ import Reveal from "@/components/Reveal.astro";
 import SectionHead from "@/components/SectionHead.astro";
 import Badge from "@/components/ui/Badge.astro";
 import Card from "@/components/ui/Card.astro";
-
-type Project = {
-  id: string;
-  year: string;
-  title: string;
-  blurb: string;
-  stack: string[];
-  href?: string;
-  repo?: string;
-  state: string[];
-  featured?: boolean;
-};
-
-const PROJECTS: Project[] = [
-  {
-    id: "ilamy",
-    year: "2026",
-    title: "Ilamy Calendar",
-    blurb:
-      "Open-source React calendar library, now rebuilt around a tiny ~13 KB gzipped core and an opt-in plugin ecosystem, so you only ship what you use. RFC 5545 recurring events, resource scheduling, drag-and-drop, timezones, and 100+ locales. Published on npm as @ilamy/calendar.",
-    stack: ["React", "TypeScript", "Tailwind CSS 4", "dnd-kit", "Motion"],
-    href: "https://ilamy.dev",
-    repo: "https://github.com/kcsujeet/ilamy-calendar",
-    state: ["Live", "Open Source"],
-    featured: true,
-  },
-  {
-    id: "sublimeread",
-    year: "2026",
-    title: "SublimeRead",
-    blurb:
-      "An Ai reading app that narrates your EPUBs and PDFs in natural-sounding voices.",
-    stack: ["Astro", "React", "TypeScript", "Cloudflare", "WASM"],
-    href: "https://sublimeread.com",
-    state: ["Live"],
-    featured: true,
-  },
-  {
-    id: "interactive-rails",
-    year: "2026",
-    title: "Interactive Rails",
-    blurb:
-      "Learn Rails 8 by building an e-commerce marketplace through 58 interactive levels across 7 acts. Free, open source, and runs entirely in your browser.",
-    stack: ["Astro", "React", "TypeScript", "Tailwind CSS 4", "Cloudflare"],
-    href: "https://interactive-rails.sujeetkc45.workers.dev",
-    repo: "https://github.com/kcsujeet/interactive-rails",
-    state: ["Live", "Open Source"],
-  },
-  {
-    id: "testoise",
-    year: "2026",
-    title: "Testoise",
-    blurb:
-      "Lightweight, fully type-safe lazy test variables for Bun, Vitest, Jest, and Node. Inspired by RSpec.",
-    stack: ["TypeScript", "Bun", "Vitest", "Jest"],
-    repo: "https://github.com/kcsujeet/testoise",
-    state: ["Open Source"],
-  },
-  {
-    id: "collage",
-    year: "2026",
-    title: "Collage Pen",
-    blurb:
-      "Browser-based collage maker designed to feel like a native desktop app. Custom Canvas with gesture interactions and high-resolution export.",
-    stack: ["Astro", "React", "TypeScript", "Canvas API"],
-    href: "https://collagepen.com",
-    state: ["Live"],
-  },
-  {
-    id: "debackground",
-    year: "2026",
-    title: "Debackground",
-    blurb:
-      "Privacy-first AI background remover that runs entirely in the browser. Transformers.js and WASM. No uploads, no waiting, everything happens locally.",
-    stack: ["Transformers.js", "WASM", "TypeScript", "React"],
-    href: "https://debackground.com",
-    state: ["Live"],
-  },
-];
+import { PROJECTS } from "../data";
 ---
 
 <section data-screen-label="04 Projects">
   <SectionHead n="04." label="Personal Projects" anchor="projects">
     <p>
-      A curated selection of engineering projects, from open-source libraries to complex web architectures.
+      A curated selection of engineering projects, from cloud-backed apps and developer tools to open-source libraries.
     </p>
   </SectionHead>
 

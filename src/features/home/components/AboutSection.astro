@@ -4,18 +4,7 @@ import Reveal from "@/components/Reveal.astro";
 import SectionHead from "@/components/SectionHead.astro";
 import Badge from "@/components/ui/Badge.astro";
 import Card from "@/components/ui/Card.astro";
-
-const STACK = [
-  "TypeScript",
-  "React.js",
-  "Next.js",
-  "Ruby on Rails",
-  "PostgreSQL",
-  "Node.js",
-  "Astro.js",
-  "Vue.js",
-  "Tailwind CSS",
-];
+import { STACK } from "../data";
 ---
 
 <section data-screen-label="02 About">
@@ -24,13 +13,13 @@ const STACK = [
       I'm a <span class="text-white">Senior Full-Stack Engineer</span> based in Coquitlam, BC, originally from Nepal.
     </p>
     <p>
-      Over the past <span class="text-white">7+ years</span>, I've worked across startups and product teams building SaaS products, internal platforms, and developer tools. My core stack is <span class="text-white">TypeScript and React</span>, with Node or Ruby on Rails on the backend.
+      Over the past <span class="text-white">7+ years</span>, I've worked across startups and product teams building SaaS products, internal platforms, and data-intensive applications. My focus is <span class="text-white">backend-leaning full-stack engineering</span>, anchored by <span class="text-white">Ruby on Rails, PostgreSQL, and Node.js</span>, complemented by modern TypeScript and React.
     </p>
     <p>
-      At Event Temple, I helped lead a large migration from AngularJS to React, made key architectural decisions, and helped modernize a product used by thousands of hotel customers.
+      At Event Temple, I led the Rails API modernization to V2 with JSON:API standards, designed a zero-downtime data migration engine moving 1.5M+ records across relational schemas, and co-led the modernization of the web platform to React and Next.js.
     </p>
     <p>
-      Outside of work, I enjoy building side projects, contributing to open source, and writing technical articles about engineering and product development.
+      I am currently preparing for the <span class="text-white">AWS Certified Developer - Associate</span> exam (EC2, ECS, EKS, RDS, Aurora, IAM, S3, CloudFormation), and exploring edge computing with Node.js and Hono in personal projects like SublimeRead.
     </p>
   </SectionHead>
 
@@ -46,9 +35,9 @@ const STACK = [
     </Card>
     <Card padding="sm" hover>
       <Mono class="text-primary">FOCUS</Mono>
-      <p class="mt-3 text-white text-base">Full-stack architecture</p>
+      <p class="mt-3 text-white text-base">Backend-Leaning Full-Stack</p>
       <p class="mt-1 text-muted-foreground text-sm">
-        TypeScript · React · Rails · large migrations
+        Rails · PostgreSQL · AWS · Node.js · TypeScript
       </p>
     </Card>
     <Card padding="sm" hover>

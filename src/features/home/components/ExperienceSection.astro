@@ -3,68 +3,7 @@ import Mono from "@/components/Mono.astro";
 import Reveal from "@/components/Reveal.astro";
 import SectionHead from "@/components/SectionHead.astro";
 import Badge from "@/components/ui/Badge.astro";
-
-type ExpItem = {
-  id: string;
-  year: string;
-  role: string;
-  company: string;
-  where: string;
-  impact: string;
-  summary: string;
-  points: string[];
-  stack: string[];
-};
-
-const EXPERIENCE: ExpItem[] = [
-  {
-    id: "et",
-    year: "2023 – PRESENT",
-    role: "Senior Full-Stack Engineer",
-    company: "Event Temple",
-    where: "Remote",
-    impact: "Migration Lead",
-    summary:
-      "Co-led a 2-year migration from AngularJS to React/Next.js with a 2-engineer team. Owned the architecture, the patterns, and the migration strategy. Migrated the Rails API to V2 with JSON:API standards.",
-    points: [
-      "Built a reusable migration system that safely moves up to 1.5M records across complex relational schemas, enabling zero-downtime onboarding.",
-      "Shipped Proposals and Guest Portal, contributing to $2M+ in multi-year enterprise contracts with hotel groups managing 200+ properties.",
-      "Designed a 78 KB embeddable Preact widget with namespaced styles for seamless customer-site integration.",
-    ],
-    stack: ["Next.js", "React", "Ruby on Rails", "TypeScript", "PostgreSQL"],
-  },
-  {
-    id: "lf",
-    year: "2021 – 2022",
-    role: "Front-End Developer",
-    company: "Legalfit",
-    where: "Remote",
-    impact: "Vue 3 Migration",
-    summary:
-      "Led the Vue 2 to Vue 3 migration with TypeScript. Built tools for non-technical users, with clients in the room.",
-    points: [
-      "Standardized component patterns to improve maintainability and reduce type-related bugs.",
-      "Built a drag-and-drop form builder with rich text editing, from requirements to ship.",
-      "Integrated and customized Tiptap for a real-time content builder used by non-technical users.",
-    ],
-    stack: ["Vue 3", "TypeScript", "Django"],
-  },
-  {
-    id: "tv",
-    year: "2019 – 2021",
-    role: "Software Engineer",
-    company: "Tekvortex",
-    where: "Lalitpur, NP",
-    impact: "$500K ARR Contribution",
-    summary:
-      "Built backend systems in Rails and PostgreSQL. Schema design, query optimization, and a D3.js dependency-mapping system that drove product revenue.",
-    points: [
-      "Designed a database client for non-technical users in Angular and Ruby on Rails.",
-      "Developed a D3.js dependency-mapping system that contributed to approximately $500K in annual revenue.",
-    ],
-    stack: ["D3.js", "Ruby on Rails", "PostgreSQL"],
-  },
-];
+import { EXPERIENCE } from "../data";
 ---
 
 <section data-screen-label="03 Experience">
@@ -74,7 +13,7 @@ const EXPERIENCE: ExpItem[] = [
     anchor="experience"
   >
     <p>
-      A track record of high-leverage migrations, performance work, and shipping customer-facing features that move revenue.
+      A track record of scalable API design, resilient database migrations, performance optimization, and cloud architecture.
     </p>
   </SectionHead>
 

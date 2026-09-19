@@ -11,7 +11,7 @@ const { title: pageTitle, description: pageDescription } = Astro.props;
 
 const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Vancouver";
 const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
-const defaultDescription = `Senior full-stack engineer. Seven years across TypeScript, React, Node, and Ruby on Rails, building SaaS products, internal platforms, and developer tools.`;
+const defaultDescription = `Senior full-stack engineer. Seven years building scalable web applications across TypeScript, React, Ruby on Rails, PostgreSQL, Node.js, and AWS cloud architecture.`;
 
 const finalTitle = pageTitle ?? defaultTitle;
 const finalOgTitle = pageTitle ?? defaultOgTitle;
@@ -22,7 +22,7 @@ const siteUrl = "https://kcsujeet.com.np/";
 const ogType = "website";
 const ogSiteName = "Sujeet Kc | Portfolio";
 const keywords =
-  "Sujeet Kc, Senior Full-Stack Engineer, Software Architect, Problem Solver, TypeScript Developer, React Developer, Next.js Developer, Node.js Developer, Ruby on Rails Developer, Astro Framework, Cloudflare Workers, PostgreSQL, Postgres, SQL, Redis, Docker, Web Performance, Scalable Architecture, Canada Developer, Vancouver Software Engineer, Coquitlam Software Engineer";
+  "Sujeet Kc, Senior Full-Stack Engineer, Full-Stack Developer, TypeScript Developer, React Developer, Next.js Developer, Ruby on Rails Developer, PostgreSQL, Postgres, SQL, REST API, JSON:API, AWS, Node.js, Hono, Cloudflare Workers, Docker, Web Performance, Scalable Architecture, Canada Developer, Vancouver Software Engineer, Coquitlam Software Engineer";
 
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
@@ -49,17 +49,16 @@ const personSchema = {
   image: new URL(logoUrl, siteUrl).href,
   knowsAbout: [
     "Full-Stack Development",
+    "TypeScript",
     "React",
     "Ruby on Rails",
     "PostgreSQL",
-    "Postgres",
-    "SQL",
-    "Redis",
-    "Docker",
-    "Astro",
-    "TypeScript",
+    "API Design & Migration",
+    "AWS",
+    "Node.js",
     "System Architecture",
-    "Web Performance",
+    "Database Query Optimization",
+    "Docker",
   ],
 };
 
