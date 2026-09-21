@@ -44,7 +44,7 @@ export const EXPERIENCE: ExpItem[] = [
     where: "Remote",
     impact: "API & Data Architecture",
     summary:
-      "Backend-focused work on a hospitality SaaS platform in Ruby on Rails and PostgreSQL. Led the API modernization to V2 with JSON:API and built a zero-downtime migration engine that moved 1.5M+ records across relational schemas.",
+      "Rails and PostgreSQL work on a hospitality SaaS platform. Led the API modernization to V2 with JSON:API and built a zero-downtime migration engine that moved 1.5M+ records across relational schemas.",
     points: [
       "Led the Rails API migration to V2 with JSON:API standards: REST resource design, serializer caching, and consistent error handling.",
       "Designed and built a zero-downtime data migration engine that moved 1.5M+ records across relational schemas with transactional safety.",
