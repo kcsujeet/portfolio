@@ -11,7 +11,7 @@ const { title: pageTitle, description: pageDescription } = Astro.props;
 
 const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Vancouver";
 const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
-const defaultDescription = `Senior full-stack engineer. Seven years building scalable web applications across TypeScript, React, Ruby on Rails, PostgreSQL, Node.js, and AWS cloud architecture.`;
+const defaultDescription = `Senior full-stack engineer, backend and infrastructure leaning. Seven years of Ruby on Rails, PostgreSQL, and API design, now going deeper on AWS.`;
 
 const finalTitle = pageTitle ?? defaultTitle;
 const finalOgTitle = pageTitle ?? defaultOgTitle;
@@ -22,7 +22,7 @@ const siteUrl = "https://kcsujeet.com.np/";
 const ogType = "website";
 const ogSiteName = "Sujeet Kc | Portfolio";
 const keywords =
-  "Sujeet Kc, Senior Full-Stack Engineer, Full-Stack Developer, TypeScript Developer, React Developer, Next.js Developer, Ruby on Rails Developer, PostgreSQL, Postgres, SQL, REST API, JSON:API, AWS, Node.js, Hono, Cloudflare Workers, Docker, Web Performance, Scalable Architecture, Canada Developer, Vancouver Software Engineer, Coquitlam Software Engineer";
+  "Sujeet Kc, Senior Full-Stack Engineer, Backend Engineer, Ruby on Rails Developer, PostgreSQL, Postgres, SQL, REST API, JSON:API, Database Migrations, AWS, Docker, Node.js, Hono, Cloudflare Workers, TypeScript, React, Vancouver Software Engineer, Coquitlam Software Engineer";
 
 const canonicalURL = new URL(Astro.url.pathname, siteUrl);
 
@@ -48,17 +48,19 @@ const personSchema = {
   description: defaultDescription,
   image: new URL(logoUrl, siteUrl).href,
   knowsAbout: [
-    "Full-Stack Development",
-    "TypeScript",
-    "React",
+    "Backend Development",
     "Ruby on Rails",
     "PostgreSQL",
-    "API Design & Migration",
-    "AWS",
+    "REST API Design",
+    "JSON:API",
+    "Database Migrations",
+    "Query Optimization",
     "Node.js",
-    "System Architecture",
-    "Database Query Optimization",
     "Docker",
+    "AWS",
+    "Cloudflare Workers",
+    "TypeScript",
+    "React",
   ],
 };
 

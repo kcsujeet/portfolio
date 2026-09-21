@@ -23,16 +23,16 @@ export interface Project {
 }
 
 export const STACK = [
-  "TypeScript",
-  "React.js",
   "Ruby on Rails",
   "PostgreSQL",
-  "Next.js",
-  "AWS",
-  "Node.js",
   "REST & JSON:API",
+  "Node.js",
   "Docker",
-  "Tailwind CSS",
+  "AWS",
+  "Cloudflare Workers",
+  "TypeScript",
+  "React.js",
+  "Next.js",
 ];
 
 export const EXPERIENCE: ExpItem[] = [
@@ -44,18 +44,19 @@ export const EXPERIENCE: ExpItem[] = [
     where: "Remote",
     impact: "API & Data Architecture",
     summary:
-      "Led the Rails API modernization to V2 with JSON:API standards, decoupling business logic and improving query efficiency. Built a resilient data migration engine moving 1.5M+ records across relational schemas with zero downtime.",
+      "Backend-focused work on a hospitality SaaS platform in Ruby on Rails and PostgreSQL. Led the API modernization to V2 with JSON:API and built a zero-downtime migration engine that moved 1.5M+ records across relational schemas.",
     points: [
-      "Led the Rails API migration to V2 with JSON:API standards, designing clean REST endpoints, serializer caching, and consistent error handling.",
-      "Architected a zero-downtime data migration engine that safely migrated 1.5M+ records across relational schemas with transactional safety.",
-      "Optimized PostgreSQL query execution and resolved table-level lock contention during production schema migrations.",
-      "Co-led the full-stack modernization of the web platform to React/Next.js with a 2-engineer team, establishing shared architectural patterns.",
-      "Shipped Proposals and Guest Portal, contributing to $2M+ in multi-year enterprise contracts with hotel groups managing 200+ properties.",
+      "Led the Rails API migration to V2 with JSON:API standards: REST resource design, serializer caching, and consistent error handling.",
+      "Designed and built a zero-downtime data migration engine that moved 1.5M+ records across relational schemas with transactional safety.",
+      "Optimized PostgreSQL queries and indexes, and diagnosed and fixed table-level lock contention during production schema migrations.",
+      "Shipped the backend for Proposals and Guest Portal, contributing to $2M+ in multi-year enterprise contracts with hotel groups managing 200+ properties.",
+      "Co-led the migration of the web platform to React and Next.js with a 2-engineer team, defining the API contracts the new frontend is built on.",
     ],
     stack: [
       "Ruby on Rails",
       "PostgreSQL",
       "JSON:API",
+      "Docker",
       "TypeScript",
       "React",
       "Next.js",
@@ -83,12 +84,12 @@ export const EXPERIENCE: ExpItem[] = [
     role: "Software Engineer",
     company: "Tekvortex",
     where: "Lalitpur, NP",
-    impact: "$500K ARR Contribution",
+    impact: "Rails & PostgreSQL Backend",
     summary:
-      "Built backend systems and data visualization tools in Ruby on Rails and PostgreSQL. Schema design, query optimization, and D3.js mapping.",
+      "Built backend systems and reporting tools in Ruby on Rails and PostgreSQL: schema design, query optimization, and a D3.js dependency-mapping product.",
     points: [
-      "Designed a database client in Angular and Ruby on Rails for non-technical users.",
       "Optimized PostgreSQL queries, views, and indexes to handle relational reporting.",
+      "Designed a database client in Ruby on Rails and Angular for non-technical users.",
       "Developed a D3.js dependency-mapping system that contributed to approximately $500K in annual revenue.",
     ],
     stack: ["Ruby on Rails", "PostgreSQL", "SQL", "D3.js", "TypeScript"],
@@ -97,24 +98,19 @@ export const EXPERIENCE: ExpItem[] = [
 
 export const PROJECTS: Project[] = [
   {
-    id: "ilamy",
-    year: "2026",
-    title: "Ilamy Calendar",
-    blurb:
-      "Open-source React calendar library, now rebuilt around a tiny ~13 KB gzipped core and an opt-in plugin ecosystem, so you only ship what you use. RFC 5545 recurring events, resource scheduling, drag-and-drop, timezones, and 100+ locales. Published on npm as @ilamy/calendar.",
-    stack: ["React", "TypeScript", "Tailwind CSS 4", "dnd-kit", "Motion"],
-    href: "https://ilamy.dev",
-    repo: "https://github.com/kcsujeet/ilamy-calendar",
-    state: ["Live", "Open Source"],
-    featured: true,
-  },
-  {
     id: "sublimeread",
     year: "2026",
     title: "SublimeRead",
     blurb:
-      "AI reading app that narrates EPUBs and PDFs with natural voices. Powered by a high-throughput Node.js backend using Hono on Cloudflare Workers, handling text extraction, tokenization pipelines, and real-time audio streaming.",
-    stack: ["Node.js", "Hono", "Cloudflare", "WASM", "TypeScript", "React", "Astro"],
+      "AI reading app that narrates EPUBs and PDFs with natural voices. The backend is a Node.js and Hono service on Cloudflare Workers that handles text extraction, tokenization pipelines, and real-time audio streaming to the reader.",
+    stack: [
+      "Node.js",
+      "Hono",
+      "Cloudflare Workers",
+      "WASM",
+      "TypeScript",
+      "React",
+    ],
     href: "https://sublimeread.com",
     state: ["Live"],
     featured: true,
@@ -125,7 +121,13 @@ export const PROJECTS: Project[] = [
     title: "Interactive Rails",
     blurb:
       "Learn Rails 8 by building an e-commerce marketplace through 58 interactive levels across 7 acts. Free, open source, and runs entirely in your browser.",
-    stack: ["Ruby on Rails", "Astro", "React", "TypeScript", "Tailwind CSS 4", "Cloudflare"],
+    stack: [
+      "Ruby on Rails",
+      "TypeScript",
+      "Astro",
+      "React",
+      "Cloudflare Workers",
+    ],
     href: "https://interactive-rails.sujeetkc45.workers.dev",
     repo: "https://github.com/kcsujeet/interactive-rails",
     state: ["Live", "Open Source"],
@@ -135,10 +137,22 @@ export const PROJECTS: Project[] = [
     year: "2026",
     title: "Testoise",
     blurb:
-      "Lightweight, fully type-safe lazy test variables for Bun, Vitest, Jest, and Node. Inspired by RSpec.",
+      "Lightweight, fully type-safe lazy test variables for Bun, Vitest, Jest, and Node. RSpec-style let for JavaScript test runners.",
     stack: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
     repo: "https://github.com/kcsujeet/testoise",
     state: ["Open Source"],
+  },
+  {
+    id: "ilamy",
+    year: "2026",
+    title: "Ilamy Calendar",
+    blurb:
+      "Open-source React calendar library, now rebuilt around a tiny ~13 KB gzipped core and an opt-in plugin ecosystem, so you only ship what you use. RFC 5545 recurring events, resource scheduling, drag-and-drop, timezones, and 100+ locales. Published on npm as @ilamy/calendar.",
+    stack: ["TypeScript", "React", "RFC 5545", "dnd-kit"],
+    href: "https://ilamy.dev",
+    repo: "https://github.com/kcsujeet/ilamy-calendar",
+    state: ["Live", "Open Source"],
+    featured: true,
   },
   {
     id: "collage",

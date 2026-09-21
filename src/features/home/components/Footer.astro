@@ -1,5 +1,6 @@
 ---
 import Mono from "@/components/Mono.astro";
+import { JOB_TITLE } from "@/config/constants";
 ---
 
 <footer class="mt-24 pt-8 pb-12 border-t border-border">
@@ -8,7 +9,7 @@ import Mono from "@/components/Mono.astro";
       <span class="text-base">
         SUJEET<span class="text-primary">·</span>KC
       </span>
-      <Mono class="text-foreground/30">Senior Full-Stack Engineer</Mono>
+      <Mono class="text-foreground/30">{JOB_TITLE}</Mono>
     </div>
     <Mono class="text-foreground/30">
       © 2026 · BUILT WITH{" "}

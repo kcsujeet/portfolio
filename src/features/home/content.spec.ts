@@ -1,76 +1,110 @@
 import { describe, expect, it } from "bun:test";
+import { JOB_TITLE } from "@/config/constants";
 import { EXPERIENCE, PROJECTS, STACK } from "./data";
 
-describe("Portfolio Content - Backend & Cloud Focus", () => {
-  describe("Core Stack", () => {
-    it("includes key backend and cloud technologies", () => {
-      expect(STACK).toContain("Node.js");
-      expect(STACK).toContain("Ruby on Rails");
-      expect(STACK).toContain("PostgreSQL");
+const EM_DASH = "—";
+
+describe("Portfolio Content - Backend & Infrastructure Focus", () => {
+  describe("Job Title & Core Stack", () => {
+    it("keeps the real job title", () => {
+      expect(JOB_TITLE).toBe("Senior Full-Stack Engineer");
+    });
+
+    it("leads the core stack with backend technologies", () => {
+      expect(STACK.slice(0, 3)).toEqual([
+        "Ruby on Rails",
+        "PostgreSQL",
+        "REST & JSON:API",
+      ]);
+    });
+
+    it("lists infrastructure tools without overclaiming", () => {
+      expect(STACK).toContain("Docker");
       expect(STACK).toContain("AWS");
-      expect(STACK).toContain("REST & JSON:API");
+      expect(STACK).toContain("Cloudflare Workers");
+      expect(STACK).not.toContain("AWS (Cloud & Infra)");
+    });
+
+    it("lists frontend tools after backend and infrastructure", () => {
+      const backendIndex = STACK.indexOf("PostgreSQL");
+      const infraIndex = STACK.indexOf("AWS");
+      const frontendIndex = STACK.indexOf("React.js");
+      expect(backendIndex).toBeLessThan(infraIndex);
+      expect(infraIndex).toBeLessThan(frontendIndex);
     });
   });
 
   describe("Experience Section", () => {
-    it("contains only authentic workplace employment history", () => {
-      const ids = EXPERIENCE.map((e) => e.id);
-      expect(ids).toEqual(["et", "lf", "tv"]);
-      // Ensure AWS is not listed as an employer/company in EXPERIENCE
-      expect(EXPERIENCE.find((e) => e.id === "aws")).toBeUndefined();
+    it("contains only real employers", () => {
+      expect(EXPERIENCE.map((e) => e.id)).toEqual(["et", "lf", "tv"]);
     });
 
-    it("contains Event Temple with Rails and PostgreSQL backend work without Node.js", () => {
+    it("keeps Event Temple on Rails and PostgreSQL, not Node.js", () => {
       const et = EXPERIENCE.find((e) => e.id === "et");
-      expect(et).toBeDefined();
-      expect(et?.company).toBe("Event Temple");
-      expect(et?.summary).toContain("Rails API");
-      expect(et?.summary).toContain("JSON:API");
       expect(et?.stack).toContain("Ruby on Rails");
       expect(et?.stack).toContain("PostgreSQL");
       expect(et?.stack).toContain("JSON:API");
-      // Node.js is personal projects, not Event Temple
       expect(et?.stack).not.toContain("Node.js");
-
-      // Verify points contain database and migration highlights
-      const pointsText = et?.points.join(" ") ?? "";
-      expect(pointsText).toContain("1.5M+ records");
-      expect(pointsText).toContain("PostgreSQL");
-      expect(pointsText).toContain("lock");
     });
 
-    it("retains authentic Front-End Developer title at Legalfit", () => {
+    it("leads Event Temple points with backend work", () => {
+      const et = EXPERIENCE.find((e) => e.id === "et");
+      const [first, second, third] = et?.points ?? [];
+      expect(first).toContain("JSON:API");
+      expect(second).toContain("1.5M+ records");
+      expect(third).toContain("PostgreSQL");
+    });
+
+    it("keeps the frontend migration point but lists it last", () => {
+      const et = EXPERIENCE.find((e) => e.id === "et");
+      const last = et?.points.at(-1) ?? "";
+      expect(last).toContain("Next.js");
+    });
+
+    it("keeps the real Front-End Developer title at Legalfit", () => {
       const lf = EXPERIENCE.find((e) => e.id === "lf");
-      expect(lf).toBeDefined();
       expect(lf?.role).toBe("Front-End Developer");
     });
 
-    it("does not contain em dashes in experience content", () => {
+    it("frames Tekvortex around the Rails and PostgreSQL backend", () => {
+      const tv = EXPERIENCE.find((e) => e.id === "tv");
+      expect(tv?.impact).toBe("Rails & PostgreSQL Backend");
+    });
+
+    it("contains no em dashes", () => {
       for (const item of EXPERIENCE) {
-        expect(item.year).not.toContain("—");
-        expect(item.summary).not.toContain("—");
-        for (const point of item.points) {
-          expect(point).not.toContain("—");
-        }
+        const text = [item.year, item.summary, ...item.points].join(" ");
+        expect(text).not.toContain(EM_DASH);
       }
     });
   });
 
   describe("Projects Section", () => {
-    it("highlights Node.js and Hono in SublimeRead", () => {
-      const sublimeread = PROJECTS.find((p) => p.id === "sublimeread");
-      expect(sublimeread).toBeDefined();
-      expect(sublimeread?.stack).toContain("Node.js");
-      expect(sublimeread?.stack).toContain("Hono");
-      expect(sublimeread?.stack).toContain("Cloudflare");
-      expect(sublimeread?.blurb).toContain("Node.js");
-      expect(sublimeread?.blurb).toContain("Hono");
+    it("leads with the backend-heavy project", () => {
+      expect(PROJECTS[0]?.id).toBe("sublimeread");
+      expect(PROJECTS[0]?.featured).toBe(true);
     });
 
-    it("does not contain em dashes in project content", () => {
+    it("describes the SublimeRead backend", () => {
+      const sublimeread = PROJECTS.find((p) => p.id === "sublimeread");
+      expect(sublimeread?.stack.slice(0, 3)).toEqual([
+        "Node.js",
+        "Hono",
+        "Cloudflare Workers",
+      ]);
+      expect(sublimeread?.blurb).toContain("backend");
+    });
+
+    it("places Interactive Rails before the frontend libraries", () => {
+      const ids = PROJECTS.map((p) => p.id);
+      expect(ids.indexOf("interactive-rails")).toBeLessThan(
+        ids.indexOf("ilamy"),
+      );
+    });
+
+    it("contains no em dashes", () => {
       for (const project of PROJECTS) {
-        expect(project.title).not.toContain("—");
-        expect(project.blurb).not.toContain("—");
+        expect(`${project.title} ${project.blurb}`).not.toContain(EM_DASH);
       }
     });
   });
