@@ -80,19 +80,16 @@ describe("Portfolio Content - Backend & Infrastructure Focus", () => {
   });
 
   describe("Projects Section", () => {
-    it("leads with the backend-heavy project", () => {
-      expect(PROJECTS[0]?.id).toBe("sublimeread");
-      expect(PROJECTS[0]?.featured).toBe(true);
-    });
-
-    it("describes the SublimeRead backend", () => {
+    it("describes the SublimeRead backend from its repo: Workers, D1, R2, Stripe", () => {
       const sublimeread = PROJECTS.find((p) => p.id === "sublimeread");
+      expect(sublimeread?.blurb).toContain("on-device");
+      expect(sublimeread?.blurb).toContain("Stripe");
       expect(sublimeread?.stack.slice(0, 3)).toEqual([
-        "Node.js",
-        "Hono",
         "Cloudflare Workers",
+        "D1",
+        "R2",
       ]);
-      expect(sublimeread?.blurb).toContain("backend");
+      expect(sublimeread?.stack).not.toContain("Hono");
     });
 
     it("places Interactive Rails before the frontend libraries", () => {
