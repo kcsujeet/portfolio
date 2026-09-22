@@ -50,7 +50,7 @@ export const EXPERIENCE: ExpItem[] = [
       "Designed and built a zero-downtime data migration engine that moved 1.5M+ records across relational schemas with transactional safety.",
       "Optimized PostgreSQL queries and indexes, and diagnosed and fixed table-level lock contention during production schema migrations.",
       "Shipped the backend for Proposals and Guest Portal, contributing to $2M+ in multi-year enterprise contracts with hotel groups managing 200+ properties.",
-      "Co-led the migration of the web platform to React and Next.js with a 2-engineer team, defining the API contracts the new frontend is built on.",
+      "Co-led the 2-year migration of the web platform from AngularJS to React and Next.js with a 2-engineer team, owning the incremental replacement strategy and the API contracts the new frontend is built on.",
     ],
     stack: [
       "Ruby on Rails",
