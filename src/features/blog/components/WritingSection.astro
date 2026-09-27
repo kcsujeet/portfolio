@@ -14,7 +14,7 @@ const latest = posts.slice(0, 3);
 {
   latest.length > 0 && (
     <section id="writing" class="px-gutter py-section flex flex-wrap gap-x-12 gap-y-6 border-t border-rule">
-      <SectionLabel>05 / notes</SectionLabel>
+      <SectionLabel>05 / writing</SectionLabel>
       <div class="flex min-w-0 grow basis-list flex-col">
         <ol class="m-0 list-none p-0">
           {latest.map((post) => (
@@ -26,7 +26,7 @@ const latest = posts.slice(0, 3);
             />
           ))}
         </ol>
-        <a href="/blog" class="border-t border-rule py-5.5 text-label">all notes →</a>
+        <a href="/blog" class="border-t border-rule py-5.5 text-label">all writing →</a>
       </div>
     </section>
   )

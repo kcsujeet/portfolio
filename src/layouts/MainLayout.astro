@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import MobileNav from "@/components/MobileNav.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { JOB_TITLE } from "@/config/constants";
@@ -126,10 +127,11 @@ const websiteSchema = {
     >
       Skip to content
     </a>
-    <SiteHeader />
+    <SiteHeader current={home ? undefined : "writing"} />
     <main id="main" class="min-h-main">
       <slot />
     </main>
     {!home && <SiteFooter />}
+    <MobileNav current={home ? undefined : "writing"} />
   </body>
 </html>

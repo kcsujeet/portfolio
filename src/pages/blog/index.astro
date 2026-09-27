@@ -18,12 +18,12 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
 ---
 
 <MainLayout
-  title="Notes · Sujeet Kc"
+  title="Writing · Sujeet Kc"
   description="Notes on the things I build, debug, and learn."
 >
   <div class="mx-auto max-w-page">
     <div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-index-top pb-index-bottom">
-      <SectionLabel class="pt-3">notes</SectionLabel>
+      <SectionLabel class="pt-3">writing</SectionLabel>
       <div class="flex min-w-0 grow basis-lead flex-col gap-6">
         <h1 class="m-0 text-index font-medium ">
           Notes on the things I build, debug, and learn.
@@ -57,7 +57,7 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
     }
     {
       posts.length === 0 && (
-        <p class="px-gutter border-t border-rule py-10 text-ink-2">No notes yet.</p>
+        <p class="px-gutter border-t border-rule py-10 text-ink-2">No posts yet.</p>
       )
     }
   </div>

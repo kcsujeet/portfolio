@@ -86,6 +86,8 @@
   --text-display--line-height: 1.08;
   --text-display--letter-spacing: -0.035em;
 
+  --shadow-pill: 0 6px 20px -8px oklch(0.24 0.012 250 / 0.35);
+
   --tracking-name: 0.02em;
   --tracking-hint: 0.06em;
   --tracking-hint-tight: 0.04em;
@@ -104,6 +106,10 @@
   --spacing-main: 70vh;
   --spacing-popover: 70vh;
   --spacing-toc: calc(100vh - 8rem);
+  /* Floating nav sits above the home indicator on notched phones. */
+  --spacing-pill: calc(1.25rem + env(safe-area-inset-bottom));
+  /* Room left at the page end so the floating nav never covers the footer. */
+  --spacing-pill-clear: calc(4.5rem + env(safe-area-inset-bottom));
 
   /* Fixed widths: the label column, row wrap points, and reading measures. */
   --container-page: 1280px;
