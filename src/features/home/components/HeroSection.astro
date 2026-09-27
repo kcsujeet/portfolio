@@ -3,13 +3,13 @@ import SectionLabel from "@/components/SectionLabel.astro";
 import { YEARS_IN_WORDS } from "@/config/constants";
 ---
 
-<div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-[clamp(48px,12vw,140px)] pb-[clamp(64px,9vw,104px)]">
+<div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-hero-top pb-hero-bottom">
   <SectionLabel class="md:pt-3.5">senior <br class="max-md:hidden" />full-stack <br class="max-md:hidden" />engineer</SectionLabel>
-  <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-10">
-    <h1 class="m-0 text-[clamp(34px,6.4vw,76px)] leading-[1.08] font-medium tracking-[-0.035em]">
+  <div class="flex min-w-0 grow basis-lead flex-col gap-10">
+    <h1 class="m-0 text-display font-medium ">
       I build the whole stack.<br />The screen, the API,<br /><span class="text-ink-4">and the data underneath.</span>
     </h1>
-    <p class="m-0 max-w-[600px] text-[17px] text-ink-2">
+    <p class="m-0 max-w-150 text-lede text-ink-2">
       {YEARS_IN_WORDS} years building web products end to end: React and
       Next.js on the front, Rails and PostgreSQL behind it. Lately I'm going
       deeper into infrastructure and AWS. Currently at Event Temple, remote

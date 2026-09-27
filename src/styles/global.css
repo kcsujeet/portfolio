@@ -28,6 +28,10 @@
   --color-night-ink-3: var(--night-ink-3);
   --color-night-rule: var(--night-rule);
   --color-border: var(--rule);
+  --color-tone-40: var(--tone-40);
+  --color-tone-32: var(--tone-32);
+  --color-tone-28: var(--tone-28);
+  --color-night-ink-4: var(--night-ink-4);
 
   --font-sans: "IBM Plex Mono", ui-monospace, monospace;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -52,6 +56,97 @@
   --night-ink-2: oklch(0.75 0.008 250);
   --night-ink-3: oklch(0.7 0.008 250);
   --night-rule: oklch(0.34 0.01 250);
+  --night-ink-4: oklch(0.65 0.008 250);
+  /* Stack text darkens with each strata band so it keeps its contrast. */
+  --tone-40: oklch(0.4 0.01 250);
+  --tone-32: oklch(0.32 0.01 250);
+  --tone-28: oklch(0.28 0.01 250);
+}
+
+/* Named values from the design, so markup uses tokens instead of one-off
+   arbitrary values (enforced by @shadcn/lint no-arbitrary-values).
+   Text sizes carry their own line height and tracking where the design
+   pairs them. https://tailwindcss.com/docs/font-size#customizing-your-theme */
+@theme {
+  --text-micro: 11px;
+  --text-label: 13px;
+  --text-body: 15px;
+  --text-lede: 17px;
+  --text-title: 19px;
+  --text-email: clamp(18px, 2vw, 24px);
+  --text-heading: clamp(22px, 2.6vw, 28px);
+  --text-heading--letter-spacing: -0.02em;
+  --text-headline: clamp(32px, 4.4vw, 52px);
+  --text-headline--line-height: 1.12;
+  --text-headline--letter-spacing: -0.03em;
+  --text-index: clamp(36px, 5vw, 60px);
+  --text-index--line-height: 1.1;
+  --text-index--letter-spacing: -0.035em;
+  --text-display: clamp(34px, 6.4vw, 76px);
+  --text-display--line-height: 1.08;
+  --text-display--letter-spacing: -0.035em;
+
+  --tracking-name: 0.02em;
+  --tracking-hint: 0.06em;
+  --tracking-hint-tight: 0.04em;
+
+  /* Fluid page rhythm. */
+  --spacing-gutter: clamp(20px, 5vw, 64px);
+  --spacing-section: clamp(64px, 9vw, 96px);
+  --spacing-hero-top: clamp(48px, 12vw, 140px);
+  --spacing-hero-bottom: clamp(64px, 9vw, 104px);
+  --spacing-figure-bottom: clamp(80px, 10vw, 120px);
+  --spacing-contact-top: clamp(80px, 11vw, 120px);
+  --spacing-index-top: clamp(72px, 10vw, 120px);
+  --spacing-index-bottom: clamp(48px, 7vw, 80px);
+  --spacing-post-top: clamp(56px, 8vw, 104px);
+  --spacing-bleed: calc(100% + 2 * var(--spacing-gutter));
+  --spacing-main: 70vh;
+  --spacing-popover: 70vh;
+  --spacing-toc: calc(100vh - 8rem);
+
+  /* Fixed widths: the label column, row wrap points, and reading measures. */
+  --container-page: 1280px;
+  --container-label: 200px;
+  --container-date: 100px;
+  --container-stack: 260px;
+  --container-row: 300px;
+  --container-heading: 360px;
+  --container-prose: 420px;
+  --container-list: 480px;
+  --container-lead: 520px;
+  --container-title: 24ch;
+  --container-lede: 62ch;
+  --container-post: 68ch;
+  --container-popover: calc(100vw - 2.5rem);
+
+  /* Posts switch to the side contents list above this width. */
+  --breakpoint-post: 901px;
+}
+
+/* Grid templates have no theme namespace in Tailwind v4, so each layout the
+   design uses is a named utility. */
+@utility grid-cols-marker {
+  grid-template-columns: 20px 1fr;
+}
+@utility grid-cols-meta {
+  grid-template-columns: 64px 1fr;
+}
+@utility grid-cols-fact {
+  grid-template-columns: 96px 1fr;
+}
+@utility grid-cols-cards {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+@utility grid-cols-about {
+  grid-template-columns: 200px minmax(0, 1fr);
+}
+@utility grid-cols-about-wide {
+  grid-template-columns: 200px minmax(0, 620px) minmax(0, 360px);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
 }
 
 @layer base {
@@ -285,16 +380,11 @@
   border-color: var(--ink);
 }
 
-/* Side gutter shared by every band of the page. */
-@utility px-gutter {
-  padding-inline: clamp(20px, 5vw, 64px);
-}
-
 /* A band that runs to the screen edge on phones and hangs 16px past the
    gutter on wider screens, as in the design. */
 @utility band-bleed {
-  margin-inline: calc(clamp(20px, 5vw, 64px) * -1);
-  padding-inline: clamp(20px, 5vw, 64px);
+  margin-inline: calc(var(--spacing-gutter) * -1);
+  padding-inline: var(--spacing-gutter);
 
   @media (min-width: 48rem) {
     margin-inline: -16px;
@@ -308,14 +398,4 @@
   display: inline-block;
   padding-block: 10px;
   margin-block: -10px;
-}
-
-/* Vertical rhythm of a standard section. */
-@utility py-section {
-  padding-block: clamp(64px, 9vw, 96px);
-}
-
-/* Pull an element out to the page edge through the side gutter. */
-@utility -mx-gutter {
-  margin-inline: calc(clamp(20px, 5vw, 64px) * -1);
 }

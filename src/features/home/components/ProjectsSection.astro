@@ -6,11 +6,11 @@ import { PROJECTS } from "../data";
 <section id="projects" class="px-gutter py-section flex flex-col gap-10 border-t border-rule">
   <div class="flex flex-wrap items-end gap-x-12 gap-y-4">
     <SectionLabel>04 / after hours</SectionLabel>
-    <h2 class="m-0 flex-[1_1_360px] text-[clamp(22px,2.6vw,28px)] font-medium tracking-[-0.02em]">
+    <h2 class="m-0 grow basis-heading text-heading font-medium ">
       Things I built because I wanted them to exist.
     </h2>
   </div>
-  <ul class="m-0 grid list-none grid-cols-[repeat(auto-fill,minmax(min(100%,300px),1fr))] gap-px border-t border-b border-t-ink border-b-rule bg-rule p-0">
+  <ul class="m-0 grid list-none grid-cols-cards gap-px border-t border-b border-t-ink border-b-rule bg-rule p-0">
     {
       PROJECTS.map((p) => (
         <li class="flex">
@@ -18,7 +18,7 @@ import { PROJECTS } from "../data";
             href={p.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="flex min-h-[220px] w-full flex-col gap-3.5 bg-paper p-7 transition-colors duration-150 hover:bg-hover hover:no-underline"
+            class="flex min-h-55 w-full flex-col gap-3.5 bg-paper p-7 transition-colors duration-150 hover:bg-hover hover:no-underline"
           >
             <span class="flex justify-between text-xs text-ink-3">
               <span>{p.tag}</span>
@@ -32,7 +32,7 @@ import { PROJECTS } from "../data";
       ))
     }
   </ul>
-  <a href="https://github.com/kcsujeet" target="_blank" rel="noopener noreferrer" class="tap self-start text-[13px]">
+  <a href="https://github.com/kcsujeet" target="_blank" rel="noopener noreferrer" class="tap self-start text-label">
     more on github.com/kcsujeet →
   </a>
 </section>

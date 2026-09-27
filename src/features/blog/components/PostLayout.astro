@@ -24,21 +24,21 @@ const formattedUpdated = post.data.updatedDate
   : undefined;
 ---
 
-<div class="px-gutter flex flex-wrap gap-x-12 gap-y-8 pt-[clamp(56px,8vw,104px)] pb-[clamp(64px,9vw,96px)]">
-  <aside class="flex flex-[0_0_200px] flex-col gap-6 text-[13px] text-ink-3 max-[900px]:flex-[1_1_100%]">
+<div class="px-gutter flex flex-wrap gap-x-12 gap-y-8 pt-post-top pb-section">
+  <aside class="flex shrink-0 grow-0 basis-label flex-col gap-6 text-label text-ink-3 max-post:grow max-post:basis-full">
     <a href="/blog" class="tap self-start text-ink">← all notes</a>
     <dl class="m-0 flex flex-col border-b border-rule">
-      <div class="grid grid-cols-[64px_1fr] gap-3 border-t border-rule py-2.5">
+      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
         <dt>date</dt>
         <dd class="m-0 text-ink"><time datetime={post.data.pubDate.toISOString()}>{formattedPubDate}</time></dd>
       </div>
-      <div class="grid grid-cols-[64px_1fr] gap-3 border-t border-rule py-2.5">
+      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
         <dt>read</dt>
         <dd class="m-0 text-ink">{minutes} min</dd>
       </div>
       {
         post.data.tags.length > 0 && (
-          <div class="grid grid-cols-[64px_1fr] gap-3 border-t border-rule py-2.5">
+          <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
             <dt>tags</dt>
             <dd class="m-0 text-ink">{post.data.tags.join(" · ")}</dd>
           </div>
@@ -48,7 +48,7 @@ const formattedUpdated = post.data.updatedDate
 
     {
       toc.length > 0 && (
-        <blog-toc class="sticky top-24 hidden max-h-[calc(100vh-8rem)] overflow-y-auto min-[901px]:block">
+        <blog-toc class="sticky top-24 hidden max-h-toc overflow-y-auto post:block">
           <nav aria-label="Table of contents">
             <p class="m-0 pb-3">on this page</p>
             <ul class="m-0 list-none border-l border-rule p-0">
@@ -72,14 +72,14 @@ const formattedUpdated = post.data.updatedDate
     }
   </aside>
 
-  <article class="min-w-0 flex-[1_1_520px]">
+  <article class="min-w-0 grow basis-lead">
     {toc.length > 0 && <MobileToc client:load headings={toc} />}
 
     <header>
-      <h1 class="m-0 max-w-[24ch] text-[clamp(32px,4.4vw,52px)] leading-[1.12] font-medium tracking-[-0.03em]">
+      <h1 class="m-0 max-w-title text-headline font-medium ">
         {post.data.title}
       </h1>
-      <p class="mt-6 mb-0 max-w-[62ch] text-[17px] text-ink-2">{post.data.description}</p>
+      <p class="mt-6 mb-0 max-w-lede text-lede text-ink-2">{post.data.description}</p>
       {
         post.data.cover && (
           <div class="mt-10 overflow-hidden border border-rule">
@@ -98,7 +98,7 @@ const formattedUpdated = post.data.updatedDate
       <slot />
     </div>
 
-    <footer class="mt-16 flex max-w-[68ch] flex-wrap gap-x-8 gap-y-2 border-t border-rule pt-5 text-[13px] text-ink-3">
+    <footer class="mt-16 flex max-w-post flex-wrap gap-x-8 gap-y-2 border-t border-rule pt-5 text-label text-ink-3">
       <a href="/blog" class="tap text-ink">← all notes</a>
       {formattedUpdated && <span>updated {formattedUpdated}</span>}
       {

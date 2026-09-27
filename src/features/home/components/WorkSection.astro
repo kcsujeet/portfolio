@@ -13,12 +13,12 @@ const depthOf = (layer: string) =>
 <section id="work" class="px-gutter py-section flex flex-col gap-10 border-t border-rule">
   <div class="flex flex-wrap items-end gap-x-12 gap-y-4">
     <SectionLabel>03 / work</SectionLabel>
-    <h2 class="m-0 flex-[1_1_360px] text-[clamp(22px,2.6vw,28px)] font-medium tracking-[-0.02em]">
+    <h2 class="m-0 grow basis-heading text-heading font-medium ">
       {YEARS_IN_WORDS} years, measured in depth.
     </h2>
     {
       showDepth && (
-        <div class="flex gap-2.5 text-[11px] tracking-[0.06em] text-ink-3" aria-hidden="true">
+        <div class="flex gap-2.5 text-micro tracking-hint text-ink-3" aria-hidden="true">
           {LAYER_ORDER.map((l) => <span>{depthOf(l)}</span>)}
         </div>
       )
@@ -28,19 +28,19 @@ const depthOf = (layer: string) =>
     {
       EXPERIENCE.map((job) => (
         <li class="flex flex-wrap gap-x-12 gap-y-4 border-b border-rule py-8">
-          <div class="flex flex-[0_0_200px] flex-col gap-1 text-[13px]">
+          <div class="flex shrink-0 grow-0 basis-label flex-col gap-1 text-label">
             <span>{job.years}</span>
             <span class="text-ink-3">{job.place}</span>
           </div>
-          <div class="flex max-w-[720px] min-w-0 flex-[1_1_420px] flex-col gap-3.5">
+          <div class="flex max-w-180 min-w-0 grow basis-prose flex-col gap-3.5">
             <h3 class="m-0 flex flex-wrap items-baseline gap-x-4 gap-y-1 font-normal">
-              <span class="text-[19px] font-medium">{job.company}</span>
-              <span class="text-[15px] text-ink-3">{job.role}</span>
+              <span class="text-title font-medium">{job.company}</span>
+              <span class="text-body text-ink-3">{job.role}</span>
             </h3>
             <p class="m-0">{job.lede}</p>
-            <ul class="m-0 flex list-none flex-col gap-1.5 p-0 text-sm text-[oklch(0.4_0.01_250)]">
+            <ul class="m-0 flex list-none flex-col gap-1.5 p-0 text-sm text-tone-40">
               {job.points.map((pt) => (
-                <li class="grid grid-cols-[20px_1fr]">
+                <li class="grid grid-cols-marker">
                   <span aria-hidden="true">–</span>
                   <span>{pt}</span>
                 </li>

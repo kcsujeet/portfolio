@@ -21,14 +21,14 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
   title="Notes · Sujeet Kc"
   description="Notes on the things I build, debug, and learn."
 >
-  <div class="mx-auto max-w-[1280px]">
-    <div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-[clamp(72px,10vw,120px)] pb-[clamp(48px,7vw,80px)]">
+  <div class="mx-auto max-w-page">
+    <div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-index-top pb-index-bottom">
       <SectionLabel class="pt-3">notes</SectionLabel>
-      <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
-        <h1 class="m-0 text-[clamp(36px,5vw,60px)] leading-[1.1] font-medium tracking-[-0.035em]">
+      <div class="flex min-w-0 grow basis-lead flex-col gap-6">
+        <h1 class="m-0 text-index font-medium ">
           Notes on the things I build, debug, and learn.
         </h1>
-        <p class="m-0 max-w-[600px] text-[17px] text-ink-2">
+        <p class="m-0 max-w-150 text-lede text-ink-2">
           Mostly Rails, PostgreSQL, and TypeScript. Some are guides, some are
           write-ups of things that broke in production.
         </p>
@@ -39,9 +39,9 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
       years.map((year) => (
         <section class="px-gutter flex flex-wrap gap-x-12 gap-y-2 border-t border-rule py-10">
           <SectionLabel>
-            <h2 class="m-0 text-[13px] font-normal">{year}</h2>
+            <h2 class="m-0 text-label font-normal">{year}</h2>
           </SectionLabel>
-          <ol class="m-0 min-w-0 flex-[1_1_480px] list-none p-0 [&>li:first-child>a]:border-t-0 [&>li:first-child>a]:pt-0">
+          <ol class="m-0 min-w-0 grow basis-list list-none p-0 [&>li:first-child>a]:border-t-0 [&>li:first-child>a]:pt-0">
             {grouped.get(year)?.map((post) => (
               <PostRow
                 href={`/blog/${post.id}`}

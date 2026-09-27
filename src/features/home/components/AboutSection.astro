@@ -9,9 +9,9 @@ const FACTS: [string, string][] = [
 ];
 ---
 
-<section id="about" class="px-gutter py-section grid gap-x-12 gap-y-8 border-t border-rule md:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[200px_minmax(0,620px)_minmax(0,360px)] xl:justify-between">
+<section id="about" class="px-gutter py-section grid gap-x-12 gap-y-8 border-t border-rule md:grid-cols-about xl:grid-cols-about-wide xl:justify-between">
   <SectionLabel>02 / about</SectionLabel>
-  <div class="flex max-w-[620px] min-w-0 flex-col gap-[22px] text-[17px]">
+  <div class="flex max-w-155 min-w-0 flex-col gap-5.5 text-lede">
     <p class="m-0">
       I’m from Nepal, now in Coquitlam, BC. I like working across the whole
       product, from the screen people use to the database behind it.
@@ -26,10 +26,10 @@ const FACTS: [string, string][] = [
       for the AWS Developer – Associate exam.
     </p>
   </div>
-  <dl class="m-0 flex max-w-[460px] flex-col self-start border-b border-rule text-[13px] md:col-start-2 xl:col-start-3">
+  <dl class="m-0 flex max-w-115 flex-col self-start border-b border-rule text-label md:col-start-2 xl:col-start-3">
     {
       FACTS.map(([k, v]) => (
-        <div class="grid grid-cols-[96px_1fr] gap-3 border-t border-rule py-3">
+        <div class="grid grid-cols-fact gap-3 border-t border-rule py-3">
           <dt class="text-ink-3">{k}</dt>
           <dd class="m-0">{v}</dd>
         </div>

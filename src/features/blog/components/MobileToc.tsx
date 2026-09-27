@@ -89,7 +89,7 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
     headings.find((h) => h.slug === activeSlug)?.text ?? headings[0]?.text;
 
   return (
-    <div className="mb-8 flex items-center justify-between gap-3 border-y border-rule py-2 text-[13px] min-[901px]:hidden">
+    <div className="mb-8 flex items-center justify-between gap-3 border-y border-rule py-2 text-label post:hidden">
       <span className="shrink-0 text-ink-3">on this page</span>
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger
@@ -106,7 +106,7 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
             sideOffset={4}
             className="z-50"
           >
-            <Popover.Popup className="max-h-[70vh] w-72 max-w-[calc(100vw-2.5rem)] overflow-y-auto border border-ink bg-paper p-3 font-mono text-[13px] outline-none">
+            <Popover.Popup className="max-h-popover w-72 max-w-popover overflow-y-auto border border-ink bg-paper p-3 font-mono text-label outline-none">
               <ul className="m-0 list-none border-l border-rule p-0">
                 {headings.map((h) => (
                   <li key={h.slug}>

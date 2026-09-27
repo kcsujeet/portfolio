@@ -12,15 +12,15 @@ const LINKS = [
 <header class="sticky top-0 z-10 border-b border-rule bg-paper/95 backdrop-blur-md">
   <!-- Phones: two compact rows (name + contact, then the section links).
        Wider screens: one row, as in the design. -->
-  <div class="px-gutter mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-x-8 pt-3 md:py-5">
+  <div class="px-gutter mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-8 pt-3 md:py-5">
     <div class="flex flex-wrap items-baseline gap-5">
-      <a href="/#top" class="tap font-semibold tracking-[0.02em]">{NAME}</a>
-      <span class="hidden text-[13px] text-ink-3 sm:inline" title="Coquitlam, BC">49.28°N 122.79°W</span>
+      <a href="/#top" class="tap font-semibold tracking-name">{NAME}</a>
+      <span class="hidden text-label text-ink-3 sm:inline" title="Coquitlam, BC">49.28°N 122.79°W</span>
     </div>
-    <a href="/#contact" class="tap text-[13px] text-ink md:hidden">contact →</a>
+    <a href="/#contact" class="tap text-label text-ink md:hidden">contact →</a>
     <nav
       aria-label="Primary"
-      class="-mx-gutter px-gutter flex w-[calc(100%+2*clamp(20px,5vw,64px))] gap-x-5 overflow-x-auto py-2 text-[13px] whitespace-nowrap text-ink-3 [scrollbar-width:none] md:mx-0 md:w-auto md:gap-x-6 md:overflow-visible md:p-0"
+      class="-mx-gutter px-gutter flex w-bleed gap-x-5 overflow-x-auto py-2 text-label whitespace-nowrap text-ink-3 no-scrollbar md:mx-0 md:w-auto md:gap-x-6 md:overflow-visible md:p-0"
     >
       {LINKS.map((l) => <a href={l.href} class="tap hover:text-ink">{l.label}</a>)}
       <a href="/#contact" class="tap text-ink max-md:hidden">contact →</a>

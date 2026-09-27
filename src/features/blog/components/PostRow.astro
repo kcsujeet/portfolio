@@ -15,12 +15,12 @@ const { href, title, date, minutes, dateFormat = "month-year" } = Astro.props;
 <li>
   <a
     href={href}
-    class="flex flex-wrap gap-x-8 gap-y-1 border-t border-rule py-[22px] transition-colors duration-150 hover:bg-hover hover:no-underline"
+    class="flex flex-wrap gap-x-8 gap-y-1 border-t border-rule py-5.5 transition-colors duration-150 hover:bg-hover hover:no-underline"
   >
-    <time datetime={date.toISOString()} class="flex-[0_0_100px] text-[13px] text-ink-3">
+    <time datetime={date.toISOString()} class="shrink-0 grow-0 basis-date text-label text-ink-3">
       {formatDate(date, dateFormat)}
     </time>
-    <span class="flex-[1_1_300px] text-[17px]">{title}</span>
-    <span class="text-[13px] text-ink-3">{minutes} min</span>
+    <span class="grow basis-row text-lede">{title}</span>
+    <span class="text-label text-ink-3">{minutes} min</span>
   </a>
 </li>
