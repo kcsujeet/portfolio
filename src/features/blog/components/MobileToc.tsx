@@ -89,12 +89,12 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
     headings.find((h) => h.slug === activeSlug)?.text ?? headings[0]?.text;
 
   return (
-    <div className="mb-8 flex items-center justify-between gap-3 border-y border-rule py-2 text-label post:hidden">
-      <span className="shrink-0 text-ink-3">on this page</span>
+    <div className="mb-8 flex items-center justify-between gap-3 border-y border-border py-2 text-label post:hidden">
+      <span className="shrink-0 text-muted-foreground">on this page</span>
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger
           aria-label="Table of contents"
-          className="inline-flex min-h-11 min-w-0 cursor-pointer items-center gap-2 text-ink"
+          className="inline-flex min-h-11 min-w-0 cursor-pointer items-center gap-2 text-foreground"
         >
           <span className="truncate">{activeText}</span>
           {open ? <CloseIcon /> : <MenuIcon />}
@@ -106,15 +106,15 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
             sideOffset={4}
             className="z-50"
           >
-            <Popover.Popup className="max-h-popover w-72 max-w-popover overflow-y-auto border border-ink bg-paper p-3 font-mono text-label outline-none">
-              <ul className="m-0 list-none border-l border-rule p-0">
+            <Popover.Popup className="max-h-popover w-72 max-w-popover overflow-y-auto border border-foreground bg-background p-3 font-mono text-label outline-none">
+              <ul className="m-0 list-none border-l border-border p-0">
                 {headings.map((h) => (
                   <li key={h.slug}>
                     <a
                       href={`#${h.slug}`}
                       onClick={() => setOpen(false)}
                       aria-current={h.slug === activeSlug ? "true" : undefined}
-                      className={`toc-link -ml-px block border-l border-transparent py-2 leading-snug text-ink-3 hover:text-ink ${
+                      className={`toc-link -ml-px block border-l border-transparent py-2 leading-snug text-muted-foreground hover:text-foreground ${
                         h.depth === 3 ? "pl-6" : "pl-3"
                       }`}
                     >

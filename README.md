@@ -1,17 +1,18 @@
 # Sujeet KC's Portfolio
 
-Personal portfolio site for Sujeet KC, Senior Full-Stack Engineer based in Halifax.
+Personal portfolio and blog for Sujeet KC, Senior Full-Stack Engineer based in Coquitlam, BC.
 
 **Live**: [kcsujeet.com.np](https://kcsujeet.com.np)
 
 ## Stack
 
-- **[Astro](https://astro.build/)**: static site generator. Pure Astro components, no JS framework runtime ships to the client.
-- **[Tailwind CSS v4](https://tailwindcss.com/)**: utility-first styling. Design tokens defined in `@theme` blocks in `src/styles/global.css`.
-- **[Bun](https://bun.sh/)**: package manager and runtime.
+- **[Astro](https://astro.build/)**: static site generator. Pages are Astro components rendered at build time.
+- **[Tailwind CSS v4](https://tailwindcss.com/)**: utility-first styling. Design tokens live in `@theme` blocks in `src/styles/global.css`.
+- **[Bun](https://bun.sh/)**: package manager, runtime, and test runner.
 - **[Biome](https://biomejs.dev/)**: formatter and linter.
+- **[@shadcn/lint](https://github.com/shadcn-ui/lint)** (through ESLint): design-system lint for `.astro` and `.tsx` files.
 
-The site is fully static. Zero React (or other JS framework) ships to the browser. The only client-side JavaScript is a small inline `<script>` block in `side-rail.astro` for scroll-position tracking and the native browser handling of `<details>` accordions.
+The site is static. Client-side JavaScript is limited to a small scroll-spy `<script>` (active section in the header and the mobile nav) and one React island: the post contents menu on small screens (`MobileToc.tsx`, built on Base UI's Popover).
 
 ## Getting started
 
@@ -31,8 +32,10 @@ Open [http://localhost:5000](http://localhost:5000).
 - `bun run dev`: start dev server (port 5000)
 - `bun run build`: build the static site to `dist/`
 - `bun run preview`: preview the production build
-- `bun run typecheck`: run TypeScript checks
-- `bun run lint`: run Biome linter
+- `bun test`: run content tests
+- `bun run typecheck`: run Astro and TypeScript checks
+- `bun run lint`: run Biome, then the design-system lint (ESLint + `@shadcn/lint`)
+- `bun run lint:ds`: run only the design-system lint
 - `bun run format`: format with Biome
 - `bun run ci`: lint, typecheck, then build
 
@@ -43,23 +46,25 @@ The codebase follows a [bulletproof-react](https://github.com/alan2207/bulletpro
 ```
 src/
 ├── components/                       shared primitives
-│   ├── ui/                           Badge, Button, Card
-│   ├── Mono.astro                    uppercase-mono label
-│   ├── Pulse.astro                   pulsing dot indicator
-│   ├── Reveal.astro                  CSS-keyframe fade-in wrapper
-│   └── SectionHead.astro             numbered section heading
+│   ├── MobileNav.astro               floating icon nav on phones, plus the shared scroll-spy
+│   ├── SectionLabel.astro            narrow left-column label ("02 / about")
+│   ├── SiteFooter.astro
+│   └── SiteHeader.astro              sticky header with the section nav
 ├── config/
-│   └── constants.ts                  JOB_TITLE, NAME, SITE_URL, START_DATE
+│   └── constants.ts                  NAME, JOB_TITLE, EMAIL, SOCIAL, START_DATE, years of experience
 ├── content/
 │   └── blog/                         blog posts (Markdown)
 ├── content.config.ts                 Astro content collection schema
 ├── features/
-│   ├── home/components/              Hero, About, Experience, Projects, Contact, Footer, SideRail
+│   ├── home/
+│   │   ├── components/               Hero, StrataFigure, About, Work, Projects, Contact
+│   │   ├── data.ts                   layers, experience, projects
+│   │   └── content.spec.ts           content tests
 │   └── blog/
-│       ├── components/               WritingSection, PostRow, PostLayout
+│       ├── components/               WritingSection, PostRow, PostLayout, MobileToc
 │       └── utils/                    format-date, reading-time
 ├── layouts/
-│   └── MainLayout.astro              HTML shell, SEO, ambient atmosphere layer
+│   └── MainLayout.astro              HTML shell, SEO, header, footer, mobile nav
 ├── pages/
 │   ├── index.astro                   homepage
 │   ├── robots.txt.ts
@@ -67,35 +72,39 @@ src/
 │       ├── index.astro               /blog listing
 │       └── [...slug].astro           individual post page
 └── styles/
-    └── global.css                    design tokens, @utility rules, .prose, keyframes
+    └── global.css                    design tokens, @utility rules, .prose
 ```
 
-Agent rules (Claude, Gemini, etc.) live in `.agents/rules/` and are surfaced via symlinked `CLAUDE.md` and `GEMINI.md` at the repo root.
+Agent rules (Claude, Gemini, etc.) live in `.agents/rules/` and are surfaced via symlinked `CLAUDE.md` and `GEMINI.md` at the repo root. Product context for design work is in `PRODUCT.md`.
 
 ## Design system
 
-Defined in `src/styles/global.css` via Tailwind v4's `@theme inline` directive. Follows the [shadcn](https://ui.shadcn.com/) semantic-token convention:
+Defined in `src/styles/global.css`. Colors follow the [shadcn](https://ui.shadcn.com/docs/theming) semantic-token convention: values in `:root`, exposed to Tailwind with `@theme inline`.
 
-- **Colors**: `background`, `foreground`, `primary`, `secondary`, `success`, `info`, `warning`, `destructive`, `muted`, `accent`, `card`, `border`, `input`, `ring`, plus `surface-1` and `surface-2`
-- **Radii**: `--radius` with `sm`, `md`, `lg`, `xl` variants
-- **Fonts**: Geist (sans), Geist Mono
-- **Custom utilities**: `radial-center`, `radial-from-top`, `radial-from-top-left`, `radial-from-right`, `radial-from-bottom` for ambient gradient backgrounds
-- **Animation**: `animate-reveal` keyframe driven by `animation-delay` for staggered fade-ins on initial paint
+- **Colors**: `background`, `foreground`, `card`, `popover`, `primary`, `secondary`, `muted`, `accent`, `destructive`, `border`, `input`, `ring` (each surface with its `-foreground` pair), plus `surface-1`, `surface-2`, `surface-3` for the depth bands in the system figure
+- **Radii**: `--radius` with `sm`, `md`, `lg`, `xl` scaled from it
+- **Font**: IBM Plex Mono for everything
+- **Type scale**: named `--text-*` tokens from the design (`label`, `body`, `lede`, `title`, `heading`, `headline`, `display`, and more), some with paired line height and tracking
+- **Spacing and widths**: fluid `--spacing-*` tokens (`gutter`, `section`, `hero-top`, ...) and `--container-*` widths (`page`, `label`, `post`, ...)
+- **Custom utilities**: named grid templates (`grid-cols-cards`, `grid-cols-about`, ...), `band-bleed`, `tap` (larger hit area for small links), `no-scrollbar`
 
-Components use semantic Tailwind utilities throughout (`text-primary`, `bg-card`, `border-border`, `text-foreground/65`). No arbitrary `[var(--color)]` values.
+Components use semantic utilities throughout (`text-foreground`, `text-muted-foreground`, `bg-accent`, `border-border`, `bg-primary`). No raw palette colors and no arbitrary values: `bun run lint` enforces this with `@shadcn/lint` (`no-raw-colors`, `no-arbitrary-values`, `no-unknown-classes`, `no-inline-styles`). When a value is missing, add a named token instead of an arbitrary class.
+
+The site is light only.
 
 ## Sections
 
-- **Hero**: Display name, intro, CTA links (View projects, Let's talk)
-- **About**: Bio paragraphs, education / focus / location grid, core stack chips
-- **Experience**: Native `<details>` cards with role, impact pill, summary, expandable bullets, and stack tags
-- **Projects**: Featured + grid layout, with status pills (Live, Open Source) and tech chips
-- **Writing**: Latest 3 blog posts; full collection lives at `/blog` with individual `/blog/<slug>` pages
-- **Contact**: Email card with hover glow, social links, inquiry status
+- **Hero**: role, headline, and a short intro
+- **Fig. 01**: a section through a system (surface, api, data, infra) with the stack at each layer
+- **About**: bio and a short facts list (education, focus, hours, next)
+- **Work**: each role with a lede, highlights, and markers for the layers it touched
+- **Projects**: grid of personal projects with status and stack
+- **Writing**: latest 3 posts; the full list lives at `/blog`, posts at `/blog/<slug>`
+- **Contact**: email, social links, and availability
 
-Side rail navigation:
-- **Desktop** (≥1024px): fixed left rail with numbered section labels and an active highlight that follows scroll position
-- **Mobile / tablet** (<1024px): fixed bottom-centered icon pill
+Navigation:
+- **Tablet and desktop** (≥768px): sticky header with section links; the section in view is underlined
+- **Phones** (<768px): slim sticky header with the name, and a floating icon pill at the bottom that highlights the section in view
 
 ## License
 

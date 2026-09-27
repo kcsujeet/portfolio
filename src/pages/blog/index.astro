@@ -28,7 +28,7 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
         <h1 class="m-0 text-index font-medium ">
           Notes on the things I build, debug, and learn.
         </h1>
-        <p class="m-0 max-w-150 text-lede text-ink-2">
+        <p class="m-0 max-w-150 text-lede text-secondary-foreground">
           Mostly Rails, PostgreSQL, and TypeScript. Some are guides, some are
           write-ups of things that broke in production.
         </p>
@@ -37,7 +37,7 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
 
     {
       years.map((year) => (
-        <section class="px-gutter flex flex-wrap gap-x-12 gap-y-2 border-t border-rule py-10">
+        <section class="px-gutter flex flex-wrap gap-x-12 gap-y-2 border-t border-border py-10">
           <SectionLabel>
             <h2 class="m-0 text-label font-normal">{year}</h2>
           </SectionLabel>
@@ -57,7 +57,7 @@ const years = Array.from(grouped.keys()).sort((a, b) => b - a);
     }
     {
       posts.length === 0 && (
-        <p class="px-gutter border-t border-rule py-10 text-ink-2">No posts yet.</p>
+        <p class="px-gutter border-t border-border py-10 text-secondary-foreground">No posts yet.</p>
       )
     }
   </div>

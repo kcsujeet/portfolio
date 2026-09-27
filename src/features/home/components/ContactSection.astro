@@ -4,25 +4,25 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import { EMAIL } from "@/config/constants";
 ---
 
-<section id="contact" class="bg-night text-night-ink">
+<section id="contact" class="bg-primary text-primary-foreground">
   <div class="px-gutter mx-auto flex max-w-page flex-wrap gap-x-12 gap-y-6 pt-contact-top pb-section">
-    <SectionLabel class="text-night-ink-3">06 / contact</SectionLabel>
+    <SectionLabel class="text-primary-foreground/70">06 / contact</SectionLabel>
     <div class="flex min-w-0 grow basis-list flex-col gap-10">
       <h2 class="m-0 max-w-205 text-headline font-medium ">
         Have a problem nobody will notice once it’s solved?
       </h2>
       <a
         href={`mailto:${EMAIL}`}
-        class="self-start border-b border-night-ink-3 pb-1 text-email break-all hover:no-underline hover:border-night-ink"
+        class="self-start border-b border-primary-foreground/70 pb-1 text-email break-all hover:no-underline hover:border-primary-foreground"
       >
         {EMAIL}
       </a>
-      <div class="flex flex-wrap gap-x-10 gap-y-3 text-label text-night-ink-2">
+      <div class="flex flex-wrap gap-x-10 gap-y-3 text-label text-primary-foreground/75">
         <span>open to backend &amp; infrastructure roles</span>
         <a href="https://github.com/kcsujeet" target="_blank" rel="noopener noreferrer" class="tap">github</a>
         <a href="https://linkedin.com/in/kc-sujeet" target="_blank" rel="noopener noreferrer" class="tap">linkedin</a>
       </div>
     </div>
   </div>
-  <SiteFooter tone="night" />
+  <SiteFooter tone="inverse" />
 </section>

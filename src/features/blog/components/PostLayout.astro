@@ -25,22 +25,22 @@ const formattedUpdated = post.data.updatedDate
 ---
 
 <div class="px-gutter flex flex-wrap gap-x-12 gap-y-8 pt-post-top pb-section">
-  <aside class="flex shrink-0 grow-0 basis-label flex-col gap-6 text-label text-ink-3 max-post:grow max-post:basis-full">
-    <a href="/blog" class="tap self-start text-ink">← all writing</a>
-    <dl class="m-0 flex flex-col border-b border-rule">
-      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+  <aside class="flex shrink-0 grow-0 basis-label flex-col gap-6 text-label text-muted-foreground max-post:grow max-post:basis-full">
+    <a href="/blog" class="tap self-start text-foreground">← all writing</a>
+    <dl class="m-0 flex flex-col border-b border-border">
+      <div class="grid grid-cols-meta gap-3 border-t border-border py-2.5">
         <dt>date</dt>
-        <dd class="m-0 text-ink"><time datetime={post.data.pubDate.toISOString()}>{formattedPubDate}</time></dd>
+        <dd class="m-0 text-foreground"><time datetime={post.data.pubDate.toISOString()}>{formattedPubDate}</time></dd>
       </div>
-      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+      <div class="grid grid-cols-meta gap-3 border-t border-border py-2.5">
         <dt>read</dt>
-        <dd class="m-0 text-ink">{minutes} min</dd>
+        <dd class="m-0 text-foreground">{minutes} min</dd>
       </div>
       {
         post.data.tags.length > 0 && (
-          <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+          <div class="grid grid-cols-meta gap-3 border-t border-border py-2.5">
             <dt>tags</dt>
-            <dd class="m-0 text-ink">{post.data.tags.join(" · ")}</dd>
+            <dd class="m-0 text-foreground">{post.data.tags.join(" · ")}</dd>
           </div>
         )
       }
@@ -51,13 +51,13 @@ const formattedUpdated = post.data.updatedDate
         <blog-toc class="sticky top-24 hidden max-h-toc overflow-y-auto post:block">
           <nav aria-label="Table of contents">
             <p class="m-0 pb-3">on this page</p>
-            <ul class="m-0 list-none border-l border-rule p-0">
+            <ul class="m-0 list-none border-l border-border p-0">
               {toc.map((h) => (
                 <li>
                   <a
                     href={`#${h.slug}`}
                     class:list={[
-                      "toc-link -ml-px block border-l border-transparent py-1 leading-snug text-ink-3 hover:text-ink hover:no-underline",
+                      "toc-link -ml-px block border-l border-transparent py-1 leading-snug text-muted-foreground hover:text-foreground hover:no-underline",
                       h.depth === 3 ? "pl-6" : "pl-3",
                     ]}
                   >
@@ -79,10 +79,10 @@ const formattedUpdated = post.data.updatedDate
       <h1 class="m-0 max-w-title text-headline font-medium ">
         {post.data.title}
       </h1>
-      <p class="mt-6 mb-0 max-w-lede text-lede text-ink-2">{post.data.description}</p>
+      <p class="mt-6 mb-0 max-w-lede text-lede text-secondary-foreground">{post.data.description}</p>
       {
         post.data.cover && (
-          <div class="mt-10 overflow-hidden border border-rule">
+          <div class="mt-10 overflow-hidden border border-border">
             <Image
               src={post.data.cover as ImageMetadata}
               alt={post.data.coverAlt ?? post.data.title}
@@ -94,12 +94,12 @@ const formattedUpdated = post.data.updatedDate
       }
     </header>
 
-    <div class="mt-12 border-t border-ink pt-2 prose">
+    <div class="mt-12 border-t border-foreground pt-2 prose">
       <slot />
     </div>
 
-    <footer class="mt-16 flex max-w-post flex-wrap gap-x-8 gap-y-2 border-t border-rule pt-5 text-label text-ink-3">
-      <a href="/blog" class="tap text-ink">← all writing</a>
+    <footer class="mt-16 flex max-w-post flex-wrap gap-x-8 gap-y-2 border-t border-border pt-5 text-label text-muted-foreground">
+      <a href="/blog" class="tap text-foreground">← all writing</a>
       {formattedUpdated && <span>updated {formattedUpdated}</span>}
       {
         post.data.devto && (
