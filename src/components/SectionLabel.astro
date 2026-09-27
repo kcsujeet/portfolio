@@ -4,6 +4,6 @@ type Props = { class?: string };
 const { class: className = "" } = Astro.props;
 ---
 
-<div class:list={["shrink-0 grow-0 basis-label text-label text-ink-3", className]}>
+<div class:list={["shrink-0 grow-0 basis-label text-label text-muted-foreground", className]}>
   <slot />
 </div>

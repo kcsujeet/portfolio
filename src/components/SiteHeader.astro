@@ -14,17 +14,17 @@ const LINKS = [
 ];
 
 const LINK_CLASS =
-  "tap underline-offset-4 decoration-1 hover:text-ink data-active:text-ink data-active:underline";
+  "tap underline-offset-4 decoration-1 hover:text-foreground data-active:text-foreground data-active:underline";
 ---
 
-<header class="sticky top-0 z-10 border-b border-rule bg-paper/95 backdrop-blur-md">
+<header class="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur-md">
   <!-- Phones: one slim row with the name; sections live in the floating
        pill (MobileNav). Wider screens: one row, as in the design. -->
   <div class="px-gutter mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-8 py-3 md:py-5">
     <a href="/#top" class="tap font-semibold tracking-name">{NAME}</a>
     <nav
       aria-label="Primary"
-      class="flex gap-x-6 text-label text-ink-3 max-md:hidden"
+      class="flex gap-x-6 text-label text-muted-foreground max-md:hidden"
     >
       {
         LINKS.map((l) => (
@@ -39,7 +39,7 @@ const LINK_CLASS =
           </a>
         ))
       }
-      <a href="/#contact" data-section-link="contact" class={`${LINK_CLASS} text-ink`}>
+      <a href="/#contact" data-section-link="contact" class={`${LINK_CLASS} text-foreground`}>
         contact →
       </a>
     </nav>

@@ -1,37 +1,41 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap");
 @import "tailwindcss";
 
-/* Tokens from the Claude Design file Portfolio.dc.html: a cool gray sheet,
-   slate ink, and a strata ramp that darkens with depth (surface, api, data,
-   infra). The contact block inverts to the ink color. */
+/* shadcn semantic color tokens (https://ui.shadcn.com/docs/theming), mapped
+   into Tailwind with @theme inline. Values come from the Claude Design file
+   Portfolio.dc.html: a cool gray sheet, slate ink, and surfaces that darken
+   with depth (fig. 01: api, data, infra). The contact block uses primary. */
 
 @theme inline {
-  --color-background: var(--paper);
-  --color-foreground: var(--ink);
-  --color-paper: var(--paper);
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-ink-4: var(--ink-4);
-  --color-rule: var(--rule);
-  --color-hover: var(--hover);
-  --color-band: var(--hover);
-  --color-accent: var(--ink);
-  --color-strata-1: var(--strata-1);
-  --color-strata-2: var(--strata-2);
-  --color-strata-3: var(--strata-3);
-  --color-divider: var(--divider);
-  --color-marker-off: var(--marker-off);
-  --color-night: var(--night);
-  --color-night-ink: var(--night-ink);
-  --color-night-ink-2: var(--night-ink-2);
-  --color-night-ink-3: var(--night-ink-3);
-  --color-night-rule: var(--night-rule);
-  --color-border: var(--rule);
-  --color-tone-40: var(--tone-40);
-  --color-tone-32: var(--tone-32);
-  --color-tone-28: var(--tone-28);
-  --color-night-ink-4: var(--night-ink-4);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface-1: var(--surface-1);
+  --color-surface-1-foreground: var(--surface-1-foreground);
+  --color-surface-2: var(--surface-2);
+  --color-surface-2-foreground: var(--surface-2-foreground);
+  --color-surface-3: var(--surface-3);
+  --color-surface-3-foreground: var(--surface-3-foreground);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 
   --font-sans: "IBM Plex Mono", ui-monospace, monospace;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -39,28 +43,35 @@
 
 :root {
   color-scheme: light;
-  --paper: oklch(0.935 0.004 250);
-  --ink: oklch(0.24 0.012 250);
-  --ink-2: oklch(0.36 0.01 250);
-  --ink-3: oklch(0.48 0.01 250);
-  --ink-4: oklch(0.55 0.01 250);
-  --rule: oklch(0.82 0.006 250);
-  --hover: oklch(0.91 0.005 250);
-  --strata-1: oklch(0.9 0.005 250);
-  --strata-2: oklch(0.86 0.006 250);
-  --strata-3: oklch(0.8 0.007 250);
-  --divider: oklch(0.6 0.008 250);
-  --marker-off: oklch(0.7 0.008 250);
-  --night: oklch(0.24 0.012 250);
-  --night-ink: oklch(0.93 0.004 250);
-  --night-ink-2: oklch(0.75 0.008 250);
-  --night-ink-3: oklch(0.7 0.008 250);
-  --night-rule: oklch(0.34 0.01 250);
-  --night-ink-4: oklch(0.65 0.008 250);
-  /* Stack text darkens with each strata band so it keeps its contrast. */
-  --tone-40: oklch(0.4 0.01 250);
-  --tone-32: oklch(0.32 0.01 250);
-  --tone-28: oklch(0.28 0.01 250);
+  --radius: 0.5rem;
+
+  --background: oklch(0.935 0.004 250);
+  --foreground: oklch(0.24 0.012 250);
+  --card: oklch(0.935 0.004 250);
+  --card-foreground: oklch(0.24 0.012 250);
+  --popover: oklch(0.935 0.004 250);
+  --popover-foreground: oklch(0.24 0.012 250);
+  --primary: oklch(0.24 0.012 250);
+  --primary-foreground: oklch(0.93 0.004 250);
+  --secondary: oklch(0.91 0.005 250);
+  /* Body text that sits one step below the foreground. */
+  --secondary-foreground: oklch(0.36 0.01 250);
+  --muted: oklch(0.91 0.005 250);
+  --muted-foreground: oklch(0.48 0.01 250);
+  --accent: oklch(0.91 0.005 250);
+  --accent-foreground: oklch(0.24 0.012 250);
+  --destructive: oklch(0.55 0.2 27);
+  --border: oklch(0.82 0.006 250);
+  --input: oklch(0.7 0.008 250);
+  --ring: oklch(0.24 0.012 250);
+
+  /* Fig. 01 depth bands; each foreground keeps contrast on its band. */
+  --surface-1: oklch(0.9 0.005 250);
+  --surface-1-foreground: oklch(0.36 0.01 250);
+  --surface-2: oklch(0.86 0.006 250);
+  --surface-2-foreground: oklch(0.32 0.01 250);
+  --surface-3: oklch(0.8 0.007 250);
+  --surface-3-foreground: oklch(0.28 0.01 250);
 }
 
 /* Named values from the design, so markup uses tokens instead of one-off
@@ -157,7 +168,7 @@
 
 @layer base {
   * {
-    @apply border-rule;
+    @apply border-border;
   }
 
   html {
@@ -174,23 +185,23 @@
 
   body {
     margin: 0;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    caret-color: var(--ink);
-    scrollbar-color: var(--ink-3) var(--paper);
+    caret-color: var(--foreground);
+    scrollbar-color: var(--muted-foreground) var(--background);
   }
 
   ::selection {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--foreground);
+    color: var(--background);
   }
 
   :focus-visible {
-    outline: 1px solid var(--ink);
+    outline: 1px solid var(--foreground);
     outline-offset: 4px;
   }
 
@@ -219,7 +230,7 @@
 /* ---- Long-form: application report body ---- */
 
 .prose {
-  color: var(--ink);
+  color: var(--foreground);
   font-size: 16px;
   line-height: 1.75;
   max-width: 68ch;
@@ -255,7 +266,7 @@
   margin-left: 0.4em;
   font-weight: 400;
   text-decoration: none;
-  color: var(--ink-3);
+  color: var(--muted-foreground);
   opacity: 0;
   transition: opacity 150ms;
 }
@@ -267,17 +278,17 @@
 }
 
 .prose .heading-anchor:hover {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .prose a {
-  color: var(--ink);
+  color: var(--foreground);
   text-decoration: underline;
-  text-decoration-color: var(--ink);
+  text-decoration-color: var(--foreground);
 }
 
 .prose a:hover {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .prose ul,
@@ -290,7 +301,7 @@
 }
 
 .prose ul li::marker {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .prose ol {
@@ -298,7 +309,7 @@
 }
 
 .prose ol li::marker {
-  color: var(--ink-3);
+  color: var(--muted-foreground);
   font-weight: 600;
 }
 
@@ -307,25 +318,25 @@
 }
 
 .prose blockquote {
-  background: var(--hover);
+  background: var(--accent);
   border-radius: 0.75rem;
   padding: 0.9em 1.1em;
-  color: var(--ink-2);
+  color: var(--secondary-foreground);
 }
 
 .prose blockquote strong {
-  color: var(--ink);
+  color: var(--foreground);
 }
 
 .prose code:not(pre code) {
-  background: var(--hover);
+  background: var(--accent);
   padding: 0.1em 0.35em;
   font-size: 0.86em;
   font-family: var(--font-mono);
 }
 
 .prose pre {
-  background: var(--hover);
+  background: var(--accent);
   padding: 1em 1.25em;
   overflow-x: auto;
   border-radius: 0.75rem;
@@ -336,7 +347,7 @@
 /* Code blocks use Shiki's github-light theme (astro.config.mjs) on the
    sheet's hover gray instead of the theme's own background. */
 .prose pre.astro-code {
-  background-color: var(--hover) !important;
+  background-color: var(--accent) !important;
 }
 
 .prose pre code {
@@ -348,12 +359,12 @@
 
 .prose hr {
   border: 0;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid var(--border);
   margin: 2.5em 0;
 }
 
 .prose img {
-  border: 1px solid var(--rule);
+  border: 1px solid var(--border);
 }
 
 .prose table {
@@ -363,17 +374,17 @@
 }
 
 .prose th {
-  background: var(--hover);
+  background: var(--accent);
   text-align: left;
   font-weight: 500;
   padding: 0.5rem 0.75rem;
-  border-top: 1px solid var(--rule-strong);
-  border-bottom: 1px solid var(--rule-strong);
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
 }
 
 .prose td {
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--border);
 }
 
 .prose strong {
@@ -382,8 +393,8 @@
 
 /* Right-rail and mobile TOC: the section the reader is in. */
 .toc-link[aria-current="true"] {
-  color: var(--ink);
-  border-color: var(--ink);
+  color: var(--foreground);
+  border-color: var(--foreground);
 }
 
 /* A band that runs to the screen edge on phones and hangs 16px past the
