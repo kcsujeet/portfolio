@@ -1,0 +1,50 @@
+---
+import { LAYERS } from "../data";
+
+// Fig. 01: each layer below the surface sits on a darker band, so depth
+// reads as a section cut through the ground.
+const BAND = {
+  surface: "",
+  api: "band-bleed bg-strata-1",
+  data: "band-bleed bg-strata-2",
+  infra: "band-bleed bg-strata-3",
+};
+const STACK_TONE = {
+  surface: "text-tone-40",
+  api: "text-ink-2",
+  data: "text-tone-32",
+  infra: "text-tone-28",
+};
+const [surface, ...below] = LAYERS;
+---
+
+<figure class="px-gutter m-0 pb-figure-bottom">
+  <figcaption class="flex flex-wrap justify-between gap-x-12 gap-y-2 pb-3 text-xs tracking-widest text-ink-3 uppercase">
+    <span>fig. 01 · section through a system</span><span>what I work on</span>
+  </figcaption>
+  <div class="border-t border-ink">
+    {
+      [surface].map((row) => (
+        <div class="flex flex-wrap gap-x-12 gap-y-1 border-b border-rule py-5.5">
+          <span class="shrink-0 grow-0 basis-label font-medium">{row.depth} {row.layer}</span>
+          <span class="grow basis-stack">{row.line}</span>
+          <span class:list={["grow basis-stack", STACK_TONE[row.layer]]}>{row.stack.join(" · ")}</span>
+        </div>
+      ))
+    }
+    <div class="flex items-center gap-3 py-2.5 text-micro tracking-hint-tight whitespace-nowrap text-ink-3 sm:gap-4 sm:text-xs sm:tracking-hint" aria-hidden="true">
+      <span>↑ what users see</span>
+      <span class="min-w-4 flex-1 border-t border-dashed border-divider"></span>
+      <span>what they depend on ↓</span>
+    </div>
+    {
+      below.map((row) => (
+        <div class:list={["flex flex-wrap gap-x-12 gap-y-1 py-5.5", BAND[row.layer]]}>
+          <span class="shrink-0 grow-0 basis-label font-medium">{row.depth} {row.layer}</span>
+          <span class="grow basis-stack">{row.line}</span>
+          <span class:list={["grow basis-stack", STACK_TONE[row.layer]]}>{row.stack.join(" · ")}</span>
+        </div>
+      ))
+    }
+  </div>
+</figure>

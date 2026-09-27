@@ -2,26 +2,21 @@
 import WritingSection from "@/features/blog/components/WritingSection.astro";
 import AboutSection from "@/features/home/components/AboutSection.astro";
 import ContactSection from "@/features/home/components/ContactSection.astro";
-import ExperienceSection from "@/features/home/components/ExperienceSection.astro";
-import Footer from "@/features/home/components/Footer.astro";
 import HeroSection from "@/features/home/components/HeroSection.astro";
 import ProjectsSection from "@/features/home/components/ProjectsSection.astro";
-import SideRail from "@/features/home/components/SideRail.astro";
+import StrataFigure from "@/features/home/components/StrataFigure.astro";
+import WorkSection from "@/features/home/components/WorkSection.astro";
 import MainLayout from "@/layouts/MainLayout.astro";
 ---
 
-<MainLayout>
-  <SideRail />
-
-  <div class="relative">
-    <div class="max-w-6xl mx-auto px-8 lg:pl-44 lg:pr-8">
-      <HeroSection />
-      <AboutSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <WritingSection />
-      <ContactSection />
-      <Footer />
-    </div>
+<MainLayout home>
+  <div id="top" class="mx-auto max-w-page">
+    <HeroSection />
+    <StrataFigure />
+    <AboutSection />
+    <WorkSection />
+    <ProjectsSection />
+    <WritingSection />
   </div>
+  <ContactSection />
 </MainLayout>

@@ -1,13 +1,22 @@
 ---
 import "../styles/global.css";
+import MobileNav from "@/components/MobileNav.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
 import { JOB_TITLE } from "@/config/constants";
 
 type Props = {
   title?: string;
   description?: string;
+  /** The homepage ends in the contact block, which carries its own footer. */
+  home?: boolean;
 };
 
-const { title: pageTitle, description: pageDescription } = Astro.props;
+const {
+  title: pageTitle,
+  description: pageDescription,
+  home = false,
+} = Astro.props;
 
 const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Vancouver";
 const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
@@ -72,14 +81,13 @@ const websiteSchema = {
   description: defaultDescription,
   author: "Sujeet Kc",
 };
-
-const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>")`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e9ebee" />
     <title>{finalTitle}</title>
     <meta name="description" content={finalDescription} />
     <meta name="keywords" content={keywords} />
@@ -106,33 +114,26 @@ const grainSvg = `url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns=
     <meta name="twitter:image" content={new URL(logoUrl, siteUrl)} />
 
     <link rel="icon" type="image/svg+xml" href={logoUrl} sizes="any" />
+    <!-- iOS home screen icon. https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
     <!-- JSON-LD Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify([personSchema, websiteSchema])} />
   </head>
 
-  <body class="bg-background text-foreground font-sans">
-    <!-- Atmosphere: ambient primary glows + grain. Blob positions are
-         decorative absolute positioning tuned to the viewport. -->
-    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      <div
-        class="absolute -top-[10vh] md:-top-[20vh] left-1/2 -translate-x-1/2 w-[180vw] md:w-[120vw] h-[70vh] md:h-[90vh] rounded-full blur-3xl radial-center from-primary/35 md:from-primary/22 to-transparent to-65% md:to-60%"
-      />
-      <div
-        class="absolute top-[55vh] md:top-[60vh] -left-[20vw] md:-left-[10vw] w-[110vw] md:w-[70vw] h-[60vh] md:h-[70vh] rounded-full blur-3xl radial-center from-primary/18 md:from-primary/10 to-transparent to-65%"
-      />
-      <div
-        class="absolute inset-0 radial-from-bottom from-black/60 to-transparent to-75%"
-      />
-      <div
-        class="absolute inset-0 opacity-[0.03] mix-blend-overlay"
-        style={`background-image: ${grainSvg};`}
-      />
-    </div>
-
-    <main class="relative z-10 min-h-screen overflow-x-clip">
+  <body class="bg-paper font-sans text-ink">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50 focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+    >
+      Skip to content
+    </a>
+    <SiteHeader current={home ? undefined : "writing"} />
+    <main id="main" class="min-h-main">
       <slot />
     </main>
+    {!home && <SiteFooter />}
+    <MobileNav current={home ? undefined : "writing"} />
   </body>
 </html>

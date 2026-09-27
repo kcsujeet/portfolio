@@ -1,10 +1,9 @@
 import { rehypeHeadingIds } from "@astrojs/markdown-remark";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-
-import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +16,11 @@ export default defineConfig({
   // Astro auto-injects heading ids; rehype-autolink-headings turns each into a
   // hoverable permalink. https://github.com/rehypejs/rehype-autolink-headings
   markdown: {
+    // Light-only site, so one light Shiki theme.
+    // https://docs.astro.build/en/guides/syntax-highlighting/
+    shikiConfig: {
+      theme: "github-light",
+    },
     rehypePlugins: [
       rehypeHeadingIds,
       [

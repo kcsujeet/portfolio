@@ -1,71 +1,28 @@
 ---
-import Mono from "@/components/Mono.astro";
-import Pulse from "@/components/Pulse.astro";
-import SectionHead from "@/components/SectionHead.astro";
-import Card from "@/components/ui/Card.astro";
-
-const SOCIAL: ReadonlyArray<readonly [string, string, string]> = [
-  ["GITHUB", "github.com/kcsujeet", "https://github.com/kcsujeet"],
-  [
-    "LINKEDIN",
-    "linkedin.com/in/kc-sujeet",
-    "https://linkedin.com/in/kc-sujeet",
-  ],
-];
+import SectionLabel from "@/components/SectionLabel.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { EMAIL } from "@/config/constants";
 ---
 
-<section data-screen-label="06 Contact">
-  <SectionHead n="06." label="CONTACT" anchor="contact">
-    <p>
-      I'm most interested in backend and infrastructure problems: APIs, data models, migrations, and the systems that run them. If you're working on something like that, reach out.
-    </p>
-  </SectionHead>
-
-  <div class="grid md:grid-cols-3 gap-3 mt-4">
-    <Card
-      as="a"
-      href="mailto:sujeetkc45@gmail.com"
-      hover
-      glow="top-left"
-      padding="lg"
-      class="md:col-span-2"
-    >
-      <Mono class="text-primary">EMAIL COMMUNICATION</Mono>
-      <p class="mt-4 text-white text-3xl md:text-5xl tracking-tight leading-tight break-all">
-        sujeetkc45@gmail.com
-      </p>
-      <div class="mt-6 inline-flex items-center gap-2 text-muted-foreground group-hover:text-primary transition-colors">
-        <Mono>WRITE A MESSAGE</Mono>
-        <span class="group-hover:translate-x-1 transition-transform">→</span>
+<section id="contact" class="bg-night text-night-ink">
+  <div class="px-gutter mx-auto flex max-w-page flex-wrap gap-x-12 gap-y-6 pt-contact-top pb-section">
+    <SectionLabel class="text-night-ink-3">06 / contact</SectionLabel>
+    <div class="flex min-w-0 grow basis-list flex-col gap-10">
+      <h2 class="m-0 max-w-205 text-headline font-medium ">
+        Have a problem nobody will notice once it’s solved?
+      </h2>
+      <a
+        href={`mailto:${EMAIL}`}
+        class="self-start border-b border-night-ink-3 pb-1 text-email break-all hover:no-underline hover:border-night-ink"
+      >
+        {EMAIL}
+      </a>
+      <div class="flex flex-wrap gap-x-10 gap-y-3 text-label text-night-ink-2">
+        <span>open to backend &amp; infrastructure roles</span>
+        <a href="https://github.com/kcsujeet" target="_blank" rel="noopener noreferrer" class="tap">github</a>
+        <a href="https://linkedin.com/in/kc-sujeet" target="_blank" rel="noopener noreferrer" class="tap">linkedin</a>
       </div>
-    </Card>
-
-    <Card padding="lg">
-      <Mono class="text-primary">INQUIRY STATUS</Mono>
-      <div class="mt-4 flex items-center gap-2.5">
-        <Pulse />
-        <span class="text-white text-base">Open to backend and infrastructure work</span>
-      </div>
-      <p class="mt-4 text-muted-foreground text-sm">
-        Expect a response within 24–48 business hours.
-      </p>
-      <div class="mt-6 space-y-2">
-        {
-          SOCIAL.map(([k, v, h]) => (
-            <a
-              href={h}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group flex items-baseline justify-between gap-3 py-1.5 border-b border-border hover:border-primary/40 transition-colors"
-            >
-              <Mono class="text-muted-foreground">{k}</Mono>
-              <span class="text-foreground/80 text-xs group-hover:text-primary transition-colors">
-                {v}
-              </span>
-            </a>
-          ))
-        }
-      </div>
-    </Card>
+    </div>
   </div>
+  <SiteFooter tone="night" />
 </section>

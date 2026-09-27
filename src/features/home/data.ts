@@ -1,179 +1,158 @@
+/** The four layers a system is drawn in, top to bottom. */
+export type Layer = "surface" | "api" | "data" | "infra";
+
+export const LAYER_ORDER: Layer[] = ["surface", "api", "data", "infra"];
+
+export interface LayerRow {
+  layer: Layer;
+  depth: string;
+  line: string;
+  stack: string[];
+}
+
+/** Fig. 01: a section through a system, from what users see to where it runs. */
+export const LAYERS: LayerRow[] = [
+  {
+    layer: "surface",
+    depth: "±0",
+    line: "What people see.",
+    stack: ["TypeScript", "React", "Next.js", "Vue"],
+  },
+  {
+    layer: "api",
+    depth: "−1",
+    line: "Contracts that outlive the frontend.",
+    stack: ["Ruby on Rails", "JSON:API", "REST", "Node.js"],
+  },
+  {
+    layer: "data",
+    depth: "−2",
+    line: "Schemas, indexes, locks, migrations.",
+    stack: ["PostgreSQL", "SQL", "Drizzle", "D1"],
+  },
+  {
+    layer: "infra",
+    depth: "−3",
+    line: "Where it all runs.",
+    stack: ["Docker", "AWS", "Cloudflare Workers", "R2"],
+  },
+];
+
 export interface ExpItem {
   id: string;
-  year: string;
+  years: string;
+  place: string;
   role: string;
   company: string;
-  where: string;
-  impact: string;
-  summary: string;
+  lede: string;
   points: string[];
-  stack: string[];
+  /** Layers this role touched, drawn as filled squares. */
+  layers: Layer[];
 }
-
-export interface Project {
-  id: string;
-  year: string;
-  title: string;
-  blurb: string;
-  stack: string[];
-  href?: string;
-  repo?: string;
-  state: string[];
-  featured?: boolean;
-}
-
-export const STACK = [
-  "Ruby on Rails",
-  "PostgreSQL",
-  "REST & JSON:API",
-  "Node.js",
-  "Docker",
-  "AWS",
-  "Cloudflare Workers",
-  "TypeScript",
-  "React.js",
-  "Next.js",
-];
 
 export const EXPERIENCE: ExpItem[] = [
   {
     id: "et",
-    year: "2023 - PRESENT",
-    role: "Senior Full-Stack Engineer",
+    years: "2023 - now",
+    place: "remote",
     company: "Event Temple",
-    where: "Remote",
-    impact: "API & Data Architecture",
-    summary:
-      "Rails and PostgreSQL work on a hospitality SaaS platform. Led the API modernization to V2 with JSON:API and built a zero-downtime migration engine that moved 1.5M+ records across relational schemas.",
+    role: "Senior Full-Stack Engineer",
+    lede: "Hospitality SaaS. I own the API and the data underneath it.",
     points: [
-      "Led the Rails API migration to V2 with JSON:API standards: REST resource design, serializer caching, and consistent error handling.",
-      "Designed and built a zero-downtime data migration engine that moved 1.5M+ records across relational schemas with transactional safety.",
-      "Optimized PostgreSQL queries and indexes, and diagnosed and fixed table-level lock contention during production schema migrations.",
-      "Shipped the backend for Proposals and Guest Portal, contributing to $2M+ in multi-year enterprise contracts with hotel groups managing 200+ properties.",
-      "Co-led the 2-year migration of the web platform from AngularJS to React and Next.js with a 2-engineer team, owning the incremental replacement strategy and the API contracts the new frontend is built on.",
+      "Led the Rails API to V2 on JSON:API: resource design, serializer caching, one error shape.",
+      "Built a zero-downtime migration engine; 1.5M+ records moved across schemas, transactionally.",
+      "Traced and fixed PostgreSQL table-level lock contention during production schema migrations.",
+      "Backend for Proposals and Guest Portal, part of $2M+ in enterprise contracts.",
+      "Co-led a two-year AngularJS → React/Next.js migration, owning the API contracts.",
     ],
-    stack: [
-      "Ruby on Rails",
-      "PostgreSQL",
-      "JSON:API",
-      "Docker",
-      "TypeScript",
-      "React",
-      "Next.js",
-    ],
+    layers: ["surface", "api", "data", "infra"],
   },
   {
     id: "lf",
-    year: "2021 - 2022",
-    role: "Front-End Developer",
+    years: "2021 - 2022",
+    place: "remote",
     company: "Legalfit",
-    where: "Remote",
-    impact: "Vue 3 Migration",
-    summary:
-      "Led the Vue 2 to Vue 3 migration with TypeScript. Built rich client-facing tools and integrated with Django backend services.",
+    role: "Front-End Developer",
+    lede: "Led Vue 2 → Vue 3 with TypeScript, and the tools clients built with.",
     points: [
-      "Led the migration from Vue 2 to Vue 3 with TypeScript, standardizing component patterns and type safety.",
-      "Built a drag-and-drop form builder with rich text editing, from requirements to ship.",
-      "Integrated frontend builders with Django REST APIs, handling data validation and real-time content editing.",
+      "Standardized component patterns and type safety across the migration.",
+      "Drag-and-drop form builder with rich text, from requirements to ship.",
+      "Wired builders to Django REST APIs with validation and live editing.",
     ],
-    stack: ["Vue 3", "TypeScript", "Django", "REST APIs"],
+    layers: ["surface", "api"],
   },
   {
     id: "tv",
-    year: "2019 - 2021",
-    role: "Software Engineer",
+    years: "2019 - 2021",
+    place: "Lalitpur, NP",
     company: "Tekvortex",
-    where: "Lalitpur, NP",
-    impact: "Rails & PostgreSQL Backend",
-    summary:
-      "Built backend systems and reporting tools in Ruby on Rails and PostgreSQL: schema design, query optimization, and a D3.js dependency-mapping product.",
+    role: "Software Engineer",
+    lede: "Rails and PostgreSQL reporting systems, where the schema was the product.",
     points: [
-      "Optimized PostgreSQL queries, views, and indexes to handle relational reporting.",
-      "Designed a database client in Ruby on Rails and Angular for non-technical users.",
-      "Developed a D3.js dependency-mapping system that contributed to approximately $500K in annual revenue.",
+      "Tuned queries, views and indexes for relational reporting.",
+      "A database client for non-technical users, in Rails and Angular.",
+      "D3.js dependency mapping behind ~$500K in annual revenue.",
     ],
-    stack: ["Ruby on Rails", "PostgreSQL", "SQL", "D3.js", "TypeScript"],
+    layers: ["surface", "api", "data"],
   },
 ];
+
+export interface Project {
+  id: string;
+  name: string;
+  tag: "live" | "open source";
+  href: string;
+  line: string;
+  stack: string[];
+}
 
 export const PROJECTS: Project[] = [
   {
     id: "sublimeread",
-    year: "2026",
-    title: "SublimeRead",
-    blurb:
-      "Read-along reader for EPUBs and PDFs with sentence-level highlighting and on-device text-to-speech. The backend runs on Cloudflare Workers: D1 with Drizzle ORM and versioned migrations for library, progress, highlights, notes, and shelves; R2 for book files and TTS models; better-auth sessions; and Stripe subscriptions through checkout, portal, and webhook endpoints.",
-    stack: [
-      "Cloudflare Workers",
-      "D1",
-      "R2",
-      "Drizzle ORM",
-      "Stripe",
-      "TypeScript",
-      "React",
-      "WASM",
-    ],
+    name: "SublimeRead",
+    tag: "live",
     href: "https://sublimeread.com",
-    state: ["Live"],
-    featured: true,
+    line: "Read-along EPUB/PDF reader with on-device TTS. Workers, D1, R2, Stripe billing.",
+    stack: ["workers", "d1", "r2", "drizzle"],
   },
   {
     id: "interactive-rails",
-    year: "2026",
-    title: "Interactive Rails",
-    blurb:
-      "Learn Rails 8 by building an e-commerce marketplace through 58 interactive levels across 7 acts. Free, open source, and runs entirely in your browser.",
-    stack: [
-      "Ruby on Rails",
-      "TypeScript",
-      "Astro",
-      "React",
-      "Cloudflare Workers",
-    ],
+    name: "Interactive Rails",
+    tag: "open source",
     href: "https://interactive-rails.sujeetkc45.workers.dev",
-    repo: "https://github.com/kcsujeet/interactive-rails",
-    state: ["Live", "Open Source"],
-  },
-  {
-    id: "testoise",
-    year: "2026",
-    title: "Testoise",
-    blurb:
-      "Lightweight, fully type-safe lazy test variables for Bun, Vitest, Jest, and Node. RSpec-style let for JavaScript test runners.",
-    stack: ["TypeScript", "Bun", "Vitest", "Jest", "Node.js"],
-    repo: "https://github.com/kcsujeet/testoise",
-    state: ["Open Source"],
+    line: "Learn Rails 8 in 58 levels, entirely in the browser.",
+    stack: ["rails", "astro", "workers"],
   },
   {
     id: "ilamy",
-    year: "2026",
-    title: "Ilamy Calendar",
-    blurb:
-      "Open-source React calendar library, now rebuilt around a tiny ~13 KB gzipped core and an opt-in plugin ecosystem, so you only ship what you use. RFC 5545 recurring events, resource scheduling, drag-and-drop, timezones, and 100+ locales. Published on npm as @ilamy/calendar.",
-    stack: ["TypeScript", "React", "RFC 5545", "dnd-kit"],
+    name: "Ilamy Calendar",
+    tag: "open source",
     href: "https://ilamy.dev",
-    repo: "https://github.com/kcsujeet/ilamy-calendar",
-    state: ["Live", "Open Source"],
-    featured: true,
+    line: "React calendar with a ~13 KB core. RFC 5545 recurrence, 100+ locales.",
+    stack: ["typescript", "react", "npm"],
   },
   {
-    id: "collage",
-    year: "2026",
-    title: "Collage Pen",
-    blurb:
-      "Browser-based collage maker designed to feel like a native desktop app. Custom Canvas with gesture interactions and high-resolution export.",
-    stack: ["Astro", "React", "TypeScript", "Canvas API"],
-    href: "https://collagepen.com",
-    state: ["Live"],
+    id: "testoise",
+    name: "Testoise",
+    tag: "open source",
+    href: "https://github.com/kcsujeet/testoise",
+    line: "RSpec-style lazy let for Bun, Vitest, Jest and Node.",
+    stack: ["typescript", "bun"],
   },
   {
     id: "debackground",
-    year: "2026",
-    title: "Debackground",
-    blurb:
-      "Privacy-first AI background remover that runs entirely in the browser. Transformers.js and WASM. No uploads, no waiting, everything happens locally.",
-    stack: ["Transformers.js", "WASM", "TypeScript", "React"],
+    name: "Debackground",
+    tag: "live",
     href: "https://debackground.com",
-    state: ["Live"],
+    line: "Background removal that never leaves your browser.",
+    stack: ["transformers.js", "wasm"],
+  },
+  {
+    id: "collage",
+    name: "Collage Pen",
+    tag: "live",
+    href: "https://collagepen.com",
+    line: "A collage maker that feels like a desktop app.",
+    stack: ["canvas", "react"],
   },
 ];

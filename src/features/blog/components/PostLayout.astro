@@ -1,8 +1,6 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import Mono from "@/components/Mono.astro";
-import Badge from "@/components/ui/Badge.astro";
 import { formatDate } from "@/features/blog/utils/format-date";
 import { readingTimeMinutes } from "@/features/blog/utils/reading-time";
 import { MobileToc } from "./MobileToc";
@@ -17,7 +15,7 @@ type Props = {
 };
 
 const { post, headings = [] } = Astro.props;
-// Only section headings make a useful right-rail TOC; h1 lives in the header.
+// Only section headings make a useful contents list; h1 lives in the header.
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const minutes = readingTimeMinutes(post.body ?? "");
 const formattedPubDate = formatDate(post.data.pubDate, "full");
@@ -26,49 +24,65 @@ const formattedUpdated = post.data.updatedDate
   : undefined;
 ---
 
-<div
-  class="mx-auto max-w-6xl pt-16 md:pt-24 pb-20 lg:grid lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-12"
->
-  {toc.length > 0 && <MobileToc client:load headings={toc} />}
-
-  <article class="min-w-0">
-    {/* Desktop back link; on mobile this lives in the fixed MobileToc bar. */}
-    <a
-      href="/blog"
-      class="group hidden lg:inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-    >
-      <span class="group-hover:-translate-x-1 transition-transform">←</span>
-      <Mono>ALL WRITING</Mono>
-    </a>
-
-    <header class="mt-10">
-      <div class="flex items-center gap-3 text-muted-foreground">
-        <Mono>{formattedPubDate}</Mono>
-        <span class="block w-3 h-px bg-foreground/15" />
-        <Mono>{minutes} MIN READ</Mono>
+<div class="px-gutter flex flex-wrap gap-x-12 gap-y-8 pt-post-top pb-section">
+  <aside class="flex shrink-0 grow-0 basis-label flex-col gap-6 text-label text-ink-3 max-post:grow max-post:basis-full">
+    <a href="/blog" class="tap self-start text-ink">← all writing</a>
+    <dl class="m-0 flex flex-col border-b border-rule">
+      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+        <dt>date</dt>
+        <dd class="m-0 text-ink"><time datetime={post.data.pubDate.toISOString()}>{formattedPubDate}</time></dd>
       </div>
-
-      <h1 class="mt-6 text-white text-4xl md:text-5xl font-medium tracking-tight leading-tight">
-        {post.data.title}
-      </h1>
-
-      <p class="mt-4 text-foreground/70 text-lg md:text-xl max-w-prose">
-        {post.data.description}
-      </p>
-
+      <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+        <dt>read</dt>
+        <dd class="m-0 text-ink">{minutes} min</dd>
+      </div>
       {
         post.data.tags.length > 0 && (
-          <div class="mt-6 flex flex-wrap gap-x-3 gap-y-2">
-            {post.data.tags.map((tag) => (
-              <Badge>{tag}</Badge>
-            ))}
+          <div class="grid grid-cols-meta gap-3 border-t border-rule py-2.5">
+            <dt>tags</dt>
+            <dd class="m-0 text-ink">{post.data.tags.join(" · ")}</dd>
           </div>
         )
       }
+    </dl>
 
+    {
+      toc.length > 0 && (
+        <blog-toc class="sticky top-24 hidden max-h-toc overflow-y-auto post:block">
+          <nav aria-label="Table of contents">
+            <p class="m-0 pb-3">on this page</p>
+            <ul class="m-0 list-none border-l border-rule p-0">
+              {toc.map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class:list={[
+                      "toc-link -ml-px block border-l border-transparent py-1 leading-snug text-ink-3 hover:text-ink hover:no-underline",
+                      h.depth === 3 ? "pl-6" : "pl-3",
+                    ]}
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </blog-toc>
+      )
+    }
+  </aside>
+
+  <article class="min-w-0 grow basis-lead">
+    {toc.length > 0 && <MobileToc client:load headings={toc} />}
+
+    <header>
+      <h1 class="m-0 max-w-title text-headline font-medium ">
+        {post.data.title}
+      </h1>
+      <p class="mt-6 mb-0 max-w-lede text-lede text-ink-2">{post.data.description}</p>
       {
         post.data.cover && (
-          <div class="mt-10 overflow-hidden rounded-sm border border-border">
+          <div class="mt-10 overflow-hidden border border-rule">
             <Image
               src={post.data.cover as ImageMetadata}
               alt={post.data.coverAlt ?? post.data.title}
@@ -80,72 +94,22 @@ const formattedUpdated = post.data.updatedDate
       }
     </header>
 
-    <div class="mt-12 prose">
+    <div class="mt-12 border-t border-ink pt-2 prose">
       <slot />
     </div>
 
-    <hr class="mt-16 border-0 border-t border-border" />
-
-    {
-      (post.data.devto || formattedUpdated) && (
-        <footer class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          {post.data.devto && (
-            <a
-              href={post.data.devto}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary transition-colors"
-            >
-              <Mono>ORIGINALLY ON DEV.TO</Mono>
-              <span class="group-hover:translate-x-1 transition-transform">↗</span>
-            </a>
-          )}
-          {formattedUpdated && (
-            <span class="text-muted-foreground">
-              <Mono>UPDATED {formattedUpdated.toUpperCase()}</Mono>
-            </span>
-          )}
-        </footer>
-      )
-    }
-
-    <div class="mt-12 flex justify-center">
-      <a
-        href="/blog"
-        class="group inline-flex items-center gap-2 px-4 py-2 border border-border rounded-sm text-muted-foreground hover:text-primary hover:border-primary/40 transition-colors"
-      >
-        <span class="group-hover:-translate-x-1 transition-transform">←</span>
-        <Mono>BACK TO ALL WRITING</Mono>
-      </a>
-    </div>
+    <footer class="mt-16 flex max-w-post flex-wrap gap-x-8 gap-y-2 border-t border-rule pt-5 text-label text-ink-3">
+      <a href="/blog" class="tap text-ink">← all writing</a>
+      {formattedUpdated && <span>updated {formattedUpdated}</span>}
+      {
+        post.data.devto && (
+          <a href={post.data.devto} target="_blank" rel="noopener noreferrer" class="tap">
+            originally on dev.to ↗
+          </a>
+        )
+      }
+    </footer>
   </article>
-
-  {
-    toc.length > 0 && (
-      <aside class="hidden lg:block">
-        <blog-toc class="block sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto">
-          <nav aria-label="Table of contents">
-            <Mono class="text-muted-foreground">ON THIS PAGE</Mono>
-            <ul class="mt-4 border-l border-border">
-              {toc.map((h) => (
-                <li>
-                  <a
-                    href={`#${h.slug}`}
-                    class:list={[
-                      "toc-link block -ml-px border-l border-transparent py-1 text-sm leading-snug text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors",
-                      h.depth === 3 ? "pl-7" : "pl-4",
-                    ]}
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </blog-toc>
-      </aside>
-    )
-  }
 </div>
 
 <script>

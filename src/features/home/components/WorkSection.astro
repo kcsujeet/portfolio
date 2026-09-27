@@ -1,0 +1,70 @@
+---
+import SectionLabel from "@/components/SectionLabel.astro";
+import { YEARS_IN_WORDS } from "@/config/constants";
+import { EXPERIENCE, LAYER_ORDER, LAYERS } from "../data";
+
+type Props = { showDepth?: boolean };
+const { showDepth = true } = Astro.props;
+
+const depthOf = (layer: string) =>
+  LAYERS.find((l) => l.layer === layer)?.depth ?? "";
+---
+
+<section id="work" class="px-gutter py-section flex flex-col gap-10 border-t border-rule">
+  <div class="flex flex-wrap items-end gap-x-12 gap-y-4">
+    <SectionLabel>03 / work</SectionLabel>
+    <h2 class="m-0 grow basis-heading text-heading font-medium ">
+      {YEARS_IN_WORDS} years, measured in depth.
+    </h2>
+    {
+      showDepth && (
+        <div class="flex gap-2.5 text-micro tracking-hint text-ink-3" aria-hidden="true">
+          {LAYER_ORDER.map((l) => <span>{depthOf(l)}</span>)}
+        </div>
+      )
+    }
+  </div>
+  <ol class="m-0 list-none border-t border-ink p-0">
+    {
+      EXPERIENCE.map((job) => (
+        <li class="flex flex-wrap gap-x-12 gap-y-4 border-b border-rule py-8">
+          <div class="flex shrink-0 grow-0 basis-label flex-col gap-1 text-label">
+            <span>{job.years}</span>
+            <span class="text-ink-3">{job.place}</span>
+          </div>
+          <div class="flex max-w-180 min-w-0 grow basis-prose flex-col gap-3.5">
+            <h3 class="m-0 flex flex-wrap items-baseline gap-x-4 gap-y-1 font-normal">
+              <span class="text-title font-medium">{job.company}</span>
+              <span class="text-body text-ink-3">{job.role}</span>
+            </h3>
+            <p class="m-0">{job.lede}</p>
+            <ul class="m-0 flex list-none flex-col gap-1.5 p-0 text-sm text-tone-40">
+              {job.points.map((pt) => (
+                <li class="grid grid-cols-marker">
+                  <span aria-hidden="true">–</span>
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {showDepth && (
+            <div
+              class="ml-auto flex items-start gap-1.5 pt-1.5"
+              title={`layers touched: ${job.layers.join(", ")}`}
+              role="img"
+              aria-label={`Layers touched: ${job.layers.join(", ")}`}
+            >
+              {LAYER_ORDER.map((layer) =>
+                job.layers.includes(layer) ? (
+                  <span class="size-3.5 bg-ink" />
+                ) : (
+                  <span class="size-3 border border-marker-off" />
+                ),
+              )}
+            </div>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</section>
