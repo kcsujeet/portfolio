@@ -1,4 +1,10 @@
 <svg width="512" height="512" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t"><title id="t">Sujeet Kc</title>
-  <rect width="64" height="64" rx="14" fill="#0f3d33"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="-1.5" fill="#f3f7f4">SK</text>
+  <!-- Fig. 01 in miniature: four strata (surface, api, data, infra) that
+       darken with depth, on the site's ink. The ramp is spread wider than
+       the page greys so it still reads at 16px. -->
+  <rect width="64" height="64" rx="12" fill="#1b2025"/>
+  <rect x="12" y="12" width="40" height="7" fill="#e7eaec"/>
+  <rect x="12" y="23.5" width="40" height="7" fill="#b9bec3"/>
+  <rect x="12" y="35" width="40" height="7" fill="#8c9298"/>
+  <rect x="12" y="46.5" width="40" height="5.5" fill="#5f666d"/>
 </svg>
