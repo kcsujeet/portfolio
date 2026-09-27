@@ -1,0 +1,23 @@
+---
+import { BUILD_DATE, NAME } from "@/config/constants";
+
+type Props = { tone?: "light" | "night" };
+const { tone = "light" } = Astro.props;
+
+const year = BUILD_DATE.toLocaleString("en-US", {
+  year: "numeric",
+  timeZone: "America/Vancouver",
+});
+---
+
+<footer
+  class:list={[
+    "border-t",
+    tone === "night" ? "border-night-rule text-[oklch(0.65_0.008_250)]" : "border-rule text-ink-3",
+  ]}
+>
+  <div class="px-gutter mx-auto flex max-w-[1280px] flex-wrap justify-between gap-x-6 gap-y-2 py-5 text-xs">
+    <span>&copy; {year} {NAME}</span>
+    <span>no trackers · no cookies · no fuss</span>
+  </div>
+</footer>

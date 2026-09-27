@@ -1,43 +1,19 @@
 ---
-import Mono from "@/components/Mono.astro";
-import Reveal from "@/components/Reveal.astro";
-import Button from "@/components/ui/Button.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
+import { YEARS_IN_WORDS } from "@/config/constants";
 ---
 
-<section
-  id="intro"
-  class="pt-24 md:pt-40 pb-20 md:pb-28 min-h-[85vh] flex flex-col justify-center"
-  data-screen-label="01 Home"
->
-  <div class="flex items-baseline gap-6 mb-12">
-    <span class="text-foreground/15 text-5xl md:text-6xl font-medium tabular-nums tracking-tight leading-none">
-      01.
-    </span>
-    <span class="block flex-1 h-px bg-border -translate-y-2" />
-    <Mono class="text-primary">INTRO</Mono>
-  </div>
-
-  <Reveal delay={120}>
-    <h1 class="text-white text-7xl sm:text-8xl lg:text-9xl font-medium tracking-tighter leading-none">
-      Sujeet<span class="text-foreground/45">Kc</span><span class="text-primary">.</span>
+<div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-[clamp(48px,12vw,140px)] pb-[clamp(64px,9vw,104px)]">
+  <SectionLabel class="md:pt-3.5">senior <br class="max-md:hidden" />full-stack <br class="max-md:hidden" />engineer</SectionLabel>
+  <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-10">
+    <h1 class="m-0 text-[clamp(34px,6.4vw,76px)] leading-[1.08] font-medium tracking-[-0.035em]">
+      I build the whole stack.<br />The screen, the API,<br /><span class="text-ink-4">and the data underneath.</span>
     </h1>
-  </Reveal>
-
-  <Reveal delay={220}>
-    <div class="mt-12 max-w-prose space-y-5 text-lg md:text-xl">
-      <p class="text-foreground/80 text-base">
-        Senior full-stack engineer. Ruby on Rails, PostgreSQL, and API design, with TypeScript and React on top. Building toward AWS.
-      </p>
-      <Mono class="text-foreground/45 block">
-        Event Temple · Remote from Coquitlam, BC
-      </Mono>
-    </div>
-  </Reveal>
-
-  <Reveal delay={300}>
-    <div class="mt-10 flex flex-wrap items-center gap-2">
-      <Button href="#projects" arrow="down">View projects</Button>
-      <Button href="#contact" variant="primary" arrow="right">Let's talk</Button>
-    </div>
-  </Reveal>
-</section>
+    <p class="m-0 max-w-[600px] text-[17px] text-ink-2">
+      {YEARS_IN_WORDS} years building web products end to end: React and
+      Next.js on the front, Rails and PostgreSQL behind it. Lately I'm going
+      deeper into infrastructure and AWS. Currently at Event Temple, remote
+      from Coquitlam, BC.
+    </p>
+  </div>
+</div>

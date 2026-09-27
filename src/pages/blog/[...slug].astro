@@ -22,7 +22,7 @@ const { Content, headings } = await render(post);
   title={`${post.data.title} · Sujeet Kc`}
   description={post.data.description}
 >
-  <div class="relative px-8">
+  <div class="mx-auto max-w-[1280px]">
     <PostLayout post={post} headings={headings}>
       <Content />
     </PostLayout>

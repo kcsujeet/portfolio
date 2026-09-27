@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 type Heading = { depth: number; slug: string; text: string };
 
 /**
- * Mobile top bar: pinned to the very top edge of the screen with the "back to
- * all writing" link on the left and a hamburger on the right. The hamburger
- * opens a Base UI Popover with the table of contents. Base UI owns open/close
- * (trigger toggle, outside-click, Escape), so the toggle is reliable. The active
- * section is tracked with the same scroll-spy as the desktop rail.
+ * Small-screen contents bar at the top of a post. The toggle opens a Base UI
+ * Popover with the table of contents; Base UI owns open/close (trigger,
+ * outside-click, Escape). The active section is tracked with the same
+ * scroll-spy as the desktop list.
  */
 export function MobileToc({ headings }: { headings: Heading[] }) {
   const [open, setOpen] = useState(false);
@@ -86,47 +85,37 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
     };
   }, [headings]);
 
-  return (
-    <div className="lg:hidden fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 border-b border-border bg-background/5 px-6 py-3 backdrop-blur-md">
-      <a
-        href="/blog"
-        className="group inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
-      >
-        <span className="transition-transform group-hover:-translate-x-1">
-          ←
-        </span>
-        <span className="font-mono text-xs uppercase tracking-widest">
-          All Writing
-        </span>
-      </a>
+  const activeText =
+    headings.find((h) => h.slug === activeSlug)?.text ?? headings[0]?.text;
 
+  return (
+    <div className="mb-8 flex items-center justify-between gap-3 border-y border-rule py-2 text-[13px] min-[901px]:hidden">
+      <span className="shrink-0 text-ink-3">on this page</span>
       <Popover.Root open={open} onOpenChange={setOpen}>
         <Popover.Trigger
           aria-label="Table of contents"
-          className="inline-flex cursor-pointer items-center justify-center rounded-md p-1.5 text-muted-foreground transition-colors hover:text-primary data-[popup-open]:text-primary"
+          className="inline-flex min-h-11 min-w-0 cursor-pointer items-center gap-2 text-ink"
         >
+          <span className="truncate">{activeText}</span>
           {open ? <CloseIcon /> : <MenuIcon />}
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Positioner
             side="bottom"
             align="end"
-            sideOffset={8}
+            sideOffset={4}
             className="z-50"
           >
-            <Popover.Popup className="max-h-[70vh] w-64 max-w-[80vw] overflow-y-auto rounded-lg border border-border bg-background/95 p-3 shadow-lg backdrop-blur outline-none">
-              <p className="mb-2 px-1 font-mono text-xs uppercase tracking-widest text-muted-foreground">
-                On this page
-              </p>
-              <ul className="border-l border-border">
+            <Popover.Popup className="max-h-[70vh] w-72 max-w-[calc(100vw-2.5rem)] overflow-y-auto border border-ink bg-paper p-3 font-mono text-[13px] outline-none">
+              <ul className="m-0 list-none border-l border-rule p-0">
                 {headings.map((h) => (
                   <li key={h.slug}>
                     <a
                       href={`#${h.slug}`}
                       onClick={() => setOpen(false)}
                       aria-current={h.slug === activeSlug ? "true" : undefined}
-                      className={`toc-link block -ml-px border-l border-transparent py-1.5 text-sm leading-snug text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary ${
-                        h.depth === 3 ? "pl-7" : "pl-4"
+                      className={`toc-link -ml-px block border-l border-transparent py-2 leading-snug text-ink-3 hover:text-ink ${
+                        h.depth === 3 ? "pl-6" : "pl-3"
                       }`}
                     >
                       {h.text}
@@ -145,13 +134,13 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
 function MenuIcon() {
   return (
     <svg
-      width="22"
-      height="22"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
-      strokeLinecap="round"
+      strokeLinecap="square"
       aria-hidden="true"
     >
       <line x1="3" y1="6" x2="21" y2="6" />
@@ -164,13 +153,13 @@ function MenuIcon() {
 function CloseIcon() {
   return (
     <svg
-      width="22"
-      height="22"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
-      strokeLinecap="round"
+      strokeLinecap="square"
       aria-hidden="true"
     >
       <line x1="6" y1="6" x2="18" y2="18" />

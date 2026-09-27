@@ -2,7 +2,7 @@
 
 - Follow the bulletproof-react project structure: <https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md>.
 - Translated to Astro:
-  - `src/components/`: shared primitives reused across features (e.g. `Mono`, `Reveal`, `SectionHead`, `Pulse`, plus `ui/` for Badge/Button/Card).
+  - `src/components/`: shared primitives reused across features (e.g. `SectionHead`, `Icon`, `SiteHeader`, `SiteFooter`, plus `ui/` for Button).
   - `src/features/<feature>/components/`: components scoped to a single feature.
   - `src/features/<feature>/{utils,hooks,types}/`: feature-scoped logic. Only create the subfolders a feature actually needs.
   - `src/config/`: app-wide constants and configuration.

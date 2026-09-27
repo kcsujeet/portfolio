@@ -1,60 +1,39 @@
 ---
-import Mono from "@/components/Mono.astro";
-import Reveal from "@/components/Reveal.astro";
-import SectionHead from "@/components/SectionHead.astro";
-import Badge from "@/components/ui/Badge.astro";
-import Card from "@/components/ui/Card.astro";
-import { STACK } from "../data";
+import SectionLabel from "@/components/SectionLabel.astro";
+
+const FACTS: [string, string][] = [
+  ["education", "M.A.C.S., Dalhousie University"],
+  ["focus", "Full stack, going deeper on backend & infra"],
+  ["hours", "Pacific time · remote / hybrid"],
+  ["next", "AWS Developer – Associate"],
+];
 ---
 
-<section data-screen-label="02 About">
-  <SectionHead n="02." label="ABOUT" anchor="about">
-    <p>
-      I'm a <span class="text-white">Senior Full-Stack Engineer</span> based in Coquitlam, BC, originally from Nepal.
+<section id="about" class="px-gutter py-section grid gap-x-12 gap-y-8 border-t border-rule md:grid-cols-[200px_minmax(0,1fr)] xl:grid-cols-[200px_minmax(0,620px)_minmax(0,360px)] xl:justify-between">
+  <SectionLabel>02 / about</SectionLabel>
+  <div class="flex max-w-[620px] min-w-0 flex-col gap-[22px] text-[17px]">
+    <p class="m-0">
+      I’m from Nepal, now in Coquitlam, BC. I like working across the whole
+      product, from the screen people use to the database behind it.
     </p>
-    <p>
-      Over the past <span class="text-white">7+ years</span>, I've built SaaS products, internal platforms, and data-intensive applications across the stack. My work is <span class="text-white">Ruby on Rails, PostgreSQL, and API design</span>, with TypeScript and React on the frontend.
+    <p class="m-0 text-ink-2">
+      At Event Temple that has meant leading our API rewrite to JSON:API,
+      building a migration engine that moved 1.5 million records without
+      downtime, and co-leading the move from AngularJS to React and Next.js.
     </p>
-    <p>
-      At Event Temple, I led the Rails API modernization to V2 with JSON:API standards, designed a zero-downtime data migration engine that moved 1.5M+ records across relational schemas, and dug into PostgreSQL lock contention during production schema migrations, which turned into <a href="/blog/postgres-locking-and-safe-rails-migrations" class="text-white underline decoration-foreground/30 underline-offset-4 hover:decoration-primary transition-colors">a post</a>.
+    <p class="m-0 text-ink-2">
+      Right now I’m going deeper into backend and infrastructure, and studying
+      for the AWS Developer – Associate exam.
     </p>
-    <p>
-      On the infrastructure side, I'm preparing for the <span class="text-white">AWS Certified Developer - Associate</span> exam (EC2, ECS, RDS, IAM, S3, CloudFormation), and in personal projects I build on Cloudflare Workers: the API behind SublimeRead runs on D1 and R2 with Drizzle migrations and Stripe billing. I'm open to backend and infrastructure roles.
-    </p>
-  </SectionHead>
-
-  <div class="mt-12 grid md:grid-cols-3 gap-4 max-w-4xl">
-    <Card padding="sm" hover>
-      <Mono class="text-primary">EDUCATION</Mono>
-      <p class="mt-3 text-white text-base">
-        Master's in Applied Computer Science
-      </p>
-      <p class="mt-1 text-muted-foreground text-sm">
-        Dalhousie University, Halifax
-      </p>
-    </Card>
-    <Card padding="sm" hover>
-      <Mono class="text-primary">FOCUS</Mono>
-      <p class="mt-3 text-white text-base">Backend & Infrastructure</p>
-      <p class="mt-1 text-muted-foreground text-sm">
-        Rails · PostgreSQL · API design · AWS
-      </p>
-    </Card>
-    <Card padding="sm" hover>
-      <Mono class="text-primary">LOCATION</Mono>
-      <p class="mt-3 text-white text-base">Coquitlam, BC</p>
-      <p class="mt-1 text-muted-foreground text-sm">
-        Remote / hybrid · Pacific time
-      </p>
-    </Card>
   </div>
-
-  <Reveal>
-    <div class="mt-12">
-      <Mono class="text-foreground/45 mb-4 block">CORE STACK</Mono>
-      <div class="flex flex-wrap gap-x-2 gap-y-2 max-w-3xl">
-        {STACK.map((s) => <Badge variant="outline">{s}</Badge>)}
-      </div>
-    </div>
-  </Reveal>
+  <dl class="m-0 flex max-w-[460px] flex-col self-start border-b border-rule text-[13px] md:col-start-2 xl:col-start-3">
+    {
+      FACTS.map(([k, v]) => (
+        <div class="grid grid-cols-[96px_1fr] gap-3 border-t border-rule py-3">
+          <dt class="text-ink-3">{k}</dt>
+          <dd class="m-0">{v}</dd>
+        </div>
+      ))
+    }
+  </dl>
 </section>

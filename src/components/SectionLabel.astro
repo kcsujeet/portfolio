@@ -1,0 +1,9 @@
+---
+// The narrow left column label every band shares, e.g. "02 / about".
+type Props = { class?: string };
+const { class: className = "" } = Astro.props;
+---
+
+<div class:list={["flex-[0_0_200px] text-[13px] text-ink-3", className]}>
+  <slot />
+</div>

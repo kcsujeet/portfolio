@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import Mono from "@/components/Mono.astro";
-import Reveal from "@/components/Reveal.astro";
+import SectionLabel from "@/components/SectionLabel.astro";
 import PostRow from "@/features/blog/components/PostRow.astro";
 import { readingTimeMinutes } from "@/features/blog/utils/reading-time";
 import MainLayout from "@/layouts/MainLayout.astro";
@@ -10,83 +9,56 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
 );
 
-type GroupedPost = {
-  id: string;
-  title: string;
-  pubDate: Date;
-  tags: string[];
-  body: string;
-};
-
-const grouped = new Map<number, GroupedPost[]>();
+const grouped = new Map<number, typeof posts>();
 for (const post of posts) {
   const year = post.data.pubDate.getFullYear();
-  const list = grouped.get(year) ?? [];
-  list.push({
-    id: post.id,
-    title: post.data.title,
-    pubDate: post.data.pubDate,
-    tags: post.data.tags,
-    body: post.body ?? "",
-  });
-  grouped.set(year, list);
+  grouped.set(year, [...(grouped.get(year) ?? []), post]);
 }
-
 const years = Array.from(grouped.keys()).sort((a, b) => b - a);
 ---
 
 <MainLayout
-  title="Writing · Sujeet Kc"
+  title="Notes · Sujeet Kc"
   description="Notes on the things I build, debug, and learn."
 >
-  <div class="relative">
-    <div class="max-w-5xl mx-auto px-8 pt-16 md:pt-24 pb-20">
-      <a
-        href="/"
-        class="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-      >
-        <span class="group-hover:-translate-x-1 transition-transform">←</span>
-        <Mono>BACK</Mono>
-      </a>
-
-      <Reveal class="mt-10">
-        <h1 class="text-white text-5xl md:text-6xl font-medium tracking-tight leading-none">
-          Writing<span class="text-primary">.</span>
-        </h1>
-        <p class="mt-6 text-foreground/70 text-lg md:text-xl max-w-prose">
+  <div class="mx-auto max-w-[1280px]">
+    <div class="px-gutter flex flex-wrap gap-x-12 gap-y-6 pt-[clamp(72px,10vw,120px)] pb-[clamp(48px,7vw,80px)]">
+      <SectionLabel class="pt-3">notes</SectionLabel>
+      <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-6">
+        <h1 class="m-0 text-[clamp(36px,5vw,60px)] leading-[1.1] font-medium tracking-[-0.035em]">
           Notes on the things I build, debug, and learn.
+        </h1>
+        <p class="m-0 max-w-[600px] text-[17px] text-ink-2">
+          Mostly Rails, PostgreSQL, and TypeScript. Some are guides, some are
+          write-ups of things that broke in production.
         </p>
-      </Reveal>
-
-      <div class="mt-12">
-        {
-          years.map((year) => (
-            <section class="mt-10 first:mt-0">
-              <div class="flex items-baseline gap-4 mb-2">
-                <span class="block flex-1 h-px bg-border" />
-                <Mono class="text-muted-foreground">{year}</Mono>
-              </div>
-              {grouped.get(year)!.map((post, i) => (
-                <Reveal delay={i * 30}>
-                  <PostRow
-                    href={`/blog/${post.id}`}
-                    title={post.title}
-                    date={post.pubDate}
-                    tags={post.tags}
-                    minutes={readingTimeMinutes(post.body)}
-                    dateFormat="month-day"
-                  />
-                </Reveal>
-              ))}
-            </section>
-          ))
-        }
-        {
-          posts.length === 0 && (
-            <p class="text-foreground/55">No posts yet. Check back soon.</p>
-          )
-        }
       </div>
     </div>
+
+    {
+      years.map((year) => (
+        <section class="px-gutter flex flex-wrap gap-x-12 gap-y-2 border-t border-rule py-10">
+          <SectionLabel>
+            <h2 class="m-0 text-[13px] font-normal">{year}</h2>
+          </SectionLabel>
+          <ol class="m-0 min-w-0 flex-[1_1_480px] list-none p-0 [&>li:first-child>a]:border-t-0 [&>li:first-child>a]:pt-0">
+            {grouped.get(year)?.map((post) => (
+              <PostRow
+                href={`/blog/${post.id}`}
+                title={post.data.title}
+                date={post.data.pubDate}
+                minutes={readingTimeMinutes(post.body ?? "")}
+                dateFormat="full"
+              />
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+    {
+      posts.length === 0 && (
+        <p class="px-gutter border-t border-rule py-10 text-ink-2">No notes yet.</p>
+      )
+    }
   </div>
 </MainLayout>

@@ -1,6 +1,7 @@
 # Writing
 
 - Never use em dashes (`—`). Use a hyphen (`-`), comma, semicolon, parentheses, or a sentence break instead. This applies to blog posts, UI copy, comments, docs, commit messages, and any other prose you generate.
+- Sujeet is a full-stack engineer. In site copy, bios, and positioning, lead with full stack (frontend and backend are both real work), and present backend and infrastructure as where he is going deeper, not a switch. Never frame him as a backend engineer.
 
 ## Blog posts
 

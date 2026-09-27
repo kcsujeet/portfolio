@@ -23,3 +23,10 @@ dist
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Impeccable design tool artifacts (screenshots, previews)
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
+.impeccable/questions/
+.impeccable/hook.cache.json
