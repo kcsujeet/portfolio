@@ -26,7 +26,7 @@ const formattedUpdated = post.data.updatedDate
 
 <div class="px-gutter flex flex-wrap gap-x-12 gap-y-8 pt-post-top pb-section">
   <aside class="flex shrink-0 grow-0 basis-label flex-col gap-6 text-label text-muted-foreground max-post:grow max-post:basis-full">
-    <a href="/blog" class="tap self-start text-foreground">← all writing</a>
+    <a href="/blog" class="tap link self-start text-foreground">← all writing</a>
     <dl class="m-0 flex flex-col border-b border-border">
       <div class="grid grid-cols-meta gap-3 border-t border-border py-2.5">
         <dt>date</dt>
@@ -99,11 +99,11 @@ const formattedUpdated = post.data.updatedDate
     </div>
 
     <footer class="mt-16 flex max-w-post flex-wrap gap-x-8 gap-y-2 border-t border-border pt-5 text-label text-muted-foreground">
-      <a href="/blog" class="tap text-foreground">← all writing</a>
+      <a href="/blog" class="tap link text-foreground">← all writing</a>
       {formattedUpdated && <span>updated {formattedUpdated}</span>}
       {
         post.data.devto && (
-          <a href={post.data.devto} target="_blank" rel="noopener noreferrer" class="tap">
+          <a href={post.data.devto} target="_blank" rel="noopener noreferrer" class="tap link">
             originally on dev.to ↗
           </a>
         )

@@ -409,6 +409,21 @@
   }
 }
 
+/* Standalone text links: always underlined so they read as links, with a
+   quiet line that goes solid on hover. color-mix with currentColor keeps it
+   right on both the light page and the dark contact block.
+   https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix */
+@utility link {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
 /* Grow a small inline link's hit area to a comfortable tap size without
    moving the layout around it. */
 @utility tap {

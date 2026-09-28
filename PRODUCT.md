@@ -12,7 +12,7 @@ A general audience with no single target. Visitors include hiring managers and e
 
 ## Product Purpose
 
-Personal site and blog for Sujeet Kc, a Senior Full-Stack Engineer (7+ years) based in Coquitlam, BC. It presents his experience, personal projects, and writing, and signals his current direction: deeper into backend and infrastructure work (Rails, PostgreSQL, API design, data migrations, AWS, Cloudflare Workers). Success means a visitor leaves understanding what he builds, how he thinks, and how to reach him.
+Personal site and blog for Sujeet Kc, a Senior Full-Stack Engineer (7+ years) based in Coquitlam, BC. It presents his experience, personal projects, and writing, and signals his current direction as a full-stack engineer: going deeper into backend and infrastructure work (Rails, PostgreSQL, API design, data migrations, AWS, Cloudflare Workers). Success means a visitor leaves understanding what he builds, how he thinks, and how to reach him.
 
 ## Positioning
 
@@ -28,7 +28,7 @@ Static Astro site, read on desktop and phones. Visitors arrive cold from links. 
 - Content lives in `src/features/home/data.ts` and `src/content/blog/`; `content.spec.ts` guards backend-first ordering, real titles, and no em dashes.
 - Bulletproof-react structure: shared primitives in `src/components/`, feature components in `src/features/<feature>/`.
 - AWS status: preparing for AWS Certified Developer - Associate, no exam date. Never present it as earned.
-- Open to backend and infrastructure roles.
+- Not actively job hunting (confirmed 2026-09-28). Do not add "open to roles", "available for hire", or similar availability claims.
 
 ## Brand Commitments
 
