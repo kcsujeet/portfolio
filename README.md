@@ -100,7 +100,7 @@ The site is light only.
 - **Work**: each role with a lede, highlights, and markers for the layers it touched
 - **Projects**: grid of personal projects with status and stack
 - **Writing**: latest 3 posts; the full list lives at `/blog`, posts at `/blog/<slug>`
-- **Contact**: email, social links, and availability
+- **Contact**: email and social links
 
 Navigation:
 - **Tablet and desktop** (≥768px): sticky header with section links; the section in view is underlined

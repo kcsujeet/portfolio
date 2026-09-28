@@ -4,7 +4,7 @@ import { EXPERIENCE, LAYERS, PROJECTS } from "./data";
 
 const EM_DASH = "—";
 
-describe("Portfolio Content - Backend & Infrastructure Focus", () => {
+describe("Portfolio Content", () => {
   describe("Job Title & Layers", () => {
     it("keeps the real job title", () => {
       expect(JOB_TITLE).toBe("Senior Full-Stack Engineer");
