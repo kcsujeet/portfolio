@@ -1,6 +1,6 @@
 # Sujeet KC's Portfolio
 
-Personal portfolio and blog for Sujeet KC, Senior Full-Stack Engineer based in Coquitlam, BC.
+Personal portfolio and blog for Sujeet KC, Senior Full-Stack Engineer based in Metro Vancouver.
 
 **Live**: [kcsujeet.com.np](https://kcsujeet.com.np)
 
