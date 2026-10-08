@@ -32,10 +32,10 @@ For example, consider an event management system:
 - This could lead to the Toronto user missing the event entirely because they interpreted the date incorrectly.
 
 ### Storing Only Time Can Also Be a Problem
-Similarly, many systems store time separately, using formats like `HH:MM` (e.g., `10:00`) or as seconds since midnight (eg. `36000`). However, without the date and timezone context, this can cause serious issues.
+Similarly, many systems store time separately, using formats like `HH:MM` (e.g., `10:00`) or as seconds since midnight (e.g. `36000`). However, without the date and timezone context, this can cause serious issues.
 
 For example, consider a global meeting scheduling app:
-- A user in Tokyo schedules a meeting at `10:00` (i.e `10 am`).
+- A user in Tokyo schedules a meeting at `10:00` (i.e. `10 am`).
 - The system stores just `10:00` without specifying the timezone.
 - A user in Toronto sees `10:00` but assumes it is their local time, which is incorrect.
 - The meeting happens at the wrong time for the Toronto user, leading to confusion.
@@ -45,67 +45,95 @@ This demonstrates why both date and time should always be stored with timezone i
 ## Real-world examples of timezone-related problems
 Let's look at some more examples to understand the timezone issues better. 
 
-###  Example 1: Server Misinterprets the Date
+###  Example 1: Client Misinterprets the Date
 
 - Let's say you have a SaaS app with a subscription-based service. 
 - A user in `Toronto (UTC-5)` signs up to your app and sets a subscription renewal date as `Jan 1, 2025`. 
-- So, the value `2025-01-01` is sent to the server and stored in the database.
-- The user expects their subscription to renew at midnight in Toronto on `2025-01-01`.  
-- However, the server is in `Tokyo (JST)` and thus, the server interprets `2025-01-01` in JST timezone, which is `14 hours` earlier than Toronto time, meaning it's still `2024-12-31` in Toronto.
-- As a result, the user will think they were charged before the set date and may lose trust in the service.
+- So, the value `2025-01-01` is sent to the server and stored in the database. It has no time and no timezone.
+- When the user opens their billing page, the server sends `2025-01-01` back to the browser.
+- The browser treats a date-only string like `2025-01-01` as midnight in `UTC`, not midnight in Toronto.
+- Midnight UTC on Jan 1 is `7:00 PM on Dec 31, 2024` in Toronto, so the billing page says the subscription renews on `Dec 31, 2024`.
+- As a result, the user thinks they will be charged a day before the date they picked, and may lose trust in the service.
 
 **Code Illustration:**
 Server-Side (Ruby):
 ```ruby
-# Server stores renewal date as "2025-01-01" in JST
+# Server stores the renewal date with no time and no timezone
 renewal_date = Date.parse('2025-01-01')
 
-puts "Renewal Date (JST): #{renewal_date}" 
-# Output: "Renewal Date (JST): 2025-01-01"
+puts "Renewal Date: #{renewal_date}" 
+# Output: "Renewal Date: 2025-01-01"
 ```
 Client-Side (JavaScript):
 ```javascript
-// Server sends renewal date as "2025-01-01" (JST)
+// Server sends renewal date as "2025-01-01"
 const renewalDate = "2025-01-01";
 
-// Browser parses it in the user's local time zone (Toronto, UTC-5)
+// The browser treats a date-only string as midnight UTC,
+// then shows that moment in the user's local time zone (Toronto, UTC-5)
 const renewalDateLocal = new Date(renewalDate);
 console.log("Local Renewal Date:", renewalDateLocal); 
 // Output: Tue Dec 31 2024 19:00:00 GMT-0500 (Eastern Standard Time)
 ```
 
-###  Example 2: Client Misinterprets the Date
+The output looks like the browser moved the date back a day, but it didn't change the moment at all. Print it in UTC and you get the date you started with:
+
+```javascript
+console.log(renewalDateLocal.toISOString());
+// Output: "2025-01-01T00:00:00.000Z"
+```
+
+From the [MDN docs on `Date.parse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse): date-only strings are treated as UTC, while a date and time with no offset, like `2025-01-01T00:00:00`, is treated as local time.
+
+###  Example 2: Server Misinterprets the Date
 
 - Let's say you have an app where students can register for an examination online.
 - A registration deadline of `2025-01-01` is scheduled for an examination.
-- The server, which is in `Tokyo (JST)`, processes the deadline as midnight JST.
+- The server is in `Tokyo (JST, UTC+9)`. When it checks the deadline, it reads `2025-01-01` in its own timezone, so registration closes at midnight JST.
 - A student is in `Toronto (UTC-5)`, which is 14 hours behind JST.
-- The student's browser gets the deadline and parses it in Toronto timezone (EST), so the student sees `7:00 PM on Dec 31, 2024`.
-- However, the backend will stop accepting applications at midnight JST, which is still `10:00 AM on Dec 31, 2024`, in Toronto.
-- Therefore, when the student tries to register for the exam at `11:00 am on Dec 31, 2024 (Toronto time)`, thinking they’re within the deadline, the system rejects the registration since the deadline has already passed in JST.
+- The page shows the deadline as `2025-01-01`, and the student reads it as Jan 1 in Toronto.
+- However, midnight JST on Jan 1 is `10:00 AM on Dec 31, 2024` in Toronto.
+- Therefore, when the student tries to register at `11:00 AM on Dec 31, 2024 (Toronto time)`, thinking they have more than a day left, the system rejects the registration because the deadline has already passed in JST.
 
 **Code Illustration:**
 
 Server-Side (Ruby):
 
 ```ruby
-# Server stores deadline as "2025-01-01" in JST
-deadline = Date.parse('2025-01-01')
+require 'time'
 
-puts "Deadline (JST): #{deadline}" 
-# Output: "Deadline (JST): 2025-01-01"
+# The server's timezone is Tokyo (JST, UTC+9).
+# The string has no timezone, so Ruby uses the server's.
+deadline = Time.parse('2025-01-01')
+
+puts deadline
+# Output: 2025-01-01 00:00:00 +0900
+
+puts deadline.utc
+# Output: 2024-12-31 15:00:00 UTC
 ```
 
 Client-Side (JavaScript):
 
 ```javascript
-// Server sends deadline as "2025-01-01" (JST)
+// Server sends deadline as "2025-01-01", with no time and no timezone
 const deadline = "2025-01-01";
 
-// Browser parses it in the student's local time zone (Toronto, UTC-5)
-console.log(new Date(deadline)); 
-// Output: Tue Dec 31 2024 19:00:00 GMT-0500 (Eastern Standard Time)
+// The page shows the date as is
+console.log(`Registration closes on ${deadline}`);
+// Output: "Registration closes on 2025-01-01"
 ```
+
+Here's how the deadline looks in each timezone:
+
+| Where | Deadline in local time |
+| --- | --- |
+| Tokyo (JST, UTC+9) | Jan 1, 2025, 12:00 AM |
+| UTC | Dec 31, 2024, 3:00 PM |
+| Toronto (EST, UTC-5) | Dec 31, 2024, 10:00 AM |
+| What the student assumed | Jan 1, 2025 (sometime in Toronto) |
+
+The two examples fail in different places. In the first, the browser picks a timezone the user didn't mean. In the second, the server does. Both happen for the same reason: the stored value had no timezone, so something had to guess.
 
 ## How to test timezone differences in your browser
 You can change the timezone for a specific tab in your browser using Chrome DevTools.
@@ -149,41 +177,43 @@ Examples of ISO8601 with Different Timezones:
  - `2025-01-01T00:00:00-05:00`
  - The -05:00 offset indicates that this time is 5 hours behind UTC (Eastern Standard Time).
 
+> **NOTE**: Toronto is `UTC-5` only in winter. In summer it switches to Eastern Daylight Time, which is `UTC-4`. That's one more reason to store timestamps in `UTC` and convert them only for display, rather than storing a fixed offset and doing the math yourself.
+
 ### Converting date to ISO format:
 #### On the Server Side (Ruby):
-Always use timestamps (for both date and time fields) instead of just dates or times. In Ruby, it's best to use the `Time` (instead of `Date` or `DateTime`) class for precise timestamps, as it includes both the date and the time, along with timezone support.
+When a value is a moment in time, like an event start or a deadline, store a timestamp instead of just a date or just a time. In Ruby, it's best to use the `Time` (instead of `Date` or `DateTime`) class for precise timestamps, as it includes both the date and the time, along with timezone support.
 
 ``` ruby
 require 'time'
 
-# Create a time object with a specific date and time
-birthday = Time.new 
+# The event starts at midnight UTC on Jan 1, 2025
+event_starts_at = Time.utc(2025, 1, 1, 0, 0, 0)
 
 # Convert to ISO8601 format
-iso_string = birthday.iso8601
+iso_string = event_starts_at.iso8601
 puts iso_string 
-# Output: "2025-01-01T00:00:00+00:00"
+# Output: "2025-01-01T00:00:00Z"
 ```
 
 #### On the Client Side (JavaScript):
-Again, always use timestamps. When sending date or time to the back-end, use `ISO8601` format. In JavaScript, the `Date` object has a `.toISOString()` method that converts it to an `ISO8601` string.
+Again, use timestamps for moments in time. When sending them to the back-end, use `ISO8601` format. In JavaScript, the `Date` object has a `.toISOString()` method that converts it to an `ISO8601` string.
 
 Example:
 ```javascript
 // Get current date and time
-const deadline = new Date();
+const registeredAt = new Date();
 
 // Convert to ISO8601 format
-const isoString = deadline.toISOString();
+const isoString = registeredAt.toISOString();
 console.log(isoString); 
-// Output: "2025-01-01T00:00:00.000Z"
+// Output, if you run it at midnight UTC on Jan 1, 2025: "2025-01-01T00:00:00.000Z"
 ```
 
-A great feature of modern browsers is that when you send a `Date` object in an HTTP request (like in a JSON payload), the browser automatically converts it to `ISO8601` format using `.toISOString`.
+You don't have to call `.toISOString()` yourself when sending JSON. `JSON.stringify` calls the date's `toJSON()` method, which returns the same string as `.toISOString()`. From the [MDN docs on `toJSON()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toJSON): "The `toJSON()` method is automatically called by `JSON.stringify()` when a `Date` object is stringified."
 
 Example with HTTP Request:
 ```javascript 
-const birthDay = new Date();
+const registeredAt = new Date();
 fetch('https://dummyjson.com/users/add', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -191,7 +221,7 @@ fetch('https://dummyjson.com/users/add', {
     firstName: 'Anil',
     lastName: 'Devkota',
     age: 25,
-    birthDay // automatically converted to ISO format
+    registeredAt // converted to ISO format by JSON.stringify
   })
 })
 .then(res => res.json())
@@ -201,12 +231,20 @@ If you open the browser’s network tab, you'll see a payload that looks somethi
 
 ```json
 {
-    age: 25
-    birthDay: "2025-01-01T00:00:00.000Z"
-    firstName: "Anil"
-    lastName: "Devkota"
+  "firstName": "Anil",
+  "lastName": "Devkota",
+  "age": 25,
+  "registeredAt": "2025-01-01T00:00:00.000Z"
 }
 ```
+
+> **NOTE**: Some values are calendar dates, not moments in time: a birthday, a public holiday, an all-day event. Anil's birthday is April 12 wherever he is, so it has no timezone to convert. Store it as a plain date (a `date` column in Rails, a `"1999-04-12"` string in JSON) and don't pass it to `new Date()`, because the browser will treat it as midnight UTC and shift it a day back for anyone west of UTC.
+>
+> ```javascript
+> // In Toronto (UTC-5)
+> console.log(new Date('1999-04-12').toDateString())
+> // Output: "Sun Apr 11 1999"
+> ```
 
 > **NOTE**:  The `.toISOString()` method always converts the time to `UTC`, regardless of the local timezone of the user. This means that if the user is in a different timezone (e.g., Toronto, Eastern Standard Time, `UTC-5`), the output of `.toISOString()` will be in `UTC` rather than their local time.
 > 
@@ -225,10 +263,11 @@ If you open the browser’s network tab, you'll see a payload that looks somethi
 You might be wondering why this format prevents timezone issues. To illustrate this, let’s revisit the examination deadline example.
 
 ##### The Issue:
-- The server (in Tokyo, JST) sets the deadline as midnight JST (`2025-01-01`).
-- A student in Toronto (UTC-5) receives this but their browser displays it in local time as `7:00 PM` on Dec 31, 2024.
+- The server (in Tokyo, JST) closes registration at midnight JST on `2025-01-01`.
+- It sends the student just `2025-01-01`, with no time and no timezone.
+- A student in Toronto (UTC-5) reads that as Jan 1 in Toronto.
 - However, the system stops accepting applications at `10:00 AM` on Dec 31, 2024 (Toronto time), which is midnight JST.
-- The student, thinking they have until `11:59 PM` Toronto time, registers too late and gets rejected.
+- The student registers at `11:00 AM` on Dec 31, thinking they have more than a day left, and gets rejected.
 
 ##### The Fix: Use ISO8601 with UTC
 By storing and sending `2024-12-31T15:00:00Z` (midnight JST in UTC), the client correctly converts it to local time.
@@ -237,8 +276,8 @@ Server-Side (Ruby)
 ```ruby
 require 'time'
 
-# Store deadline with explicit UTC time
-deadline = Time.new.getutc
+# Midnight JST on Jan 1, converted to UTC
+deadline = Time.new(2025, 1, 1, 0, 0, 0, "+09:00").utc
 
 puts deadline.iso8601  
 # Output: "2024-12-31T15:00:00Z"
@@ -257,7 +296,7 @@ console.log(new Date(deadline));
 ##### Why This Works
 When you pass an `ISO8601` UTC string (`2024-12-31T15:00:00Z`) into `new Date()`, the browser automatically converts it to the user’s local time zone.
 
-So, instead of assuming `7:00 PM` local time, the browser correctly displays the deadline as `10:00 AM on Dec 31, 2024 (Toronto time)`. This prevents confusion and ensures users see the actual deadline in their timezone.
+So, instead of leaving the student to guess which Jan 1 the date meant, the browser displays the deadline as `10:00 AM on Dec 31, 2024 (Toronto time)`. This prevents confusion and ensures users see the actual deadline in their timezone.
 
 This behaviour is the opposite of `.toISOString()`, which always converts dates to UTC. Using both correctly ensures consistent storage and accurate timezone conversions, preventing misunderstandings.
 
@@ -268,8 +307,6 @@ There's no single best way to display date-time in the front-end as it largely d
 That said, I really like how `Stripe` handles this. Instead of just showing a raw timestamp, Stripe displays a text value, and when you hover over it, a tooltip appears with the same timestamp in three different time zones:
 
 - **Local Time** – The user's browser time zone.
-
-
 - **UTC** – A universal reference, useful for consistency.
 - **Organization Time Zone** – A user-selected time zone, typically set during sign-up or in account settings.
 
@@ -280,10 +317,9 @@ This approach strikes a great balance between readability and flexibility, makin
 You can use libraries like `dayjs` or `date-fns` to format date to different timezones.
 
 ## Conclusion
-Handling timezones correctly is essential to avoid errors and inconsistencies in applications. By following these best practices (storing timestamps in UTC, using timezone-aware objects, and converting for display), you can ensure a smooth experience for users worldwide.
-
-🚀 **Final Takeaways**:
- - Always work with `timestamps` instead of just `date` or `time`.
- - Always use full `ISO8601` format (i.e.`YYYY-MM-DDTHH:mm:ssZ`).
+- For moments in time (deadlines, event starts, renewals), store `timestamps` in `UTC`, not just a `date` or a `time`.
+- Send them in full `ISO8601` format (i.e. `YYYY-MM-DDTHH:mm:ssZ`), so the receiving side never has to guess the timezone.
+- For calendar dates like birthdays, store a plain date and don't run it through `new Date()`.
+- Convert to the user's timezone only when you display the value.
 
 
