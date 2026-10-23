@@ -3,7 +3,7 @@ import "../styles/global.css";
 import MobileNav from "@/components/MobileNav.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { JOB_TITLE } from "@/config/constants";
+import { JOB_TITLE, YEARS_IN_WORDS } from "@/config/constants";
 
 type Props = {
   title?: string;
@@ -20,7 +20,7 @@ const {
 
 const defaultTitle = "Sujeet Kc · Senior Full-Stack Engineer · Vancouver";
 const defaultOgTitle = `Sujeet Kc | ${JOB_TITLE} & Problem Solver`;
-const defaultDescription = `Senior full-stack engineer. Seven years of Ruby on Rails, PostgreSQL, API design, and TypeScript, building toward AWS.`;
+const defaultDescription = `Senior full-stack engineer. ${YEARS_IN_WORDS} years building web products end to end with React, TypeScript, Ruby on Rails, and PostgreSQL, going deeper into infrastructure and AWS.`;
 
 const finalTitle = pageTitle ?? defaultTitle;
 const finalOgTitle = pageTitle ?? defaultOgTitle;
@@ -57,7 +57,10 @@ const personSchema = {
   description: defaultDescription,
   image: new URL(logoUrl, siteUrl).href,
   knowsAbout: [
-    "Backend Development",
+    "Full-Stack Development",
+    "TypeScript",
+    "React",
+    "Next.js",
     "Ruby on Rails",
     "PostgreSQL",
     "REST API Design",
@@ -68,8 +71,6 @@ const personSchema = {
     "Docker",
     "AWS",
     "Cloudflare Workers",
-    "TypeScript",
-    "React",
   ],
 };
 

@@ -47,18 +47,18 @@ describe("Portfolio Content", () => {
       expect(et?.layers).toEqual(["surface", "api", "data", "infra"]);
     });
 
-    it("leads Event Temple points with backend work", () => {
+    it("credits Event Temple features as built end to end", () => {
       const et = EXPERIENCE.find((e) => e.id === "et");
-      const [first, second, third] = et?.points ?? [];
-      expect(first).toContain("JSON:API");
-      expect(second).toContain("1.5M+ records");
-      expect(third).toContain("PostgreSQL");
+      expect(et?.lede).toContain("end to end");
+      expect(et?.points.join(" ")).toContain("end to end");
     });
 
-    it("keeps the frontend migration point but lists it last", () => {
-      const et = EXPERIENCE.find((e) => e.id === "et");
-      const last = et?.points.at(-1) ?? "";
-      expect(last).toContain("Next.js");
+    it("never credits a feature with only its backend half", () => {
+      for (const item of EXPERIENCE) {
+        const text = [item.lede, ...item.points].join(" ");
+        expect(text).not.toMatch(/\bbackend for\b/i);
+        expect(text).not.toContain("owning the API contracts");
+      }
     });
 
     it("keeps the real Front-End Developer title at Legalfit", () => {
@@ -66,9 +66,10 @@ describe("Portfolio Content", () => {
       expect(lf?.role).toBe("Front-End Developer");
     });
 
-    it("frames Tekvortex around Rails and PostgreSQL", () => {
+    it("frames Tekvortex across the stack", () => {
       const tv = EXPERIENCE.find((e) => e.id === "tv");
-      expect(tv?.lede).toContain("Rails and PostgreSQL");
+      expect(tv?.lede).toContain("PostgreSQL");
+      expect(tv?.lede).toContain("Angular");
     });
 
     it("contains no em dashes", () => {
@@ -80,11 +81,11 @@ describe("Portfolio Content", () => {
   });
 
   describe("Projects Section", () => {
-    it("describes the SublimeRead backend: Workers, D1, R2, Stripe", () => {
+    it("describes SublimeRead as Astro on Workers, D1, R2, Stripe", () => {
       const sublimeread = PROJECTS.find((p) => p.id === "sublimeread");
       expect(sublimeread?.line).toContain("on-device");
       expect(sublimeread?.line).toContain("Stripe");
-      expect(sublimeread?.stack.slice(0, 3)).toEqual(["workers", "d1", "r2"]);
+      expect(sublimeread?.stack).toEqual(["astro", "workers", "d1", "r2"]);
       expect(sublimeread?.stack).not.toContain("hono");
     });
 
