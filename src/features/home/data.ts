@@ -21,7 +21,7 @@ export const LAYERS: LayerRow[] = [
   {
     layer: "api",
     depth: "−1",
-    line: "Contracts that outlive the frontend.",
+    line: "Contracts between the screen and the data.",
     stack: ["Ruby on Rails", "JSON:API", "REST", "Node.js"],
   },
   {
@@ -57,13 +57,13 @@ export const EXPERIENCE: ExpItem[] = [
     place: "remote",
     company: "Event Temple",
     role: "Senior Full-Stack Engineer",
-    lede: "Hospitality SaaS. I own the API and the data underneath it.",
+    lede: "Hospitality SaaS. I build features end to end, from the database to the UI.",
     points: [
       "Led the Rails API to V2 on JSON:API: resource design, serializer caching, one error shape.",
+      "Co-led a two-year AngularJS → React/Next.js migration.",
       "Built a zero-downtime migration engine; 1.5M+ records moved across schemas, transactionally.",
+      "Built product features end to end, including Proposals and Guest Portal (part of $2M+ in enterprise contracts) and, most recently, the Booking Engine.",
       "Traced and fixed PostgreSQL table-level lock contention during production schema migrations.",
-      "Backend for Proposals and Guest Portal, part of $2M+ in enterprise contracts.",
-      "Co-led a two-year AngularJS → React/Next.js migration, owning the API contracts.",
     ],
     layers: ["surface", "api", "data", "infra"],
   },
@@ -87,7 +87,7 @@ export const EXPERIENCE: ExpItem[] = [
     place: "Lalitpur, NP",
     company: "Tekvortex",
     role: "Software Engineer",
-    lede: "Rails and PostgreSQL reporting systems, where the schema was the product.",
+    lede: "Reporting tools in Rails, PostgreSQL and Angular, from the schema to the screen.",
     points: [
       "Tuned queries, views and indexes for relational reporting.",
       "A database client for non-technical users, in Rails and Angular.",
@@ -113,7 +113,7 @@ export const PROJECTS: Project[] = [
     tag: "live",
     href: "https://sublimeread.com",
     line: "Read-along EPUB/PDF reader with on-device TTS. Workers, D1, R2, Stripe billing.",
-    stack: ["workers", "d1", "r2", "drizzle"],
+    stack: ["astro", "workers", "d1", "r2"],
   },
   {
     id: "interactive-rails",
