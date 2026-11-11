@@ -10,4 +10,5 @@
   - `src/styles/`: global styles.
   - `src/pages/`: Astro's router. Required by Astro at this exact path.
   - `src/content/` and `src/content.config.ts`: required Astro paths for Content Collections.
+  - Store a blog post's images in `src/content/blog/images/` and embed them by relative path (`./images/<name>.png`), so Astro optimizes them. Do not put them in `public/`.
 - Imports flow `shared` to `features` to `app`. Features must not import from each other; compose them at the app/page layer.
