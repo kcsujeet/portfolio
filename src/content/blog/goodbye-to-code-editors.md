@@ -9,8 +9,6 @@ Code editors and IDEs are built for working on code by hand: typing it, jumping 
 
 Claude writes most of the code I ship now. My part is orchestrating it: describing what I want, steering when it goes the wrong way, and reviewing what comes out. Keeping an editor at the center of my day stopped making sense, so these days I do my coding in the Claude desktop app. I still open VS Code, but to read code, not to write it.
 
-This post is about how I got here, what a day in the app looks like, and the one job VS Code still has.
-
 ## How I got here
 
 The move away from the editor started with Claude Code in a terminal. Once Claude was doing most of the writing, the terminal was where the work happened, so I started trying terminals. The default macOS Terminal first, then Ghostty, then Warp. After that I moved on to multiplexers built for running coding agents side by side. I used [cmux](https://cmux.com) for a while and it never clicked for me. Then I found [Herdr](https://herdr.dev), and that one stuck. I used it for a month or two and liked it a lot.
