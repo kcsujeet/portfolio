@@ -1,5 +1,5 @@
 ---
-title: "I Don't Use VS Code Anymore"
+title: "I Think It's Time to Say Goodbye to Code Editors"
 description: "How I went from Claude Code in a terminal, through Ghostty, Warp, cmux and Herdr, to the Claude desktop app, and the one job VS Code still has."
 pubDate: 2026-11-11T13:39:59-07:00
 tags: ["claude", "ai", "tooling", "workflow"]
@@ -37,6 +37,8 @@ The browser is part of a bigger thing I like about the app: I don't have to leav
 
 This goes past code, too. Sometimes I create videos, and the video plays right in the app, so I don't need a separate video player. When I'm making slides, I open them right there as well. It's very handy.
 
+![Diagram comparing before and now. Before: separate windows for VS Code, Herdr, Chrome for artifacts and the running app, and a video player. Now: one Claude desktop app window with sessions in a sidebar, the conversation with tasks, PR and CI in the middle, and a side pane for the browser, artifacts, files, videos and slides, plus VS Code kept open only for source control.](./images/claude-desktop-before-and-now.png)
+
 Everything I need for a session is in this one window, and I don't have to go looking for a different one.
 
 ## How I work in the app
@@ -45,13 +47,15 @@ At work, I keep one main session open that orchestrates the others. Every other 
 
 Each layer runs on a different model. The main session usually runs on the most powerful one, Fable. The sessions under it usually run on Opus. Review agents and other smaller helpers run on a weaker model like Sonnet. That split helps me save tokens.
 
+![Diagram of my session layers: one main session on Fable orchestrates three sessions on Opus (two tickets and a PR review), each in its own worktree, and each of those uses review agents on Sonnet.](./images/claude-desktop-session-layers.png)
+
 For reviews and QA, the sessions use [kc-claude-kit](https://github.com/kcsujeet/kc-claude-kit), my own Claude Code toolkit. It holds my coding conventions, a gate-based code review, and the skills I use to verify a change.
 
 The browser is where this pays off. When a change is ready, I tell Claude what to QA, and it goes through the UI the way a user would. It clicks through buttons, opens and closes forms and modals, fills out forms, and tries the different states along the way. It can also go through the same flow as different personas, so what gets checked is a real user's flow from start to end.
 
 ## I haven't uninstalled VS Code yet
 
-I know the title says I don't use VS Code anymore, but there's still one thing I go back to it for: source control. I think VS Code's Source Control view and its side-by-side diff editor are phenomenal, and I don't like the diff view in the desktop app nearly as much. I even tried building my own diff view for the app and gave up after two versions.
+I know the title says goodbye to code editors, but there's still one thing I go back to VS Code for: source control. I think VS Code's Source Control view and its side-by-side diff editor are phenomenal, and I don't like the diff view in the desktop app nearly as much. I even tried building my own diff view for the app and gave up after two versions.
 
 So when a session is done, I open its folder in VS Code and skim through the changes in Source Control to see if anything stands out. Then I go back to the app to steer the next round. That's reading code, not writing it, and for reading a diff VS Code is still the best tool I have.
 
