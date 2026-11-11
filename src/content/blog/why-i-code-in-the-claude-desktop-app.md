@@ -5,7 +5,7 @@ pubDate: 2026-11-11T13:39:59-07:00
 tags: ["claude", "ai", "tooling", "workflow"]
 ---
 
-VS Code is a code editor, and I don't edit code anymore.
+Code editors and IDEs are built for writing code: typing it, jumping around it, refactoring it, debugging it. I don't do that anymore.
 
 Claude writes most of the code I ship now. My part is describing what I want, steering when it goes the wrong way, and reviewing what comes out. Keeping an editor at the center of my day stopped making sense, so these days I do my coding in the Claude desktop app. I still open VS Code, but to read code, not to write it.
 
