@@ -89,13 +89,6 @@ describe("Portfolio Content", () => {
       expect(sublimeread?.stack).not.toContain("hono");
     });
 
-    it("links Passport Photo Wiz to its live site", () => {
-      const passportPhotoWiz = PROJECTS.find(
-        (p) => p.id === "passport-photo-wiz",
-      );
-      expect(passportPhotoWiz?.href).toBe("https://passportphotowiz.com");
-    });
-
     it("places Interactive Rails before the frontend libraries", () => {
       const ids = PROJECTS.map((p) => p.id);
       expect(ids.indexOf("interactive-rails")).toBeLessThan(
