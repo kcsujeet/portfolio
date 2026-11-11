@@ -116,6 +116,14 @@ export const PROJECTS: Project[] = [
     stack: ["astro", "workers", "d1", "r2"],
   },
   {
+    id: "passport-photo-wiz",
+    name: "Passport Photo Wiz",
+    tag: "live",
+    href: "https://passportphotowiz.com",
+    line: "Passport photos for 24 countries with AI background removal. A Pro plan on Pages Functions, D1 and Stripe.",
+    stack: ["astro", "mediapipe", "d1", "stripe"],
+  },
+  {
     id: "interactive-rails",
     name: "Interactive Rails",
     tag: "open source",
@@ -138,14 +146,6 @@ export const PROJECTS: Project[] = [
     href: "https://github.com/kcsujeet/testoise",
     line: "RSpec-style lazy let for Bun, Vitest, Jest and Node.",
     stack: ["typescript", "bun"],
-  },
-  {
-    id: "debackground",
-    name: "Debackground",
-    tag: "live",
-    href: "https://debackground.com",
-    line: "Background removal that never leaves your browser.",
-    stack: ["transformers.js", "wasm"],
   },
   {
     id: "collage",
