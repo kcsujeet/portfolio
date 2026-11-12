@@ -5,13 +5,13 @@ pubDate: 2026-11-11T13:39:59-07:00
 tags: ["claude", "ai", "tooling", "workflow"]
 ---
 
-Code editors and IDEs are built for working on code by hand: typing it, jumping around it, refactoring it, stepping through it in a debugger. I still debug and refactor, but I don't do it by hand anymore.
+Code editors and IDEs are built for working on code by hand: typing it, jumping around it, refactoring it, stepping through it in a debugger. For years, that's how I spent most of my day. But so much has changed in the last few years.
 
 Claude writes most of the code I ship now. My part is orchestrating it: describing what I want, steering when it goes the wrong way, and reviewing what comes out. Keeping an editor at the center of my day stopped making sense, so these days I do my coding in the Claude desktop app. I still open VS Code, but to read code, not to write it.
 
 ## How I got here
 
-The move away from the editor started with Claude Code in a terminal. Once Claude was doing most of the writing, the terminal was where the work happened, so I started trying terminals. The default macOS Terminal first, then Ghostty, then Warp. After that I moved on to multiplexers built for running coding agents side by side. I used [cmux](https://cmux.com) for a while and it never clicked for me. Then I found [Herdr](https://herdr.dev), and that one stuck. I used it for a month or two and liked it a lot.
+For a long time, my setup was VS Code with Claude Code running in a terminal beside it. But once Claude was doing most of the writing, the terminal was where the work happened, and the editor was just where I went to check it. So I started trying terminals. The default macOS Terminal first, then Ghostty, then Warp. After that I moved on to multiplexers built for running coding agents side by side. I used [cmux](https://cmux.com) for a while and it never clicked for me. Then I found [Herdr](https://herdr.dev), and that one stuck. I used it for a month or two and liked it a lot.
 
 Then I started hitting small issues. When I pasted an image into a session, I didn't get a thumbnail of it, so I couldn't see what I had sent. It seemed like a strange thing to be missing. It wasn't enough to make me leave on its own, but this time I wanted to try something different, so I gave the Claude desktop app a go.
 
@@ -27,13 +27,13 @@ In a terminal, a session is a log that keeps scrolling. A background task or a c
 - Each session shows which connectors are running, which background tasks it has started, and its task list.
 - For a branch with a PR, the PR's status and its CI checks sit next to the conversation.
 
-The feature I like the most is the built-in browser. Claude can open the dev server in a browser pane, and I see the same page it does. Before this, if I wanted Claude to look at a running app, I had to set up something like the Playwright MCP server and keep it working. Now the browser is right there.
+Before the app, if I wanted Claude to look at a running app, I had to set up something like the Playwright MCP server and keep it working. Now the browser is right there. Claude opens the dev server in a pane next to the conversation, and I see the same page it does. It's the feature I like the most.
 
 ## Everything in one window
 
-The browser is part of a bigger thing I like about the app: I don't have to leave it. When I'm working on an artifact, like a design, it opens in a pane next to the conversation. Before, I'd have to open a separate Chrome window and navigate to it. Files work the same way. The app has viewers built in, so when a session writes a markdown file, I read it right there instead of opening it somewhere else.
+My work used to be spread across windows: the editor, the terminal, a Chrome window for anything I needed to look at, and a video player whenever I made a video. But the browser is only part of what changed: in the app, I don't have to leave the window at all.
 
-This goes past code, too. Sometimes I create videos, and the video plays right in the app, so I don't need a separate video player. When I'm making slides, I open them right there as well. It's very handy.
+When I'm working on an artifact, like a design, it opens in a pane next to the conversation instead of in a separate Chrome window. When a session writes a markdown file, I read it right there. And it goes past code, too. Sometimes I create videos, and they play right in the app. When I'm making slides, they open there as well. It's very handy.
 
 ![Diagram comparing before and now. Before: separate windows for VS Code, Herdr, Chrome for artifacts and the running app, and a video player. Now: one Claude desktop app window with sessions in a sidebar, the conversation with tasks, PR and CI in the middle, and a side pane for the browser, artifacts, files, videos and slides, plus VS Code kept open only for source control.](./images/claude-desktop-before-and-now.png)
 
