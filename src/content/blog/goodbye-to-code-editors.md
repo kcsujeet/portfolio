@@ -1,6 +1,6 @@
 ---
 title: "I Think It's Time to Say Goodbye to Code Editors"
-description: "How I went from Claude Code in a terminal, through Ghostty, Warp, cmux and Herdr, to the Claude desktop app, and the one job VS Code still has."
+description: "Claude writes most of my code now, so I moved my coding out of the editor and into the Claude desktop app. VS Code still has one job left."
 pubDate: 2026-11-11T13:39:59-07:00
 tags: ["claude", "ai", "tooling", "workflow"]
 ---
@@ -8,8 +8,6 @@ tags: ["claude", "ai", "tooling", "workflow"]
 Code editors and IDEs are built for working on code by hand: typing it, jumping around it, refactoring it, stepping through it in a debugger. I still debug and refactor, but I don't do it by hand anymore.
 
 Claude writes most of the code I ship now. My part is orchestrating it: describing what I want, steering when it goes the wrong way, and reviewing what comes out. Keeping an editor at the center of my day stopped making sense, so these days I do my coding in the Claude desktop app. I still open VS Code, but to read code, not to write it.
-
-This post is about how I got here, what a day in the app looks like, and the one job VS Code still has.
 
 ## How I got here
 
