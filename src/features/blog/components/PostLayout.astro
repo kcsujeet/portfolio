@@ -113,118 +113,31 @@ const formattedUpdated = post.data.updatedDate
 </div>
 
 <script>
-  // Scroll-spy for the right-rail TOC. Adapted from Starlight's StarlightTOC
-  // (withastro/starlight, components-internals/TableOfContents/starlight-toc.ts):
-  // observe content elements through a thin activation band near the top of the
-  // viewport, resolve each intersecting element back to its governing heading,
-  // and mark that heading's link with aria-current. Simplified for this site's
-  // flat `.prose` DOM (headings + blocks are siblings) and no fixed header.
+  import { watchActiveHeading } from "../utils/active-heading";
+
+  // Marks the side contents list's link for the section the reader is in.
   class BlogToc extends HTMLElement {
-    protected current: HTMLAnchorElement | null = null;
+    private activeLink: HTMLAnchorElement | null = null;
+    private stopWatching = () => {};
 
     connectedCallback() {
-      const onIdle = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
-      onIdle(() => this.init());
-    }
-
-    // Mark a link as the active section. Subclasses override onCurrent to react
-    // (e.g. the mobile bar updates its summary label).
-    protected setCurrent(link: HTMLAnchorElement) {
-      if (link === this.current) return;
-      this.current?.removeAttribute("aria-current");
-      link.setAttribute("aria-current", "true");
-      this.current = link;
-      this.onCurrent(link);
-    }
-
-    protected onCurrent(_link: HTMLAnchorElement) {}
-
-    private init() {
       const links = [...this.querySelectorAll<HTMLAnchorElement>("a")];
-      const content = document.querySelector(".prose");
-      if (!content || links.length === 0) return;
-
-      const headingSel = "h2[id], h3[id]";
-
-      // Flat prose: an element's section heading is the nearest preceding sibling
-      // that is a heading.
-      const headingFor = (el: Element | null): Element | null => {
-        let cur: Element | null = el;
-        while (cur) {
-          if (cur.matches(headingSel)) return cur;
-          cur = cur.previousElementSibling;
-        }
-        return null;
-      };
-
-      const linkFor = (heading: Element) =>
-        links.find((l) => l.hash === "#" + encodeURIComponent(heading.id));
-
-      const lastLink = links[links.length - 1];
-      // The final section is often too short to ever scroll up into the
-      // activation band, so the band observer alone can never highlight it
-      // (Starlight has the same blind spot). When the page is scrolled to the
-      // bottom, force the last link active instead.
-      const atBottom = () =>
-        Math.ceil(window.scrollY + window.innerHeight) >=
-        document.documentElement.scrollHeight - 2;
-
-      const onIntersect: IntersectionObserverCallback = (entries) => {
-        if (atBottom()) {
-          this.setCurrent(lastLink);
-          return;
-        }
-        for (const { isIntersecting, target } of entries) {
-          if (!isIntersecting) continue;
-          const heading = headingFor(target);
-          if (!heading) continue;
-          const link = linkFor(heading);
-          if (link) {
-            this.setCurrent(link);
-            break;
-          }
-        }
-      };
-
-      let observer: IntersectionObserver | undefined;
-      const observe = () => {
-        if (observer) return;
-        // Thin band: from `top`px to `top + band`px below the viewport top.
-        const top = 100;
-        const band = 64;
-        const height = document.documentElement.clientHeight;
-        const bottom = Math.max(0, height - top - band);
-        observer = new IntersectionObserver(onIntersect, {
-          rootMargin: `-${top}px 0% -${bottom}px`,
-        });
-        for (const el of content.children) observer.observe(el);
-      };
-      observe();
-
-      // Bottom guard: the band observer can't reach the last section, so watch
-      // for the page being scrolled to the bottom (also covers landing here via
-      // a #hash, which jumps straight to the bottom).
-      const onScroll = () => {
-        if (atBottom()) this.setCurrent(lastLink);
-      };
-      window.addEventListener("scroll", onScroll, { passive: true });
-
-      // Initial highlight. At the top the band sits over the article header (not
-      // the prose), so nothing intersects yet — default to the first section.
-      // The observer's own initial callback fires right after and corrects this
-      // if we actually loaded part-way down (e.g. via a #hash to a later
-      // section); the bottom guard covers loading at the very end.
-      if (atBottom()) this.setCurrent(lastLink);
-      else this.setCurrent(links[0]);
-
-      let timeout: ReturnType<typeof setTimeout>;
-      window.addEventListener("resize", () => {
-        // Recompute the band (it depends on viewport height) after resize.
-        observer?.disconnect();
-        observer = undefined;
-        clearTimeout(timeout);
-        timeout = setTimeout(observe, 200);
+      // The href holds the heading id as written (`#${slug}`), so it needs no
+      // decoding.
+      const getHeadingId = (link: HTMLAnchorElement) =>
+        link.getAttribute("href")?.slice(1) ?? "";
+      this.stopWatching = watchActiveHeading(links.map(getHeadingId), (id) => {
+        const link = links.find((l) => getHeadingId(l) === id);
+        if (!link) return;
+        if (link === this.activeLink) return;
+        this.activeLink?.removeAttribute("aria-current");
+        link.setAttribute("aria-current", "true");
+        this.activeLink = link;
       });
+    }
+
+    disconnectedCallback() {
+      this.stopWatching();
     }
   }
 
