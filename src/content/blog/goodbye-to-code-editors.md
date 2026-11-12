@@ -1,6 +1,6 @@
 ---
 title: "I Think It's Time to Say Goodbye to Code Editors"
-description: "How I went from Claude Code in a terminal, through Ghostty, Warp, cmux and Herdr, to the Claude desktop app, and the one job VS Code still has."
+description: "Claude writes most of my code now, so I moved my coding out of the editor and into the Claude desktop app. VS Code still has one job left."
 pubDate: 2026-11-11T13:39:59-07:00
 tags: ["claude", "ai", "tooling", "workflow"]
 ---
