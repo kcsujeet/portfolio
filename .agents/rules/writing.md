@@ -80,6 +80,7 @@ He writes in short sentences made of everyday words, with something concrete doi
 
 ### How he explains things
 
+- Tell a change as before, turn, now. Start from how it used to be (what the thing is for, how he used to work, what he had to set up), tie it to himself in a short sentence, mark the change in one short line, and only then say what he does now. The model is the opening of `goodbye-to-code-editors.md`: "Code editors and IDEs are built for working on code by hand: typing it, jumping around it, refactoring it, stepping through it in a debugger. For years, that's how I spent most of my day. But so much has changed in the last few years." Leading with the new thing and tucking the old way into a "Before this, ..." clause reads like a feature list. Use the pattern only where the facts give a real before; never invent one.
 - Build one concrete scenario with named places and real values, then reuse it for the whole post. The timezone post runs Tokyo and Toronto, `2025-01-01`, JST and UTC-5 through every example.
 - Walk a failure as a bulleted causal chain, one step per bullet, ending on the consequence to the user. "A user in Tokyo schedules an online event for `2025-01-01`. / The system stores just `2025-01-01` without specifying a timezone. / ... / This could lead to the Toronto user missing the event entirely."
 - Show both sides of the wire when it applies, labelled `Server-Side (Ruby)` and `Client-Side (JavaScript)`, and put the real result in an output comment: `# Output: "Renewal Date (JST): 2025-01-01"`.
