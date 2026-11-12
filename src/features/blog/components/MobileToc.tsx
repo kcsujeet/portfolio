@@ -1,5 +1,6 @@
 import { Popover } from "@base-ui/react/popover";
 import { useEffect, useState } from "react";
+import { watchActiveHeading } from "../utils/active-heading";
 
 type Heading = { depth: number; slug: string; text: string };
 
@@ -13,77 +14,14 @@ export function MobileToc({ headings }: { headings: Heading[] }) {
   const [open, setOpen] = useState(false);
   const [activeSlug, setActiveSlug] = useState(headings[0]?.slug ?? "");
 
-  useEffect(() => {
-    const content = document.querySelector(".prose");
-    if (!content || headings.length === 0) return;
-
-    const slugs = new Set(headings.map((h) => h.slug));
-    const lastSlug = headings[headings.length - 1]?.slug ?? "";
-
-    // Flat prose: an element's section heading is the nearest preceding sibling
-    // that is a heading.
-    const headingFor = (el: Element | null): HTMLElement | null => {
-      let cur: Element | null = el;
-      while (cur) {
-        if (cur instanceof HTMLElement && cur.matches("h2[id], h3[id]")) {
-          return cur;
-        }
-        cur = cur.previousElementSibling;
-      }
-      return null;
-    };
-
-    const atBottom = () =>
-      Math.ceil(window.scrollY + window.innerHeight) >=
-      document.documentElement.scrollHeight - 2;
-
-    let observer: IntersectionObserver | undefined;
-    const setup = () => {
-      observer?.disconnect();
-      const top = 100;
-      const band = 64;
-      const height = document.documentElement.clientHeight;
-      const bottom = Math.max(0, height - top - band);
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (atBottom()) {
-            setActiveSlug(lastSlug);
-            return;
-          }
-          for (const { isIntersecting, target } of entries) {
-            if (!isIntersecting) continue;
-            const heading = headingFor(target);
-            if (heading && slugs.has(heading.id)) {
-              setActiveSlug(heading.id);
-              break;
-            }
-          }
-        },
-        { rootMargin: `-${top}px 0% -${bottom}px` },
-      );
-      for (const el of content.children) observer.observe(el);
-    };
-    setup();
-
-    const onScroll = () => {
-      if (atBottom()) setActiveSlug(lastSlug);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    let timeout: ReturnType<typeof setTimeout>;
-    const onResize = () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(setup, 200);
-    };
-    window.addEventListener("resize", onResize);
-
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
-      clearTimeout(timeout);
-    };
-  }, [headings]);
+  useEffect(
+    () =>
+      watchActiveHeading(
+        headings.map((h) => h.slug),
+        setActiveSlug,
+      ),
+    [headings],
+  );
 
   const activeText =
     headings.find((h) => h.slug === activeSlug)?.text ?? headings[0]?.text;
