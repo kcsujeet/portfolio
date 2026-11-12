@@ -89,11 +89,13 @@ describe("Portfolio Content", () => {
       expect(sublimeread?.stack).not.toContain("hono");
     });
 
-    it("places Interactive Rails before the frontend libraries", () => {
+    it("lists Ilamy Calendar third, after the two live products", () => {
       const ids = PROJECTS.map((p) => p.id);
-      expect(ids.indexOf("interactive-rails")).toBeLessThan(
-        ids.indexOf("ilamy"),
-      );
+      expect(ids.slice(0, 3)).toEqual([
+        "sublimeread",
+        "passport-photo-wiz",
+        "ilamy",
+      ]);
     });
 
     it("contains no em dashes", () => {
