@@ -2,6 +2,8 @@ type HeadingPosition = { id: string; top: number };
 
 // Sub-pixel layout can leave a jumped-to heading a hair below its landing line.
 const LANDING_TOLERANCE_PX = 4;
+// Rounding can leave the page a pixel or two short of its full scroll height.
+const BOTTOM_TOLERANCE_PX = 2;
 
 /**
  * The section a reader is in: the last heading whose top has reached the line
@@ -20,6 +22,38 @@ export function pickActiveHeading(
 }
 
 /**
+ * The heading id a URL fragment (the part after `#`) points at, written as-is
+ * or percent-encoded. Never decodes, so a malformed fragment like `100%`
+ * matches nothing instead of throwing.
+ */
+export function headingIdForFragment(
+  fragment: string,
+  ids: string[],
+): string | undefined {
+  return ids.find(
+    (id) => id === fragment || encodeURIComponent(id) === fragment,
+  );
+}
+
+const parsePx = (value: string) => Number.parseFloat(value) || 0;
+
+type ClickInput = Pick<
+  MouseEvent,
+  "button" | "defaultPrevented" | "metaKey" | "ctrlKey" | "shiftKey" | "altKey"
+>;
+
+/**
+ * Whether a click on a `#` link makes the browser jump in this tab: a plain
+ * left click, not a modified one (new tab or window) and not one another
+ * handler already cancelled.
+ */
+export function isPlainLeftClick(event: ClickInput): boolean {
+  const hasModifier =
+    event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+  return event.button === 0 && !event.defaultPrevented && !hasModifier;
+}
+
+/**
  * Reports the active section of a post as the reader scrolls, for its tables of
  * contents. A heading the reader jumps to (a contents link, an anchor, a #hash
  * on load, back and forward) stays active until they scroll on their own, since
@@ -30,83 +64,96 @@ export function watchActiveHeading(
   ids: string[],
   onActive: (id: string) => void,
 ): () => void {
-  const headings = ids
+  const headingElements = ids
     .map((id) => document.getElementById(id))
     .filter((el): el is HTMLElement => el !== null);
-  if (headings.length === 0) return () => {};
+  if (headingElements.length === 0) return () => {};
 
   let isPinned = false;
-  let frame = 0;
+  let pendingFrameId = 0;
 
   // Where the browser puts a heading it jumps to: the page's scroll-padding-top
   // plus the heading's own scroll-margin-top.
-  const landingLine = () =>
-    (Number.parseFloat(
+  const getLandingLine = () => {
+    const scrollPadding = parsePx(
       getComputedStyle(document.documentElement).scrollPaddingTop,
-    ) || 0) +
-    (Number.parseFloat(getComputedStyle(headings[0]).scrollMarginTop) || 0) +
-    LANDING_TOLERANCE_PX;
+    );
+    const scrollMargin = parsePx(
+      getComputedStyle(headingElements[0]).scrollMarginTop,
+    );
+    return scrollPadding + scrollMargin + LANDING_TOLERANCE_PX;
+  };
 
   const isAtBottom = () =>
     Math.ceil(window.scrollY + window.innerHeight) >=
-    document.documentElement.scrollHeight - 2;
+    document.documentElement.scrollHeight - BOTTOM_TOLERANCE_PX;
 
-  const update = () => {
-    frame = 0;
+  const updateActiveHeading = () => {
+    pendingFrameId = 0;
     if (isPinned) return;
-    const positions = headings.map((el) => ({
+    const positions = headingElements.map((el) => ({
       id: el.id,
       top: el.getBoundingClientRect().top,
     }));
-    const activeId = pickActiveHeading(positions, landingLine(), isAtBottom());
+    const landingLine = getLandingLine();
+    const atBottom = isAtBottom();
+    const activeId = pickActiveHeading(positions, landingLine, atBottom);
     if (activeId) onActive(activeId);
   };
 
   const scheduleUpdate = () => {
-    if (!frame) frame = requestAnimationFrame(update);
+    if (!pendingFrameId) {
+      pendingFrameId = requestAnimationFrame(updateActiveHeading);
+    }
   };
 
-  const pinTo = (id: string) => {
-    if (!ids.includes(id)) return false;
+  const pinToFragment = (fragment: string) => {
+    const id = headingIdForFragment(fragment, ids);
+    if (!id) return false;
     isPinned = true;
     onActive(id);
     return true;
   };
 
-  const pinToHash = () => pinTo(decodeURIComponent(location.hash.slice(1)));
-
-  const onClick = (event: MouseEvent) => {
-    if (!(event.target instanceof Element)) return;
-    const href = event.target.closest('a[href^="#"]')?.getAttribute("href");
-    if (href) pinTo(decodeURIComponent(href.slice(1)));
-  };
-
   // Any input that moves the page itself ends a jump's pin.
-  const release = () => {
+  const releasePin = () => {
     if (!isPinned) return;
     isPinned = false;
     scheduleUpdate();
   };
 
-  if (!pinToHash()) update();
+  const handleHashLinkClick = (event: MouseEvent) => {
+    if (!isPlainLeftClick(event)) return;
+    if (!(event.target instanceof Element)) return;
+    const href = event.target.closest('a[href^="#"]')?.getAttribute("href");
+    if (href) pinToFragment(href.slice(1));
+  };
 
-  document.addEventListener("click", onClick);
-  window.addEventListener("hashchange", pinToHash);
+  // Back and forward to an entry that isn't a heading (no hash, a footnote)
+  // hands the highlight back to the scroll position.
+  const handleHashChange = () => {
+    if (!pinToFragment(location.hash.slice(1))) releasePin();
+  };
+
+  if (!pinToFragment(location.hash.slice(1))) updateActiveHeading();
+
+  document.addEventListener("click", handleHashLinkClick);
+  window.addEventListener("hashchange", handleHashChange);
   window.addEventListener("scroll", scheduleUpdate, { passive: true });
   window.addEventListener("resize", scheduleUpdate);
   const releaseEvents = ["wheel", "touchstart", "keydown", "pointerdown"];
   for (const type of releaseEvents) {
-    window.addEventListener(type, release, { passive: true });
+    window.addEventListener(type, releasePin, { passive: true });
   }
 
   return () => {
-    cancelAnimationFrame(frame);
-    document.removeEventListener("click", onClick);
-    window.removeEventListener("hashchange", pinToHash);
+    cancelAnimationFrame(pendingFrameId);
+    document.removeEventListener("click", handleHashLinkClick);
+    window.removeEventListener("hashchange", handleHashChange);
     window.removeEventListener("scroll", scheduleUpdate);
     window.removeEventListener("resize", scheduleUpdate);
     for (const type of releaseEvents) {
-      window.removeEventListener(type, release);
+      window.removeEventListener(type, releasePin);
     }
   };
 }

@@ -117,19 +117,22 @@ const formattedUpdated = post.data.updatedDate
 
   // Marks the side contents list's link for the section the reader is in.
   class BlogToc extends HTMLElement {
-    private current: HTMLAnchorElement | null = null;
+    private activeLink: HTMLAnchorElement | null = null;
     private stopWatching = () => {};
 
     connectedCallback() {
       const links = [...this.querySelectorAll<HTMLAnchorElement>("a")];
-      const idOf = (link: HTMLAnchorElement) =>
-        decodeURIComponent(link.hash.slice(1));
-      this.stopWatching = watchActiveHeading(links.map(idOf), (id) => {
-        const link = links.find((l) => idOf(l) === id);
-        if (!link || link === this.current) return;
-        this.current?.removeAttribute("aria-current");
+      // The href holds the heading id as written (`#${slug}`), so it needs no
+      // decoding.
+      const getHeadingId = (link: HTMLAnchorElement) =>
+        link.getAttribute("href")?.slice(1) ?? "";
+      this.stopWatching = watchActiveHeading(links.map(getHeadingId), (id) => {
+        const link = links.find((l) => getHeadingId(l) === id);
+        if (!link) return;
+        if (link === this.activeLink) return;
+        this.activeLink?.removeAttribute("aria-current");
         link.setAttribute("aria-current", "true");
-        this.current = link;
+        this.activeLink = link;
       });
     }
 
