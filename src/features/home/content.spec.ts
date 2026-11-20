@@ -98,6 +98,29 @@ describe("Portfolio Content", () => {
       ]);
     });
 
+    it("lists kc-claude-kit fourth in a six-card grid without Testoise", () => {
+      expect(PROJECTS.map((p) => p.id)).toEqual([
+        "sublimeread",
+        "passport-photo-wiz",
+        "ilamy",
+        "kc-claude-kit",
+        "interactive-rails",
+        "collage",
+      ]);
+    });
+
+    it("describes kc-claude-kit as an open source Claude Code toolkit", () => {
+      const kit = PROJECTS.find((p) => p.id === "kc-claude-kit");
+      expect(kit).toEqual({
+        id: "kc-claude-kit",
+        name: "kc-claude-kit",
+        tag: "open source",
+        href: "https://github.com/kcsujeet/kc-claude-kit",
+        line: "Claude Code toolkit with portable coding conventions, gate-based code review, QA skills and autopilot.",
+        stack: ["claude code", "typescript", "shell"],
+      });
+    });
+
     it("contains no em dashes", () => {
       for (const project of PROJECTS) {
         expect(`${project.name} ${project.line}`).not.toContain(EM_DASH);
