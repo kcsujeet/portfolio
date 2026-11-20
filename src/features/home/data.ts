@@ -133,20 +133,20 @@ export const PROJECTS: Project[] = [
     stack: ["typescript", "react", "tailwind"],
   },
   {
+    id: "kc-claude-kit",
+    name: "kc-claude-kit",
+    tag: "open source",
+    href: "https://github.com/kcsujeet/kc-claude-kit",
+    line: "Claude Code toolkit with portable coding conventions, gate-based code review, QA skills and autopilot.",
+    stack: ["claude code", "typescript", "shell"],
+  },
+  {
     id: "interactive-rails",
     name: "Interactive Rails",
     tag: "open source",
     href: "https://interactive-rails.sujeetkc45.workers.dev",
     line: "Learn Rails 8 in 58 levels, entirely in the browser.",
     stack: ["rails", "astro", "workers"],
-  },
-  {
-    id: "testoise",
-    name: "Testoise",
-    tag: "open source",
-    href: "https://github.com/kcsujeet/testoise",
-    line: "RSpec-style lazy let for Bun, Vitest, Jest and Node.",
-    stack: ["typescript", "bun"],
   },
   {
     id: "collage",
